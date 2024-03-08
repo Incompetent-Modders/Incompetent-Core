@@ -1,0 +1,4 @@
+#The maximum amount of mana a player can have
+#Range: > 0
+maxMana = 100
+

@@ -1,0 +1,5 @@
+/data get entity Dev
+/attribute Dev incompetent_core:incompetent_druidry.max_mana get
+/data get entity Dev
+/weather clear
+/data get entity Dev
