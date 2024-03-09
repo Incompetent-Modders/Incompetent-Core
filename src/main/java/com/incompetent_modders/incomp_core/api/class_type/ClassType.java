@@ -46,7 +46,7 @@ public class ClassType {
     }
     protected String getOrCreateDescriptionId() {
         if (this.descriptionId == null) {
-            this.descriptionId = Util.makeDescriptionId("spell", ModRegistries.CLASS_TYPE.getKey(this));
+            this.descriptionId = Util.makeDescriptionId("class_type", ModRegistries.CLASS_TYPE.getKey(this));
         }
         
         return this.descriptionId;

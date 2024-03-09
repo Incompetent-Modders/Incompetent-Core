@@ -1,15 +1,16 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
-import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.Util;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -21,13 +22,17 @@ public class Spell {
     private final boolean isRangedAttack;
     private final int manaCost;
     private final int drawTime;
+    private final int coolDown;
+    private final SpellCategory category;
     private final ClassType casterClassType;
     @Nullable
     private String descriptionId;
-    public Spell(boolean isRangedAttack, int manaCost, int drawTime, ClassType casterClassType) {
+    public Spell(boolean isRangedAttack, int manaCost, int drawTime, int coolDown, SpellCategory category, ClassType casterClassType) {
         this.isRangedAttack = isRangedAttack;
         this.manaCost = manaCost;
         this.drawTime = drawTime;
+        this.coolDown = coolDown;
+        this.category = category;
         this.casterClassType = casterClassType;
     }
     public final Spell getSpell(ResourceLocation rl) {
@@ -39,7 +44,28 @@ public class Spell {
         }
     }
     
-    
+    public SpellCategory getCategory() {
+        return category;
+    }
+    public SoundEvent getSpellSound() {
+        return getSpellSound(this.getCategory());
+    }
+    private SoundEvent getSpellSound(SpellCategory category) {
+        return switch (category) {
+            case CURSE -> SoundEvents.ALLAY_DEATH;
+            case PROJECTILE -> SoundEvents.ALLAY_ITEM_TAKEN;
+            case BUFF -> SoundEvents.WARDEN_AGITATED;
+            case DEBUFF -> SoundEvents.WARDEN_HURT;
+            case HEALING -> SoundEvents.ALLAY_AMBIENT_WITH_ITEM;
+            case SUMMON -> SoundEvents.ALLAY_ITEM_GIVEN;
+            case UTILITY -> SoundEvents.WARDEN_AMBIENT;
+            case DEFENSE -> SoundEvents.WARDEN_DEATH;
+            case OFFENSE -> SoundEvents.WARDEN_ATTACK_IMPACT;
+            case MOBILITY -> SoundEvents.ALLAY_THROW;
+            case ENVIRONMENTAL -> SoundEvents.WARDEN_EMERGE;
+            default -> SoundEvents.WARDEN_HEARTBEAT;
+        };
+    }
     public ClassType getCasterClassType() {
         return casterClassType;
     }
@@ -48,6 +74,9 @@ public class Spell {
     }
     public int getDrawTime() {
         return drawTime;
+    }
+    public int getCoolDown() {
+        return coolDown;
     }
     
     protected String getOrCreateDescriptionId() {
