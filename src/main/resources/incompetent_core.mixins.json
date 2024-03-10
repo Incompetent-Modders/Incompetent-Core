@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_16",
-  "package": "com.incompetent_modders.spellcasting.mixin",
+  "package": "com.incompetent_modders.incomp_core.mixin",
   "refmap": "incompetent_spellcasting.refmap.json",
   "mixins": [
   ],

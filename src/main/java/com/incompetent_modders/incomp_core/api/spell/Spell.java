@@ -27,13 +27,13 @@ public class Spell {
     private final ClassType casterClassType;
     @Nullable
     private String descriptionId;
-    public Spell(boolean isRangedAttack, int manaCost, int drawTime, int coolDown, SpellCategory category, ClassType casterClassType) {
+    public Spell(boolean isRangedAttack, int manaCost, int drawTime, int coolDown, SpellCategory category, ResourceLocation casterClassType) {
         this.isRangedAttack = isRangedAttack;
         this.manaCost = manaCost;
         this.drawTime = drawTime;
         this.coolDown = coolDown;
         this.category = category;
-        this.casterClassType = casterClassType;
+        this.casterClassType = ModRegistries.CLASS_TYPE.get(casterClassType);
     }
     public final Spell getSpell(ResourceLocation rl) {
         if (rl.equals(this.getSpellIdentifier())) {

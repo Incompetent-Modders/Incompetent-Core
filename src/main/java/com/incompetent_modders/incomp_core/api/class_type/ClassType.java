@@ -10,25 +10,25 @@ import javax.annotation.Nullable;
 
 public class ClassType {
     private final boolean canCastSpells;
-    private final int baseMana;
+    private final int maxMana;
     private final boolean pacifist;
     @Nullable
     private String descriptionId;
     
-    public ClassType(boolean canCastSpells, int baseMana, boolean pacifist) {
+    public ClassType(boolean canCastSpells, int maxMana, boolean pacifist) {
         this.canCastSpells = canCastSpells;
-        this.baseMana = baseMana;
+        this.maxMana = maxMana;
         this.pacifist = pacifist;
     }
     
     public ClassType() {
         this.canCastSpells = false;
-        this.baseMana = 0;
+        this.maxMana = 0;
         this.pacifist = false;
     }
     
-    public int getBaseMana() {
-        return baseMana;
+    public int getMaxMana() {
+        return maxMana;
     }
     public boolean canCastSpells() {
         return canCastSpells;
@@ -66,5 +66,9 @@ public class ClassType {
     
     public static void classAbility() {
     
+    }
+    
+    public boolean canRegenerateMana() {
+        return false;
     }
 }

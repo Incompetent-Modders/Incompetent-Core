@@ -1,5 +1,7 @@
 package com.incompetent_modders.incomp_core.api.mana;
 
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -7,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class ManaCap implements IManaCap {
     private final LivingEntity livingEntity;
     
-    private double mana;
+    public double mana;
     
     private int maxMana;
     
@@ -41,7 +43,15 @@ public class ManaCap implements IManaCap {
         }
         return this.getCurrentMana();
     }
-    
+    @Override
+    public void healMana(double amount) {
+        amount = CommonUtils.onManaHeal(livingEntity, amount);
+        if (amount <= 0) return;
+        double f = this.getCurrentMana();
+        if (f > 0.0F) {
+            this.setMana(f + amount);
+        }
+    }
     @Override
     public double addMana(double manaToAdd) {
         this.setMana(this.getCurrentMana() + manaToAdd);

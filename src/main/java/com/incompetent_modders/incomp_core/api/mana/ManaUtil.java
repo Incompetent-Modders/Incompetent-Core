@@ -3,11 +3,13 @@ package com.incompetent_modders.incomp_core.api.mana;
 import com.incompetent_modders.incomp_core.Config;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModCapabilities;
+import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.EventHooks;
 
 import java.util.UUID;
 
@@ -30,6 +32,7 @@ public class ManaUtil {
     // Only updated if the value changes.
     static final UUID MAX_MANA_MODIFIER = UUID.fromString("71e00672-51f3-43b3-92cb-166496ef38e1");
     static final UUID MANA_REGEN_MODIFIER = UUID.fromString("bbb182cc-0d9c-402c-9d00-3adb19722e7b");
+    
     
     // Calculate Max Mana & Mana Reserve to keep track of the mana reserved by familiars & co.
     public static Mana calcMaxMana(Player e) {

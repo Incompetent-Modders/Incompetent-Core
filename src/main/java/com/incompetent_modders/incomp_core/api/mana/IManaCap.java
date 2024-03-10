@@ -15,4 +15,6 @@ public interface IManaCap extends INBTSerializable<CompoundTag> {
     double addMana(final double manaToAdd);
     
     double removeMana(final double manaToRemove);
+    default void healMana(double amount) {
+    }
 }
