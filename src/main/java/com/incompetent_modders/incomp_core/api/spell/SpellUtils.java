@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class SpellUtils {
-    public static void giveItems(Level level, Player player, int amount, Item item) {
+public static void giveItems(Level level, Player player, int amount, Item item) {
         ItemStack stack = new ItemStack(item);
         stack.setCount(amount);
         if (!level.isClientSide) {
@@ -30,9 +30,18 @@ public class SpellUtils {
             return Spells.EMPTY.get();
         }
         if (tag.contains("spellSlot_" + slot)) {
-            return ModRegistries.SPELL.get(new ResourceLocation(tag.getString("spellSlot_" + slot)));
+            //The NBT formats the spell as modid:spellname. We need to separate them into two strings.
+            String spellModid = tag.getString("spellSlot_" + slot).split(":")[0];
+            String spellName = tag.getString("spellSlot_" + slot).split(":")[1];
+            return ModRegistries.SPELL.get(new ResourceLocation(spellModid, spellName));
         }
         return Spells.EMPTY.get();
         
+    }
+    public static void serializeToSlot(CompoundTag tag, int slot, Spell spell) {
+        if (tag == null) {
+            return;
+        }
+        tag.putString("spellSlot_" + slot, spell.getSpellIdentifier().toString());
     }
 }
