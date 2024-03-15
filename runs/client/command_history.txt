@@ -8,3 +8,4 @@
 /i_c cast_spell Dev incompetent_core:empty
 /incompetent_core cast_spell Dev "incompetent_core:empty"
 /incompetent_core cast_spell @r "incompetent_core:empty"
+/incompetent_core setSpell 0 "incompetent_core:empty"

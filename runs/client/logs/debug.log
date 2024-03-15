@@ -6568,3 +6568,111 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [15Mar2024 22:16:35.558] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
 [15Mar2024 22:16:35.558] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
 [15Mar2024 22:16:35.851] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigTracker/CONFIG]: Unloading configs type SERVER
+[15Mar2024 22:17:37.640] [Render thread/DEBUG] [net.neoforged.neoforge.network.DualStackUtils/]: Detected IPv6 address: "0:0:0:0:0:0:0:0"
+[15Mar2024 22:25:42.796] [Render thread/DEBUG] [net.neoforged.neoforge.server.ServerLifecycleHooks/CORE]: Generating PackInfo named mod:incompetent_core for mod file C:\Users\pouff\Documents\GitHub\Incompetent\Incompetent-Core\build\resources\main
+[15Mar2024 22:25:42.796] [Render thread/DEBUG] [net.neoforged.neoforge.server.ServerLifecycleHooks/CORE]: Generating PackInfo named mod:neoforge for mod file /
+[15Mar2024 22:25:43.033] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[15Mar2024 22:25:43.052] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1271 advancements
+[15Mar2024 22:25:43.308] [Render thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 22:25:43.311] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.2
+[15Mar2024 22:25:43.311] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[15Mar2024 22:25:43.323] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigTracker/CONFIG]: Loading configs type SERVER
+[15Mar2024 22:25:43.324] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigFileTypeHandler/CONFIG]: Built TOML config for .\saves\New World\serverconfig\neoforge-server.toml
+[15Mar2024 22:25:43.324] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigFileTypeHandler/CONFIG]: Loaded TOML config file .\saves\New World\serverconfig\neoforge-server.toml
+[15Mar2024 22:25:43.324] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigFileTypeHandler/CONFIG]: Watching TOML config file .\saves\New World\serverconfig\neoforge-server.toml for changes
+[15Mar2024 22:25:43.324] [Server thread/DEBUG] [net.neoforged.neoforge.common.NeoForgeConfig/FORGEMOD]: Loaded NeoForge config file neoforge-server.toml
+[15Mar2024 22:25:43.902] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[15Mar2024 22:25:44.422] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[15Mar2024 22:25:44.422] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[15Mar2024 22:25:44.909] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[15Mar2024 22:25:45.415] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 9%
+[15Mar2024 22:25:45.803] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[15Mar2024 22:25:45.803] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1898 ms
+[15Mar2024 22:25:45.803] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO from server starting
+[15Mar2024 22:25:45.814] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
+[15Mar2024 22:25:45.814] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
+[15Mar2024 22:25:45.869] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Starting local connection.
+[15Mar2024 22:25:45.870] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Starting local connection.
+[15Mar2024 22:25:45.916] [Server thread/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Sending ticking packet info 'net.neoforged.neoforge.network.HandshakeMessages$S2CModData' to 'fml:handshake' sequence 0
+[15Mar2024 22:25:45.917] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Recieved login wrapper packet event for channel fml:handshake with index 0
+[15Mar2024 22:25:45.932] [Server thread/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Sending ticking packet info 'net.neoforged.neoforge.network.HandshakeMessages$S2CModList' to 'fml:handshake' sequence 1
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Recieved login wrapper packet event for channel fml:handshake with index 1
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Logging into server with mod list [minecraft, incompetent_core, neoforge]
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'neoforge:split' : Version test of '1.1' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:loginwrapper' : Version test of 'FML3' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:handshake' : Version test of 'FML3' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'incompetent_core:messages' : Version test of '1.0' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'minecraft:unregister' : Version test of 'FML3' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:play' : Version test of 'FML3' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'minecraft:register' : Version test of 'FML3' from server : ACCEPTED
+[15Mar2024 22:25:45.932] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'neoforge:tier_sorting' : Version test of '1.0' from server : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Accepting channel list from server
+[15Mar2024 22:25:45.933] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Dispatching wrapped packet reply for channel fml:handshake with index 1
+[15Mar2024 22:25:45.933] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Accepted server connection
+[15Mar2024 22:25:45.933] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/]: Expecting 18 registries: [minecraft:command_argument_type, minecraft:sound_event, minecraft:particle_type, minecraft:frog_variant, minecraft:villager_profession, neoforge:entity_data_serializers, minecraft:item, minecraft:villager_type, minecraft:painting_variant, minecraft:block_entity_type, minecraft:block, minecraft:cat_variant, minecraft:stat_type, minecraft:mob_effect, neoforge:display_contexts, minecraft:menu, minecraft:enchantment, minecraft:entity_type]
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Recieved login wrapper packet event for channel fml:handshake with index 1
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Received client indexed reply 1 of type net.neoforged.neoforge.network.HandshakeMessages$C2SModListReply
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Received client connection with modlist [minecraft, incompetent_core, neoforge]
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'neoforge:split' : Version test of '1.1' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:loginwrapper' : Version test of 'FML3' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:handshake' : Version test of 'FML3' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'incompetent_core:messages' : Version test of '1.0' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'minecraft:unregister' : Version test of 'FML3' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'fml:play' : Version test of 'FML3' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'minecraft:register' : Version test of 'FML3' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Channel 'neoforge:tier_sorting' : Version test of '1.0' from client : ACCEPTED
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.NetworkRegistry/NETREGISTRY]: Accepting channel list from client
+[15Mar2024 22:25:45.933] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Accepted client connection mod list
+[15Mar2024 22:25:45.964] [Server thread/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Sending ticking packet info 'Config neoforge-server.toml' to 'fml:handshake' sequence 2
+[15Mar2024 22:25:45.964] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Recieved login wrapper packet event for channel fml:handshake with index 2
+[15Mar2024 22:25:45.964] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Received config sync from server
+[15Mar2024 22:25:45.964] [Netty Local Client IO #1/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Dispatching wrapped packet reply for channel fml:handshake with index 2
+[15Mar2024 22:25:45.964] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.LoginWrapper/FMLHANDSHAKE]: Recieved login wrapper packet event for channel fml:handshake with index 2
+[15Mar2024 22:25:45.964] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Received client indexed reply 2 of type net.neoforged.neoforge.network.HandshakeMessages$C2SAcknowledge
+[15Mar2024 22:25:45.964] [Netty Server IO #3/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Received acknowledgement from client
+[15Mar2024 22:25:46.012] [Server thread/DEBUG] [net.neoforged.neoforge.network.HandshakeHandler/FMLHANDSHAKE]: Handshake complete!
+[15Mar2024 22:25:46.014] [Netty Server IO #3/WARN] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Unknown custom packet payload: minecraft:brand
+[15Mar2024 22:25:46.023] [Render thread/INFO] [net.neoforged.neoforge.network.NetworkHooks/]: Connected to a modded server.
+[15Mar2024 22:25:46.028] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:7c7dd095] logged in with entity id 1521 at (-112.33411594187847, 72.49520087700593, -27.046724694508377)
+[15Mar2024 22:25:46.034] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[15Mar2024 22:25:46.198] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 2 advancements
+[15Mar2024 22:30:45.976] [Server thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 22:34:07.316] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Unable to play empty soundEvent: minecraft:entity.salmon.ambient
+[15Mar2024 22:35:45.972] [Server thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 22:40:45.973] [Server thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 22:42:38.354] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[15Mar2024 22:42:38.358] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[15Mar2024 22:42:38.363] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[15Mar2024 22:42:38.364] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[15Mar2024 22:42:38.364] [Server thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 22:43:09.958] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/]: Audio device was lost!
+[15Mar2024 22:43:09.958] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[15Mar2024 22:43:09.958] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[15Mar2024 22:43:10.005] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Speakers (High Definition Audio Device)
+[15Mar2024 22:43:10.006] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[15Mar2024 22:43:10.407] [IO-Worker-33/INFO] [net.minecraft.client.sounds.SoundEngine/]: System default audio device has changed!
+[15Mar2024 22:43:10.454] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[15Mar2024 22:43:10.454] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[15Mar2024 22:43:10.482] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Speakers (High Definition Audio Device)
+[15Mar2024 22:43:10.482] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[15Mar2024 22:43:11.421] [IO-Worker-33/INFO] [net.minecraft.client.sounds.SoundEngine/]: System default audio device has changed!
+[15Mar2024 22:43:11.465] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[15Mar2024 22:43:11.465] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[15Mar2024 22:43:11.520] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on U34G2G4R3 (2- NVIDIA High Definition Audio)
+[15Mar2024 22:43:11.520] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[15Mar2024 23:05:10.533] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
+[15Mar2024 23:05:10.543] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
+[15Mar2024 23:05:10.587] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[15Mar2024 23:05:10.604] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[15Mar2024 23:05:10.606] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[15Mar2024 23:05:10.606] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[15Mar2024 23:05:11.037] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[15Mar2024 23:05:11.584] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[15Mar2024 23:05:11.585] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[15Mar2024 23:05:11.591] [Server thread/DEBUG] [net.neoforged.neoforge.common.CommonHooks/WP]: Gathered mod list to write to world save New World
+[15Mar2024 23:05:11.593] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
+[15Mar2024 23:05:11.593] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15Mar2024 23:05:11.593] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15Mar2024 23:05:11.593] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[15Mar2024 23:05:11.898] [Server thread/DEBUG] [net.neoforged.fml.config.ConfigTracker/CONFIG]: Unloading configs type SERVER
+[15Mar2024 23:05:12.756] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!

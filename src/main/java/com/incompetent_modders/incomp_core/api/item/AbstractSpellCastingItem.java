@@ -96,11 +96,11 @@ public abstract class AbstractSpellCastingItem extends Item {
     }
     
     private static final Component SELECTED_SPELL_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"staff.selected_spell"))
+                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.selected_spell"))
             )
             .withStyle(TITLE_FORMAT);
     private static final Component AVAILABLE_SPELLS_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"staff.available_spells"))
+                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.available_spells"))
             )
             .withStyle(TITLE_FORMAT);
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
@@ -228,5 +228,25 @@ public abstract class AbstractSpellCastingItem extends Item {
         if (ticks > 0) {
             tag.putInt(remainingDrawTime, ticks - 1);
         }
+    }
+    
+    public void scrollSpellSlots(ItemStack stack, Player player, boolean forward)
+    {
+        CompoundTag tag = stack.getTag();
+        if (tag == null) {
+            return;
+        }
+        int selectedSpellSlotTag = tag.getInt("selectedSpellSlot");
+        int offset = forward?-1: 1;
+        for(int i = 0; i < getSpellSlots(getLevel()); i++) {
+            if (tag.contains(spellSlot + i)) {
+                if (i == selectedSpellSlotTag) {
+                    selectedSpellSlot = i + offset;
+                }
+            }
+        }
+        //cycled.set((i+offset+cycled.size())%cycled.size(), bullets.get(i));
+        
+        player.getInventory().setChanged();
     }
 }

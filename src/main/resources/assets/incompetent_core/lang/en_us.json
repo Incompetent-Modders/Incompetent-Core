@@ -1,5 +1,7 @@
 {
   "incompetent_core.do_nothing": "Nothing Happens",
+  "item.incompetent_core.spellcasting.selected_spell": "Selected Spell:",
+  "item.incompetent_core.spellcasting.available_spells": "Available Spell(s):",
 
   "spell.incompetent_core.empty": "Empty Spell",
 
