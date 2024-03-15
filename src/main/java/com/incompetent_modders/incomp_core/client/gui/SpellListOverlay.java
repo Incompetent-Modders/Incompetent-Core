@@ -1,9 +1,9 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
+import com.incompetent_modders.incomp_core.api.item.AbstractSpellCastingItem;
 import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
-import com.incompetent_modders.incomp_core.item.ISpellCastingItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,13 +31,13 @@ public class SpellListOverlay implements IGuiOverlay {
         if (player == null)
             return;
         
-        if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ISpellCastingItem) && !(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ISpellCastingItem))
+        if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof AbstractSpellCastingItem) && !(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof AbstractSpellCastingItem))
             return;
         
-        Item staffMainHand = player.getItemInHand(InteractionHand.MAIN_HAND).getItem();
-        Spell spellMainHand = staffMainHand instanceof ISpellCastingItem staffItem ? staffItem.getCurrentSpell(player.getItemInHand(InteractionHand.MAIN_HAND)) : Spells.EMPTY.get();
-        Item staffOffHand = player.getItemInHand(InteractionHand.OFF_HAND).getItem();
-        Spell spellOffHand = staffOffHand instanceof ISpellCastingItem staffItem ? staffItem.getCurrentSpell(player.getItemInHand(InteractionHand.OFF_HAND)) : Spells.EMPTY.get();
+        Item castingMainHand = player.getItemInHand(InteractionHand.MAIN_HAND).getItem();
+        Spell spellMainHand = castingMainHand instanceof AbstractSpellCastingItem castingItem ? castingItem.getSelectedSpell(player.getItemInHand(InteractionHand.MAIN_HAND)) : Spells.EMPTY.get();
+        Item castingOffHand = player.getItemInHand(InteractionHand.OFF_HAND).getItem();
+        Spell spellOffHand = castingOffHand instanceof AbstractSpellCastingItem castingItem ? castingItem.getSelectedSpell(player.getItemInHand(InteractionHand.OFF_HAND)) : Spells.EMPTY.get();
         
         int x1 = screenWidth + spellIconInsetX;
         // y is upside-down so this is the other way round
@@ -45,8 +45,8 @@ public class SpellListOverlay implements IGuiOverlay {
         
         ResourceLocation spellMainHandIcon = spellMainHand.getSpellIconLocation();
         ResourceLocation spellOffHandIcon = spellOffHand.getSpellIconLocation();
-        boolean isMainHandSpell = player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ISpellCastingItem;
-        boolean isOffHandSpell = player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ISpellCastingItem;
+        boolean isMainHandSpell = player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof AbstractSpellCastingItem;
+        boolean isOffHandSpell = player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof AbstractSpellCastingItem;
         Component spellMainHandName = spellMainHand.getDisplayName();
         Component spellOffHandName = spellOffHand.getDisplayName();
         PoseStack poseStack = guiGraphics.pose();

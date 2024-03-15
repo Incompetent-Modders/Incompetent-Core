@@ -3,3 +3,8 @@
 /data get entity Dev
 /weather clear
 /data get entity Dev
+/jfr
+/i_c cast_spell Dev
+/i_c cast_spell Dev incompetent_core:empty
+/incompetent_core cast_spell Dev "incompetent_core:empty"
+/incompetent_core cast_spell @r "incompetent_core:empty"

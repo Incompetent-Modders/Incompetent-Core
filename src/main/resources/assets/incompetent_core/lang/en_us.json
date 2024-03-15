@@ -1,0 +1,10 @@
+{
+  "incompetent_core.do_nothing": "Nothing Happens",
+
+  "spell.incompetent_core.empty": "Empty Spell",
+
+  "class_type.incompetent_core.empty": "Empty Class",
+  "class_type.incompetent_core.simple_human": "Simple Human",
+
+  "commands.cast_spell.success.single": "Cast Spell %s from %s Player(s) [%s]"
+}

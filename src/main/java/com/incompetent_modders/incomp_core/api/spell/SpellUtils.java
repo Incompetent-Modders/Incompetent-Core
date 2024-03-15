@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class SpellUtils {
-public static void giveItems(Level level, Player player, int amount, Item item) {
+    public static void giveItems(Level level, Player player, int amount, Item item) {
         ItemStack stack = new ItemStack(item);
         stack.setCount(amount);
         if (!level.isClientSide) {

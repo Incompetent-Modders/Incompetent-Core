@@ -2,6 +2,7 @@ package com.incompetent_modders.incomp_core.api.network;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.packets.IncompPlayerDataSyncPacket;
+import com.incompetent_modders.incomp_core.api.network.packets.SpellSlotScrollPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -32,6 +33,11 @@ public class IncompNetwork {
                 .decoder(IncompPlayerDataSyncPacket::new)
                 .encoder(IncompPlayerDataSyncPacket::toBytes)
                 .consumerMainThread(IncompPlayerDataSyncPacket::handle)
+                .add();
+        net.messageBuilder(SpellSlotScrollPacket.class, id(), PlayNetworkDirection.PLAY_TO_SERVER)
+                .decoder(SpellSlotScrollPacket::new)
+                .encoder(SpellSlotScrollPacket::toBytes)
+                .consumerMainThread(SpellSlotScrollPacket::handle)
                 .add();
     }
     
