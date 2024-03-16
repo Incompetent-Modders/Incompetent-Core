@@ -2,11 +2,18 @@
   "incompetent_core.do_nothing": "Nothing Happens",
   "item.incompetent_core.spellcasting.selected_spell": "Selected Spell:",
   "item.incompetent_core.spellcasting.available_spells": "Available Spell(s):",
+  "item.incompetent_core.spellcasting.spell_info": "Spell Info:",
+  "item.incompetent_core.spellcasting.mana_cost": "Mana Cost:",
+  "item.incompetent_core.spellcasting.cooldown": "Cooldown:",
+  "item.incompetent_core.spellcasting.cast_time": "Cast Time:",
 
-  "spell.incompetent_core.empty": "Empty Spell",
+  "spell.incompetent_core.empty": "Empty Spell Slot",
 
   "class_type.incompetent_core.empty": "Empty Class",
   "class_type.incompetent_core.simple_human": "Simple Human",
 
-  "commands.cast_spell.success.single": "Cast Spell %s from %s Player(s) [%s]"
+  "commands.cast_spell.success.single": "Cast Spell %s from %s Player(s) [%s]",
+  "commands.clear_spell.single": "Cleared Spell from Slot %s",
+  "commands.clear_spell.all": "Cleared Spells from All Slots",
+  "argument.spell.id.invalid": "Invalid Spell ID: %s"
 }

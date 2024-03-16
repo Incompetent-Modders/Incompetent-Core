@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class SpellArgument implements ArgumentType<Spell> {
-    private static final Collection<String> EXAMPLES = Arrays.asList("goodberry", "incompetent_druidry:goodberry", "goodberry{foo=bar}");
+    private static final Collection<String> EXAMPLES = Arrays.asList("test_spell", "incompetent_core:test_spell", "test_spell{foo=bar}");
     public static final DynamicCommandExceptionType invalidSpell = new DynamicCommandExceptionType(
             (input) -> Component.translatable("argument.spell.id.invalid", input));
     

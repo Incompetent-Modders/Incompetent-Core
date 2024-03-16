@@ -28,7 +28,7 @@ public class CommonUtils {
         NeoForge.EVENT_BUS.post(new SpellEvent.CastEvent(level, player, hand));
     }
     
-    public static void onEntityCastEvent(Level level, Entity entity, InteractionHand hand) {
+    public static void onEntityCastEvent(Level level, LivingEntity entity, InteractionHand hand) {
         NeoForge.EVENT_BUS.post(new SpellEvent.EntityCastEvent(level, entity, hand));
     }
     

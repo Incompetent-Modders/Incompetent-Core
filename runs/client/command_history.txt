@@ -9,3 +9,23 @@
 /incompetent_core cast_spell Dev "incompetent_core:empty"
 /incompetent_core cast_spell @r "incompetent_core:empty"
 /incompetent_core setSpell 0 "incompetent_core:empty"
+/give @s incompetent_core:simple_human
+/give @s incompetent_core:test_class
+/data get entity Dev
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c cast_spell
+/i_c cast_spell @r "incompetent_core:test_spell"
+/i_c getSpell 1
+/i_c getSpell 0
+/i_c getSpell 1
+/incompetent_core cast_spell Dev "incompetent_core:test_spell"
+/data get entity Dev
+/give Dev incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/give Dev incompetent_core:test_casting_item
+/i_c setSpell 1 "incompetent_core:test_spell"
+/give Dev incompetent_core:test_casting_item
+/i_c setSpell 1 "incompetent_core:test_spell"
+/kill @e[type= minecraft:chicken]

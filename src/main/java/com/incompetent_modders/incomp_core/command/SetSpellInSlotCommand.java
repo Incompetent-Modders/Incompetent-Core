@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.command;
 
-import com.incompetent_modders.incomp_core.api.item.AbstractSpellCastingItem;
+import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -21,7 +21,7 @@ public class SetSpellInSlotCommand {
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)
                         player = FakePlayerFactory.getMinecraft(world);
-                    if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof AbstractSpellCastingItem) {
+                    if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                         CompoundTag tag = staff.getOrCreateTag();
                         //tag.putString("spellSlot_" + IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spell").getSpellIdentifier().toString());

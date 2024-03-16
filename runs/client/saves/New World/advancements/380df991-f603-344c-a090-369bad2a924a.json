@@ -7,10 +7,17 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:sunflower_plains": "2024-03-16 18:14:54 +0000",
       "minecraft:river": "2024-03-15 21:48:18 +0000",
       "minecraft:plains": "2024-03-08 18:39:01 +0000"
     },
     "done": false
+  },
+  "minecraft:recipes/food/cake": {
+    "criteria": {
+      "has_egg": "2024-03-16 18:24:58 +0000"
+    },
+    "done": true
   },
   "DataVersion": 3578
 }

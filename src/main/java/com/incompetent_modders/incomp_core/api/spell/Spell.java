@@ -227,10 +227,10 @@ public class Spell {
      * @param level The level in which the spell is cast.
      * @param entity The entity that casts the spell.
      * @param hand The hand in which the spell is cast.
-     * @see CommonUtils#onEntityCastEvent(Level, Entity, InteractionHand)
+     * @see CommonUtils#onEntityCastEvent(Level, LivingEntity, InteractionHand)
      * @see SpellEvent.EntityCastEvent
      */
-    protected void onCast(Level level, Entity entity, InteractionHand hand) {
+    protected void onCast(Level level, LivingEntity entity, InteractionHand hand) {
         CommonUtils.onEntityCastEvent(level, entity, hand);
     }
     
@@ -271,7 +271,7 @@ public class Spell {
      * @see Spell#canCast(Level, Player, InteractionHand)
      * @see Spell#shouldFail(Level, Player, InteractionHand)
      */
-    public void cast(Level level, Entity entity, InteractionHand hand, boolean ignoreRequirements) {
+    public void cast(Level level, LivingEntity entity, InteractionHand hand, boolean ignoreRequirements) {
         if (ignoreRequirements) {
             this.onCast(level, entity, hand);
         } else {

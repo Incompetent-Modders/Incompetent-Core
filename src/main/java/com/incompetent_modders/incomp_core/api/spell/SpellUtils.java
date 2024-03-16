@@ -44,4 +44,11 @@ public class SpellUtils {
         }
         tag.putString("spellSlot_" + slot, spell.getSpellIdentifier().toString());
     }
+    
+    public static int getSelectedSpellSlot(CompoundTag tag) {
+        if (tag.contains("selectedSpellSlot")) {
+            return tag.getInt("selectedSpellSlot");
+        }
+        return 0;
+    }
 }

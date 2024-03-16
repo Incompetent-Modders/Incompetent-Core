@@ -7,6 +7,9 @@ import com.incompetent_modders.incomp_core.registry.ModArgumentTypes;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
+import com.incompetent_modders.incomp_core.registry.dev.DevItems;
+import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -19,6 +22,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
@@ -26,6 +30,7 @@ import org.slf4j.Logger;
 @Mod(IncompCore.MODID)
 public class IncompCore
 {
+    public static final String DISABLE_EXAMPLES_PROPERTY_KEY = "incompetent_core.disable_examples";
     public static final String MODID = "incompetent_core";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final ChatFormatting TITLE_FORMAT = ChatFormatting.GRAY;
@@ -49,6 +54,13 @@ public class IncompCore
         
         ClientEventHandler handler = new ClientEventHandler();
         NeoForge.EVENT_BUS.register(handler);
+        
+        if (shouldRegisterDevFeatures())
+        {
+            DevClassTypes.register(modEventBus);
+            DevSpells.register(modEventBus);
+            DevItems.register(modEventBus);
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -71,5 +83,9 @@ public class IncompCore
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+    }
+    
+    static boolean shouldRegisterDevFeatures() {
+        return !FMLEnvironment.production && !Boolean.getBoolean(DISABLE_EXAMPLES_PROPERTY_KEY);
     }
 }
