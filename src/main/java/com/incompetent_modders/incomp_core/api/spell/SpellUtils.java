@@ -30,7 +30,7 @@ public class SpellUtils {
             return Spells.EMPTY.get();
         }
         if (tag.contains("spellSlot_" + slot)) {
-            //The NBT formats the spell as modid:spellname. We need to separate them into two strings.
+            //The NBT formats the spells as modid:spellname. We need to separate them into two strings.
             String spellModid = tag.getString("spellSlot_" + slot).split(":")[0];
             String spellName = tag.getString("spellSlot_" + slot).split(":")[1];
             return ModRegistries.SPELL.get(new ResourceLocation(spellModid, spellName));

@@ -58,6 +58,12 @@ public class SpellSlotScrollPacket {
                     selectedSpellSlot--;
                 }
             }
+            if (selectedSpellSlot > spellSlots) {
+                selectedSpellSlot = 0;
+            }
+            if (selectedSpellSlot < 0) {
+                selectedSpellSlot = 0;
+            }
             tag.putInt("selectedSpellSlot", selectedSpellSlot);
         }
     }

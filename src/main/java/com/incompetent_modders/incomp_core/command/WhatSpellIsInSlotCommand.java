@@ -30,7 +30,7 @@ public class WhatSpellIsInSlotCommand {
                 CompoundTag tag = staff.getOrCreateTag();
                 String spellString = tag.getString("spellSlot_" + IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 Spell spell = ModRegistries.SPELL.get(new ResourceLocation(spellString));
-                Component spellComponent = isSpellPresent(spell) ? spell.getDisplayName() : Component.nullToEmpty("No spell in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                Component spellComponent = isSpellPresent(spell) ? spell.getDisplayName() : Component.nullToEmpty("No spells in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 player.displayClientMessage(spellComponent, false);
             }
             return 0;

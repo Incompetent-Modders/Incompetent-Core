@@ -29,3 +29,4 @@
 /give Dev incompetent_core:test_casting_item
 /i_c setSpell 1 "incompetent_core:test_spell"
 /kill @e[type= minecraft:chicken]
+/data get entity Dev

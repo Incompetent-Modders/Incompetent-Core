@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 public class SetSpellInSlotCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
-        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer(0, 5)).then(Commands.argument("spell", new SpellArgument()).executes(arguments -> {
+        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer(0, 5)).then(Commands.argument("spells", new SpellArgument()).executes(arguments -> {
                     ServerLevel world = arguments.getSource().getLevel();
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)
@@ -24,8 +24,8 @@ public class SetSpellInSlotCommand {
                     if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                         CompoundTag tag = staff.getOrCreateTag();
-                        //tag.putString("spellSlot_" + IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spell").getSpellIdentifier().toString());
-                        SpellUtils.serializeToSlot(tag, IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spell"));
+                        //tag.putString("spellSlot_" + IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spells").getSpellIdentifier().toString());
+                        SpellUtils.serializeToSlot(tag, IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spells"));
                     }
                     return 0;
                 }))

@@ -192,7 +192,7 @@ public class SpellCastingItem extends Item {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getInt(spellSlotCooldown + slot) > 0;
     }
-    private int getCoolDown(int slot, ItemStack stack) {
+    public int getCoolDown(int slot, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getInt(spellSlotCooldown + slot);
     }

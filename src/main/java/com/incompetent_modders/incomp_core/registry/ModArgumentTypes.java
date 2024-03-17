@@ -16,7 +16,7 @@ public class ModArgumentTypes {
             Registries.COMMAND_ARGUMENT_TYPE, MODID
     );
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, SingletonArgumentInfo<SpellArgument>> SPELL_ARG = ARG_TYPE.register(
-            "spell", () -> ArgumentTypeInfos.registerByClass(
+            "spells", () -> ArgumentTypeInfos.registerByClass(
                     SpellArgument.class, SingletonArgumentInfo.contextFree(SpellArgument::new)
             )
     );

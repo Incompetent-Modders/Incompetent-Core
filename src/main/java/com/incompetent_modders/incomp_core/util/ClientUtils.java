@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.util;
 
+import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -53,5 +54,10 @@ public class ClientUtils {
         int g = (colour >> 8&255)/4;
         int b = (colour&255)/4;
         return r<<16|g<<8|b;
+    }
+    
+    public static ResourceLocation getClassSpecificGuiTexture(ClassType type, String spriteLoc, String name)
+    {
+        return new ResourceLocation(type.getClassTypeIdentifier().getNamespace(), spriteLoc + "/" + type.getClassTypeIdentifier().getPath() + "/" + name);
     }
 }

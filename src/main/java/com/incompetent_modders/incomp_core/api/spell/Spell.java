@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 
 /**
- * A spell.
+ * A spells.
  * <p>
  * Spells are registered using the SPELL DeferredRegister in ModRegistries.
  * @see ModRegistries#SPELL
@@ -55,9 +55,9 @@ public class Spell {
     }
     
     /**
-     * Creates a spell with no stats.
+     * Creates a spells with no stats.
      * <p>
-     * Used for the EMPTY spell.
+     * Used for the EMPTY spells.
      * @see Spells#EMPTY
      */
     public Spell() {
@@ -70,11 +70,11 @@ public class Spell {
     }
     
     /**
-     * Returns the spell with the given ResourceLocation.
+     * Returns the spells with the given ResourceLocation.
      * <p>
      * If the ResourceLocation does not exist, an error is logged and null is returned.
-     * @param rl The ResourceLocation of the spell.
-     * @return The spell with the given ResourceLocation.
+     * @param rl The ResourceLocation of the spells.
+     * @return The spells with the given ResourceLocation.
      */
     public final Spell getSpell(ResourceLocation rl) {
         if (rl.equals(this.getSpellIdentifier())) {
@@ -86,7 +86,7 @@ public class Spell {
     }
     
     /**
-     * Returns the category of the spell.
+     * Returns the category of the spells.
      * @see SpellCategory
      */
     public SpellCategory getCategory() {
@@ -94,9 +94,9 @@ public class Spell {
     }
     
     /**
-     * Returns the sound of the spell.
+     * Returns the sound of the spells.
      * <p>
-     * The sound of the spell is determined by the category of the spell.
+     * The sound of the spells is determined by the category of the spells.
      * @see SpellCategory
      * @see Spell#getSpellSound(SpellCategory)
      */
@@ -121,9 +121,9 @@ public class Spell {
     }
     
     /**
-     * Returns the class type of the caster of the spell.
+     * Returns the class type of the caster of the spells.
      * <p>
-     * If the spell has no class type, null is returned.
+     * If the spells has no class type, null is returned.
      * @see ClassType
      */
     public ClassType getCasterClassType() {
@@ -131,27 +131,27 @@ public class Spell {
     }
     
     /**
-     * Returns the ResourceLocation of the icon of the spell.
+     * Returns the ResourceLocation of the icon of the spells.
      * <p>
-     * The icon of the spell is located in the "textures/spells" directory.
+     * The icon of the spells is located in the "textures/spells" directory.
      */
     public ResourceLocation getSpellIconLocation() {
-        return new ResourceLocation(this.getSpellIdentifier().getNamespace(), "textures/spells/" + this.getSpellIdentifier().getPath());
+        return new ResourceLocation(this.getSpellIdentifier().getNamespace(), "spells/" + this.getSpellIdentifier().getPath());
     }
     
     /**
-     * Returns the draw time of the spell.
+     * Returns the draw time of the spells.
      * <p>
-     * The draw time is the time it takes to cast the spell.
+     * The draw time is the time it takes to cast the spells.
      */
     public int getDrawTime() {
         return drawTime;
     }
     
     /**
-     * Returns the cooldown of the spell.
+     * Returns the cooldown of the spells.
      * <p>
-     * The cooldown is the time it takes to cast the spell again.
+     * The cooldown is the time it takes to cast the spells again.
      */
     public int getCoolDown() {
         return coolDown;
@@ -159,9 +159,9 @@ public class Spell {
     
     
     /**
-     * Returns the description id of the spell.
+     * Returns the description id of the spells.
      * <p>
-     * The description id is used to display the name of the spell in the game.
+     * The description id is used to display the name of the spells in the game.
      */
     protected String getOrCreateDescriptionId() {
         if (this.descriptionId == null) {
@@ -172,46 +172,46 @@ public class Spell {
     }
     
     /**
-     * Returns the display name of the spell.
+     * Returns the display name of the spells.
      */
     public Component getDisplayName() {
         return Component.translatable(this.getOrCreateDescriptionId());
     }
     
     /**
-     * Returns the ResourceLocation of the spell.
+     * Returns the ResourceLocation of the spells.
      */
     public ResourceLocation getSpellIdentifier() {
         return ModRegistries.SPELL.getKey(this);
     }
     
     /**
-     * Returns the mana cost of the spell.
+     * Returns the mana cost of the spells.
      * <p>
-     * The mana cost is the amount of mana required to cast the spell.
+     * The mana cost is the amount of mana required to cast the spells.
      */
     public int getManaCost() {
         return manaCost;
     }
     
     /**
-     * Returns true if the spell is a ranged attack.
+     * Returns true if the spells is a ranged attack.
      * <p>
-     * A ranged attack is a spell that can be cast from a distance.
+     * A ranged attack is a spells that can be cast from a distance.
      */
     public boolean isRangedAttack() {
         return isRangedAttack;
     }
     
     /**
-     * Casts the spell.
+     * Casts the spells.
      * <p>
-     * If the spell is cast by a player, the player's mana is reduced by the mana cost of the spell.
+     * If the spells is cast by a player, the player's mana is reduced by the mana cost of the spells.
      * <p>
-     * The spell is cast by a player, Triggers the CastEvent.
-     * @param level The level in which the spell is cast.
-     * @param player The player that casts the spell.
-     * @param hand The hand in which the spell is cast.
+     * The spells is cast by a player, Triggers the CastEvent.
+     * @param level The level in which the spells is cast.
+     * @param player The player that casts the spells.
+     * @param hand The hand in which the spells is cast.
      * @see CommonUtils#onCastEvent(Level, Player, InteractionHand)
      * @see SpellEvent.CastEvent
      */
@@ -221,12 +221,12 @@ public class Spell {
     }
     
     /**
-     * Casts the spell.
+     * Casts the spells.
      * <p>
-     * The spell is cast by an entity, Triggers the EntityCastEvent.
-     * @param level The level in which the spell is cast.
-     * @param entity The entity that casts the spell.
-     * @param hand The hand in which the spell is cast.
+     * The spells is cast by an entity, Triggers the EntityCastEvent.
+     * @param level The level in which the spells is cast.
+     * @param entity The entity that casts the spells.
+     * @param hand The hand in which the spells is cast.
      * @see CommonUtils#onEntityCastEvent(Level, LivingEntity, InteractionHand)
      * @see SpellEvent.EntityCastEvent
      */
@@ -235,38 +235,38 @@ public class Spell {
     }
     
     /**
-     * Called when the spell is cast and fails.
+     * Called when the spells is cast and fails.
      * <p>
-     * If the spell is cast by a player, the player's mana is reduced by half of the mana cost of the spell.
-     * @param level The level in which the spell is cast.
-     * @param player The player that casts the spell.
-     * @param hand The hand in which the spell is cast.
+     * If the spells is cast by a player, the player's mana is reduced by half of the mana cost of the spells.
+     * @param level The level in which the spells is cast.
+     * @param player The player that casts the spells.
+     * @param hand The hand in which the spells is cast.
      */
     protected void onFail(Level level, Player player, InteractionHand hand) {
         SpellUtils.removeMana(player, this.getManaCost() / 2);
     }
     
     /**
-     * Called when the spell is cast and fails.
-     * @param level The level in which the spell is cast.
-     * @param entity The entity that casts the spell.
-     * @param hand The hand in which the spell is cast.
+     * Called when the spells is cast and fails.
+     * @param level The level in which the spells is cast.
+     * @param entity The entity that casts the spells.
+     * @param hand The hand in which the spells is cast.
      */
-    protected void onFail(Level level, Entity entity, InteractionHand hand) {
+    protected void onFail(Level level, LivingEntity entity, InteractionHand hand) {
     
     }
     
     /**
-     * Casts the spell.
+     * Casts the spells.
      * <p>
-     * Triggers the onCast and onFail methods according to the requirements of the spell.
-     * @param level The level in which the spell is cast.
-     * @param entity The entity that casts the spell.
-     * @param hand The hand in which the spell is cast.
-     * @param ignoreRequirements If true, the spell is cast without checking if the player can cast the spell.
-     * @see Spell#onCast(Level, Entity, InteractionHand)
+     * Triggers the onCast and onFail methods according to the requirements of the spells.
+     * @param level The level in which the spells is cast.
+     * @param entity The entity that casts the spells.
+     * @param hand The hand in which the spells is cast.
+     * @param ignoreRequirements If true, the spells is cast without checking if the player can cast the spells.
+     * @see Spell#onCast(Level, LivingEntity, InteractionHand)
      * @see Spell#onCast(Level, Player, InteractionHand)
-     * @see Spell#onFail(Level, Entity, InteractionHand)
+     * @see Spell#onFail(Level, LivingEntity, InteractionHand)
      * @see Spell#onFail(Level, Player, InteractionHand)
      * @see Spell#canCast(Level, Player, InteractionHand)
      * @see Spell#shouldFail(Level, Player, InteractionHand)
@@ -295,46 +295,45 @@ public class Spell {
     }
     
     /**
-     * Should the spell fail?
+     * Should the spells fail?
      */
     protected boolean shouldFail(Level level, Player player, InteractionHand hand) {
         return false;
     }
     /**
-     * Should the spell fail?
+     * Should the spells fail?
      */
     protected boolean shouldFail(Level level, Entity entity, InteractionHand hand) {
         return false;
     }
     
     /**
-     * Returns true if the player can cast the spell.
+     * Returns true if the player can cast the spells.
      * <p>
-     * A player can cast a spell if the player's class type can cast spells and the player has enough mana to cast the spell.
-     * @param level The level in which the spell is cast.
-     * @param player The player that casts the spell.
-     * @param hand The hand in which the spell is cast.
+     * A player can cast a spells if the player's class type can cast spells and the player has enough mana to cast the spells.
+     * @param level The level in which the spells is cast.
+     * @param player The player that casts the spells.
+     * @param hand The hand in which the spells is cast.
      * @see ClassType#canCastSpells()
      * @see ModCapabilities#getMana(LivingEntity)
      */
     protected boolean canCast(Level level, Player player, InteractionHand hand) {
-        if (!PlayerDataCore.getPlayerClassType(player).canCastSpells())
-            return false;
-        if (casterClassType != null && casterClassType.equals(PlayerDataCore.getPlayerClassType(player)))
-            return true;
-        if (casterClassType == null)
-            return true;
-        if (ModCapabilities.getMana(player).isPresent()) {
-            return ModCapabilities.getMana(player).orElseThrow(NullPointerException::new).getCurrentMana() >= this.getManaCost();
-        } else {
-            return false;
+        if (casterClassType != null) {
+            if (casterClassType.equals(PlayerDataCore.getPlayerClassType(player)))
+                return true;
+            if (ModCapabilities.getMana(player).isPresent()) {
+                return ModCapabilities.getMana(player).orElseThrow(NullPointerException::new).getCurrentMana() >= this.getManaCost();
+            }
+            return PlayerDataCore.getPlayerClassType(player).canCastSpells();
         }
+        else return true;
+        
     }
     
     /**
-     * Called when the spell hits an entity.
-     * @param level The level in which the spell hits the entity.
-     * @param entity The entity that casts the spell.
+     * Called when the spells hits an entity.
+     * @param level The level in which the spells hits the entity.
+     * @param entity The entity that casts the spells.
      */
     protected void onHit(Level level, Entity entity) {
     }

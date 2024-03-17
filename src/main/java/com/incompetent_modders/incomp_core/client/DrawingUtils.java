@@ -7,7 +7,11 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +23,22 @@ import java.util.Random;
 public final class DrawingUtils {
     public static final int BLACK = 1;
     
+    public static void blitSprite(GuiGraphics graphics, ResourceLocation sprite, int x, int y, int width, int height) {
+        graphics.blitSprite(sprite, x, y, width, height);
+    }
+    public static void renderCooldown(GuiGraphics graphics, RenderType renderType, int x, int y, float cooldownPercent, int imageSize) {
+        int i1 = y + Mth.floor(imageSize * (1.0F - cooldownPercent));
+        int j1 = i1 + Mth.ceil(imageSize * cooldownPercent);
+        if (cooldownPercent > 0.0F) {
+            graphics.fill(renderType, x, i1, x + imageSize, j1, Integer.MAX_VALUE);
+        }
+    }
+    public static void drawString(GuiGraphics graphics, Font font, Component text, int x, int y, int colour) {
+        graphics.drawString(font, text, x, y, colour);
+    }
+    public static void drawNumberString(GuiGraphics graphics, Font font, int number, int x, int y, int colour) {
+        graphics.drawString(font, String.valueOf(number), x, y, colour);
+    }
     public static void drawTexturedRect(int x, int y, int width, int height){
         drawTexturedRect(x, y, 0, 0, width, height, width, height);
     }

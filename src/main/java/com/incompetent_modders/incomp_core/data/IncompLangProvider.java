@@ -47,7 +47,7 @@ public abstract class IncompLangProvider extends LanguageProvider {
     }
     
     private void spell(Holder<Spell> holder) {
-        this.add(holder, "spell");
+        this.add(holder, "spells");
     }
     private void classType(Holder<ClassType> holder) {
         this.add(holder, "class_type");

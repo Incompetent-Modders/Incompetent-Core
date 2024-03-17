@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public class ModRegistries {
-    public static final ResourceKey<Registry<Spell>> SPELLS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(IncompCore.MODID, "spell"));
+    public static final ResourceKey<Registry<Spell>> SPELLS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(IncompCore.MODID, "spells"));
     public static final ResourceKey<Registry<ClassType>> CLASS_TYPE_KEY = ResourceKey.createRegistryKey(new ResourceLocation(IncompCore.MODID, "class_type"));
     public static final Registry<Spell> SPELL = new RegistryBuilder<>(SPELLS_KEY).create();
     public static final Registry<ClassType> CLASS_TYPE = new RegistryBuilder<>(CLASS_TYPE_KEY).create();

@@ -19,10 +19,10 @@ public class CastSpellCommand {
                         .then(
                                 Commands.argument("targets", EntityArgument.players())
                                         .then(
-                                                Commands.argument("spell", new SpellArgument())
+                                                Commands.argument("spells", new SpellArgument())
                                                         .executes(
                                                                 exec -> castSpell(
-                                                                        exec.getSource(), SpellArgument.getSpell(exec, "spell"), EntityArgument.getPlayers(exec, "targets"), 1
+                                                                        exec.getSource(), SpellArgument.getSpell(exec, "spells"), EntityArgument.getPlayers(exec, "targets"), 1
                                                                 )
                                                         )
                                         )
