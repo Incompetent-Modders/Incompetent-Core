@@ -8,6 +8,7 @@ import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
+import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.util.ClientUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.HotbarManager;
@@ -31,14 +32,14 @@ import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 
 public class SpellListOverlay implements IGuiOverlay {
     public static final SpellListOverlay INSTANCE = new SpellListOverlay();
-    public static final ResourceLocation castTimeIcon = new ResourceLocation(MODID, "spell_list/cast_time");
-    public static final ResourceLocation castTimeSideIcon = new ResourceLocation(MODID, "spell_list/cast_time_side");
-    public static final ResourceLocation castTimeTopIcon = new ResourceLocation(MODID, "spell_list/cast_time_top");
-    public static final ResourceLocation cooldownIcon = new ResourceLocation(MODID, "spell_list/cooldown");
-    public static final ResourceLocation spellFrameIcon = new ResourceLocation(MODID, "spell_list/spell_frame");
-    public static final ResourceLocation spellSlotFrameIcon = new ResourceLocation(MODID, "spell_list/spell_slot_frame");
+    //public static final ResourceLocation castTimeIcon = new ResourceLocation(MODID, "spell_list/cast_time");
+    //public static final ResourceLocation castTimeSideIcon = new ResourceLocation(MODID, "spell_list/cast_time_side");
+    //public static final ResourceLocation castTimeTopIcon = new ResourceLocation(MODID, "spell_list/cast_time_top");
+    //public static final ResourceLocation spellFrameIcon = new ResourceLocation(MODID, "spell_list/spell_frame");
+    //public static final ResourceLocation spellSlotFrameIcon = new ResourceLocation(MODID, "spell_list/spell_slot_frame");
     public static final String spriteLoc = "spell_list";
     static final int CAST_TIME = 20;
+    public static ClassType classType;
     @Override
     public void render(ExtendedGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
@@ -55,14 +56,24 @@ public class SpellListOverlay implements IGuiOverlay {
         if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) && !(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof SpellCastingItem))
             return;
         
-        
         int x1 = screenWidth + spellIconInsetX;
         int y1 = screenHeight - spellIconInsetY - 16;
         float spellCooldownPercent = getSpellCooldownPercent(getCastingItem(player));
         float castCompletionPercentMain = getCastCompletionPercent(player);
         
+        ClassType classType = getWielderClassType(player);
+        ResourceLocation castTimeIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time");
+        ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
+        ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
+        ResourceLocation spellFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_frame");
+        ResourceLocation spellSlotFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_slot_frame");
+        
         ResourceLocation spellIcon = getSelectedSpell(player).getSpellIconLocation();
         Component spellName = getSelectedSpell(player).getDisplayName();
+        
+        //PoseStack poseStack = graphics.pose();
+        //poseStack.pushPose();
+        //poseStack.scale(1.25F, 1.25F, 1.25F);
         
         DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
         DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
@@ -75,6 +86,7 @@ public class SpellListOverlay implements IGuiOverlay {
         DrawingUtils.blitSprite(graphics, castTimeIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 48, 48);
         DrawingUtils.blitSprite(graphics, castTimeTopIcon, screenWidth - (screenWidth - 10), screenHeight - 52, (int) (CAST_TIME * castCompletionPercentMain + (0) / 2), 3);
         DrawingUtils.blitSprite(graphics, castTimeSideIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 3, (int) (CAST_TIME * castCompletionPercentMain + (0) / 2));
+        //poseStack.popPose();
     }
     
     public float getSpellCooldownPercent(ItemStack stack) {
@@ -118,5 +130,11 @@ public class SpellListOverlay implements IGuiOverlay {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
             return 0;
         return getSelectedSpell(player).getDrawTime();
+    }
+    
+    public ClassType getWielderClassType(LocalPlayer player) {
+        if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
+            return ModClassTypes.SIMPLE_HUMAN.get();
+        return ((SpellCastingItem) getCastingItem(player).getItem()).getWielderClassType(getCastingItem(player));
     }
 }

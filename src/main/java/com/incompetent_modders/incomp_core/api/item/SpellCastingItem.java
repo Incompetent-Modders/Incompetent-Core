@@ -1,10 +1,14 @@
 package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.ClientUtil;
+import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.EmptySpell;
 import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
+import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -29,10 +33,11 @@ import java.util.List;
 import static com.incompetent_modders.incomp_core.IncompCore.*;
 
 public class SpellCastingItem extends Item {
-    private final String selSpellSlot = "selectedSpellSlot";
-    private final String spellSlot = "spellSlot_";
-    private final String spellSlotCooldown = "spellSlotCoolDown_";
-    private final String remainingDrawTime = "castProgress";
+    private final String selSpellSlot_NBT = "selectedSpellSlot";
+    private final String spellSlot_NBT = "spellSlot_";
+    private final String wielderClassType_NBT = "wielderClassType";
+    private final String spellSlotCooldown_NBT = "spellSlotCoolDown_";
+    private final String remainingDrawTime_NBT = "castProgress";
     private final int level;
     public SpellCastingItem(Properties properties, int level) {
         super(properties);
@@ -139,20 +144,33 @@ public class SpellCastingItem extends Item {
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag tag = stack.getOrCreateTag();
+        if (entity instanceof Player player) {
+            ClassType classType = PlayerDataCore.getPlayerClassType(player);
+            if (classType == null)
+                return;
+            if (!tag.contains(wielderClassType_NBT)) {
+                tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
+            } else if (!tag.getString(wielderClassType_NBT).equals(classType.getClassTypeIdentifier().toString())) {
+                tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
+            }
+        }
         
         
         
         for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
-            if (!tag.contains(spellSlot + i) || tag.getString(spellSlot + i).isEmpty()) {
-                tag.putString(spellSlot + i, Spells.EMPTY.get().getSpellIdentifier().toString());
+            if (!tag.contains(spellSlot_NBT + i) || tag.getString(spellSlot_NBT + i).isEmpty()) {
+                tag.putString(spellSlot_NBT + i, Spells.EMPTY.get().getSpellIdentifier().toString());
             }
             decrementCoolDowns(stack, level, (Player) entity);
             
         }
-        if (!tag.contains(selSpellSlot))
-            tag.putInt(selSpellSlot, 0);
+        if (!tag.contains(selSpellSlot_NBT))
+            tag.putInt(selSpellSlot_NBT, 0);
     }
-    
+    public ClassType getWielderClassType(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        return ModRegistries.CLASS_TYPE.get(new ResourceLocation(tag.getString(wielderClassType_NBT)));
+    }
     public Spell getSelectedSpell(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
@@ -163,25 +181,17 @@ public class SpellCastingItem extends Item {
     
     private void addCoolDown(int slot, int ticks, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        switch (slot) {
-            case 0 -> tag.putInt(spellSlotCooldown + 0, ticks);
-            case 1 -> tag.putInt(spellSlotCooldown + 1, ticks);
-            case 2 -> tag.putInt(spellSlotCooldown + 2, ticks);
-            case 3 -> tag.putInt(spellSlotCooldown + 3, ticks);
-            case 4 -> tag.putInt(spellSlotCooldown + 4, ticks);
-            case 5 -> tag.putInt(spellSlotCooldown + 5, ticks);
-        }
-        
+        tag.putInt(spellSlotCooldown_NBT + slot, ticks);
     }
     private void decrementCoolDowns(ItemStack stack, Level level, Player player) {
         CompoundTag tag = stack.getOrCreateTag();
         for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
-            if (tag.contains(spellSlotCooldown + i)) {
-                int coolDown = tag.getInt(spellSlotCooldown + i);
+            if (tag.contains(spellSlotCooldown_NBT + i)) {
+                int coolDown = tag.getInt(spellSlotCooldown_NBT + i);
                 if (coolDown > 0) {
-                    tag.putInt(spellSlotCooldown + i, coolDown - 1);
+                    tag.putInt(spellSlotCooldown_NBT + i, coolDown - 1);
                 }
-                if (tag.getInt(spellSlotCooldown + i) - 1 == 0) {
+                if (tag.getInt(spellSlotCooldown_NBT + i) - 1 == 0) {
                     level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ALLAY_THROW, player.getSoundSource(), 1.0F, 1.0F);
                 }
             }
@@ -190,33 +200,33 @@ public class SpellCastingItem extends Item {
     
     private boolean isCoolDown(int slot, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.getInt(spellSlotCooldown + slot) > 0;
+        return tag.getInt(spellSlotCooldown_NBT + slot) > 0;
     }
     public int getCoolDown(int slot, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.getInt(spellSlotCooldown + slot);
+        return tag.getInt(spellSlotCooldown_NBT + slot);
     }
     
     private int getCastProgress(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.getInt(remainingDrawTime);
+        return tag.getInt(remainingDrawTime_NBT);
     }
     
     private void setCastProgress(Spell spell, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         int ticks = spell.getDrawTime();
-        tag.putInt(remainingDrawTime, ticks);
+        tag.putInt(remainingDrawTime_NBT, ticks);
     }
     
     private void resetCastProgress(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(remainingDrawTime, 0);
+        tag.putInt(remainingDrawTime_NBT, 0);
     }
     private void decrementCastProgress(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        int ticks = tag.getInt(remainingDrawTime);
+        int ticks = tag.getInt(remainingDrawTime_NBT);
         if (ticks > 0) {
-            tag.putInt(remainingDrawTime, ticks - 1);
+            tag.putInt(remainingDrawTime_NBT, ticks - 1);
         }
     }
 }

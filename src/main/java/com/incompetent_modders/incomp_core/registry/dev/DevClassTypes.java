@@ -11,7 +11,7 @@ import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 public class DevClassTypes {
     public static final DeferredRegister<ClassType> CLASS_TYPES = DeferredRegister.create(ModRegistries.CLASS_TYPE, MODID);
     
-    public static final DeferredHolder<ClassType, ClassType> TEST_CLASS = CLASS_TYPES.register("test_class", () -> new ClassType(true, 150, true, 0));
+    public static final DeferredHolder<ClassType, ClassType> TEST_CLASS = CLASS_TYPES.register("test_class", () -> new ClassType(true, 150, true, 0, true));
     public static void register(IEventBus eventBus) {
         CLASS_TYPES.register(eventBus);
     }

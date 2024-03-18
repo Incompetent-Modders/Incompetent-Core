@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core;
 
+import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
@@ -82,6 +83,14 @@ public class IncompCore
         {
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+            ModRegistries.CLASS_TYPE.entrySet().forEach(entry -> {
+                ClassType classType = entry.getValue();
+                if (classType.useClassSpecificTexture()) {
+                    LOGGER.info("Class type {} uses class specific Spell Overlay sprites!", entry.getKey());
+                } else {
+                    LOGGER.info("Class type {} does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!", entry.getKey());
+                }
+            });
         }
     }
     

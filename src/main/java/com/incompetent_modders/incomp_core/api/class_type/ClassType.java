@@ -28,6 +28,7 @@ public class ClassType {
     private final boolean canCastSpells;
     private final int maxMana;
     private final boolean pacifist;
+    private final boolean useClassSpecificTexture;
     @Nullable
     private String descriptionId;
     private final int passiveEffectTickFrequency;
@@ -37,6 +38,14 @@ public class ClassType {
         this.maxMana = maxMana;
         this.pacifist = pacifist;
         this.passiveEffectTickFrequency = passiveEffectTickFrequency;
+        this.useClassSpecificTexture = true;
+    }
+    public ClassType(boolean canCastSpells, int maxMana, boolean pacifist, int passiveEffectTickFrequency, boolean useClassSpecificTexture) {
+        this.canCastSpells = canCastSpells;
+        this.maxMana = maxMana;
+        this.pacifist = pacifist;
+        this.passiveEffectTickFrequency = passiveEffectTickFrequency;
+        this.useClassSpecificTexture = useClassSpecificTexture;
     }
     /**
      * Creates a class type with no stats.
@@ -49,6 +58,7 @@ public class ClassType {
         this.maxMana = 0;
         this.pacifist = false;
         this.passiveEffectTickFrequency = 0;
+        this.useClassSpecificTexture = false;
     }
     
     /**
@@ -175,5 +185,17 @@ public class ClassType {
         if (event.player.tickCount % PlayerDataCore.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
             PlayerDataCore.getPlayerClassType(event.player).classPassiveEffect();
         }
+    }
+    
+    public boolean useClassSpecificTexture() {
+        return useClassSpecificTexture;
+    }
+    public ResourceLocation getClassSpecificTexture(String path, String name) {
+        return new ResourceLocation(this.getClassTypeIdentifier().getNamespace(), "textures/" + path + "/" + this.getClassTypeIdentifier().getPath() + "/" + name);
+    }
+    public ResourceLocation getSpellOverlayTexture(String spriteName) {
+        if (!useClassSpecificTexture)
+            return new ResourceLocation(IncompCore.MODID, "spell_list/" + spriteName);
+        return new ResourceLocation(this.getClassTypeIdentifier().getNamespace(), "spell_list/" + this.getClassTypeIdentifier().getPath() + "/" + spriteName);
     }
 }
