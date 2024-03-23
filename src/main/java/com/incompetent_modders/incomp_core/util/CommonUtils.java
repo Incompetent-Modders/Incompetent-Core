@@ -74,4 +74,8 @@ public class CommonUtils {
         
         return result;
     }
+    
+    public static float secondsToTicks(float seconds) {
+        return seconds * 20.0F;
+    }
 }

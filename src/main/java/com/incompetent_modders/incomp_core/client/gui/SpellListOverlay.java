@@ -15,6 +15,7 @@ import net.minecraft.client.HotbarManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.inventory.Hotbar;
 import net.minecraft.client.renderer.RenderType;
@@ -59,10 +60,9 @@ public class SpellListOverlay implements IGuiOverlay {
         int x1 = screenWidth + spellIconInsetX;
         int y1 = screenHeight - spellIconInsetY - 16;
         float spellCooldownPercent = getSpellCooldownPercent(getCastingItem(player));
-        float castCompletionPercentMain = getCastCompletionPercent(player);
+        float castCompletionPercent = getCastCompletionPercent(player);
         
         ClassType classType = getWielderClassType(player);
-        ResourceLocation castTimeIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time");
         ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
         ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
         ResourceLocation spellFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_frame");
@@ -74,18 +74,18 @@ public class SpellListOverlay implements IGuiOverlay {
         //PoseStack poseStack = graphics.pose();
         //poseStack.pushPose();
         //poseStack.scale(1.25F, 1.25F, 1.25F);
+        float totalDrawTime = getSelectedSpell(player).getDrawTime();
         
-        DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
-        DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
+        //DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
+        //DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
         DrawingUtils.drawString(graphics, mc.font, spellName, 16, 5, 0x00FF00);
         DrawingUtils.blitSprite(graphics, spellFrameIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 48, 48);
-        DrawingUtils.blitSprite(graphics, spellIcon, screenWidth - (screenWidth - 13), screenHeight - 33, 26, 26);
-        DrawingUtils.renderCooldown(graphics, RenderType.guiOverlay(), screenWidth - (screenWidth - 13), screenHeight - 33, spellCooldownPercent, 26);
+        DrawingUtils.blitSprite(graphics, spellIcon, screenWidth - (screenWidth - 17), screenHeight - 37, 26, 26);
+        DrawingUtils.renderCooldown(graphics, screenWidth - (screenWidth - 17), screenHeight - 37, 26, 26, getSpellCooldownTimer(getCastingItem(player)));
         DrawingUtils.blitSprite(graphics, spellSlotFrameIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 48, 48);
-        DrawingUtils.drawNumberString(graphics, mc.font, getSelectedSpellSlot(player), screenWidth - (screenWidth - 40), screenHeight - 41, 0xFFFFFF);
-        DrawingUtils.blitSprite(graphics, castTimeIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 48, 48);
-        DrawingUtils.blitSprite(graphics, castTimeTopIcon, screenWidth - (screenWidth - 10), screenHeight - 52, (int) (CAST_TIME * castCompletionPercentMain + (0) / 2), 3);
-        DrawingUtils.blitSprite(graphics, castTimeSideIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 3, (int) (CAST_TIME * castCompletionPercentMain + (0) / 2));
+        DrawingUtils.drawNumberString(graphics, mc.font, getSelectedSpellSlot(player), screenWidth - (screenWidth - 44), screenHeight - 45, 0xFFFFFF);
+        //DrawingUtils.blitSprite(graphics, castTimeTopIcon, screenWidth - (screenWidth - 10), screenHeight - 52, (int) (20 * castCompletionPercent + (0) / 2), 3);
+        //DrawingUtils.blitSprite(graphics, castTimeSideIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 3, (int) (20 * (1 - castCompletionPercent)));
         //poseStack.popPose();
     }
     
@@ -98,6 +98,12 @@ public class SpellListOverlay implements IGuiOverlay {
         }
         
         return 1 - (staffItem.getCoolDown(selectedSpell, stack) / (float) staffItem.getSelectedSpell(stack).getCoolDown());
+    }
+    public float getSpellCooldownTimer(ItemStack stack) {
+        if (!(stack.getItem() instanceof SpellCastingItem staffItem))
+            return 0;
+        int selectedSpell = SpellUtils.getSelectedSpellSlot(stack.getOrCreateTag());
+        return staffItem.getCoolDown(selectedSpell, stack);
     }
     public Spell getSelectedSpell(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem staffItem))

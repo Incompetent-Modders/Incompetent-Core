@@ -1,8 +1,4 @@
 /data get entity Dev
-/attribute Dev incompetent_core:incompetent_druidry.max_mana get
-/data get entity Dev
-/weather clear
-/data get entity Dev
 /jfr
 /i_c cast_spell Dev
 /i_c cast_spell Dev incompetent_core:empty
@@ -30,3 +26,25 @@
 /i_c setSpell 1 "incompetent_core:test_spell"
 /kill @e[type= minecraft:chicken]
 /data get entity Dev
+/particle minecraft:bubble_column_up ~ ~ ~
+/particle minecraft:ash ~ ~ ~
+/gamemode survival
+/gamemode creative
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/i_c setSpell 1 "incompetent_core:test_projectile_spell"
+/summon incompetent_core:test_spell_projectile
+/summon minecraft:fireball
+/summon incompetent_core:test_spell_projectile
+/kill @e[type= incompetent_core:test_spell_projectile]
+/summon incompetent_core:test_spell_projectile
+/kill @e[type= incompetent_core:test_spell_projectile]
+/summon incompetent_core:test_spell_projectile
+/i_c cast_spell Dev "incompetent_core:test_projectile_spell"
+/summon incompetent_core:test_spell_projectile
+/give @s incompetent_core:simple_human
+/give @s incompetent_core:test_class
+/weather clear
+/summon incompetent_core:test_spell_projectile
+/kill @e[type= incompetent_core:test_spell_projectile]
+/summon incompetent_core:spell_projectile

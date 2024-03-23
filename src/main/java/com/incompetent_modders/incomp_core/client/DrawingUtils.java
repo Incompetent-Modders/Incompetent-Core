@@ -33,6 +33,16 @@ public final class DrawingUtils {
             graphics.fill(renderType, x, i1, x + imageSize, j1, Integer.MAX_VALUE);
         }
     }
+    public static void renderCooldown(GuiGraphics graphics, int x, int y, int width, int height, float cooldownTimer) {
+        if (cooldownTimer > 0.0F) {
+            float f5 = cooldownTimer / 100.0F;
+            if (f5 > 1.0F) {
+                f5 = 1.0F - (cooldownTimer - 100.0F) / 10.0F;
+            }
+            int j = (int)(220.0F * f5) << 24 | 1052704;
+            graphics.fill(RenderType.guiOverlay(), 0, 0, width, height, j);
+        }
+    }
     public static void drawString(GuiGraphics graphics, Font font, Component text, int x, int y, int colour) {
         graphics.drawString(font, text, x, y, colour);
     }

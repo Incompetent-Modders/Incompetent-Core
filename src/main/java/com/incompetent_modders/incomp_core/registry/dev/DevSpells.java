@@ -12,6 +12,7 @@ public class DevSpells {
     public static final DeferredRegister<Spell> SPELLS = DeferredRegister.create(ModRegistries.SPELL, MODID);
     
     public static final DeferredHolder<Spell, Spell> TEST_SPELL = SPELLS.register("test_spell", TestSpell::new);
+    public static final DeferredHolder<Spell, Spell> TEST_PROJECTILE_SPELL = SPELLS.register("test_projectile_spell", TestProjectileSpell::new);
     public static void register(IEventBus eventBus) {
         SPELLS.register(eventBus);
     }

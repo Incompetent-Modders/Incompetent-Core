@@ -19,10 +19,12 @@ public class TestSpell extends Spell {
     
     @Override
     public void onCast(Level level, Player player, InteractionHand hand) {
+        super.onCast(level, player, hand);
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 1));
     }
     @Override
     public void onCast(Level level, LivingEntity entity, InteractionHand hand) {
+        super.onCast(level, entity, hand);
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 1));
     }
 }

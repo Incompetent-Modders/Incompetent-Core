@@ -9,6 +9,7 @@ import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
+import com.incompetent_modders.incomp_core.registry.dev.DevEntities;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
 import com.mojang.logging.LogUtils;
@@ -61,6 +62,7 @@ public class IncompCore
             DevClassTypes.register(modEventBus);
             DevSpells.register(modEventBus);
             DevItems.register(modEventBus);
+            DevEntities.register(modEventBus);
         }
     }
 
@@ -94,7 +96,7 @@ public class IncompCore
         }
     }
     
-    static boolean shouldRegisterDevFeatures() {
+    public static boolean shouldRegisterDevFeatures() {
         return !FMLEnvironment.production && !Boolean.getBoolean(DISABLE_EXAMPLES_PROPERTY_KEY);
     }
 }

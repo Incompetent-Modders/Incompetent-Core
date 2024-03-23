@@ -17,11 +17,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
 /**
- * A spells.
+ * A spell.
  * <p>
  * Spells are registered using the SPELL DeferredRegister in ModRegistries.
  * @see ModRegistries#SPELL
@@ -277,7 +278,7 @@ public class Spell {
         } else {
             if (entity instanceof Player player) {
                 if (!this.canCast(level, player, hand)) {
-                    return;
+                    this.onFail(level, player, hand);
                 }
                 if (this.shouldFail(level, player, hand)) {
                     this.onFail(level, player, hand);
@@ -332,10 +333,12 @@ public class Spell {
     
     /**
      * Called when the spells hits an entity.
-     * @param level The level in which the spells hits the entity.
-     * @param entity The entity that casts the spells.
+     *
+     * @param level     The level in which the spells hits the entity.
+     * @param entity    The entity that casts the spells.
+     * @param hitresult
      */
-    protected void onHit(Level level, Entity entity) {
+    public void onHit(Level level, Entity entity, HitResult hitresult) {
     }
     
     

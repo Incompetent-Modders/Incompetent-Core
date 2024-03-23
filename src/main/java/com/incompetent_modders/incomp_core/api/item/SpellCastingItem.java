@@ -63,17 +63,20 @@ public class SpellCastingItem extends Item {
     public int spellRemainingDrawTime(ItemStack stack) {
         return getCastProgress(stack);
     }
+    private static boolean casting = false;
     public void onUseTick(Level level, LivingEntity entity, ItemStack itemstack, int p_41431_) {
         if (getCastProgress(itemstack) > 0) {
             decrementCastProgress(itemstack);
         }
         CompoundTag tag = itemstack.getOrCreateTag();
-        if (getCastProgress(itemstack) == 0) {
+        if (getCastProgress(itemstack) == 0 && !casting) {
             Spell spell = getSelectedSpell(itemstack);
-            if (spell != null && !isCoolDown(SpellUtils.getSelectedSpellSlot(tag), itemstack)) {
+            if (spell != null && !isCoolDown(SpellUtils.getSelectedSpellSlot(tag), itemstack) && !casting) {
+                casting = true;
                 spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
                 level.playSound((Player) entity, entity.getX(), entity.getY(), entity.getZ(), spell.getSpellSound(), entity.getSoundSource(), 1.0F, 1.0F);
                 addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
+                casting = false;
             }
             entity.stopUsingItem();
         }
