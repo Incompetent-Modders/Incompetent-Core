@@ -8,6 +8,7 @@
   "item.incompetent_core.spellcasting.cast_time": "Cast Time:",
 
   "spell.incompetent_core.empty": "Empty Spell Slot",
+  "spell.incompetent_core.empty_projectile": "Empty Projectile Spell",
 
   "class_type.incompetent_core.empty": "Empty Class",
   "class_type.incompetent_core.simple_human": "Simple Human",
@@ -15,5 +16,6 @@
   "commands.cast_spell.success.single": "Cast Spell %s from %s Player(s) [%s]",
   "commands.clear_spell.single": "Cleared Spell from Slot %s",
   "commands.clear_spell.all": "Cleared Spells from All Slots",
-  "argument.spell.id.invalid": "Invalid Spell ID: %s"
+  "argument.spell.id.invalid": "Invalid Spell ID: %s",
+  "spell.incompetent_core.select_entity": "Selected:"
 }

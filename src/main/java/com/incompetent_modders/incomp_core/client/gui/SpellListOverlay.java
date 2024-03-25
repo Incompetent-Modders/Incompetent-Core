@@ -59,12 +59,10 @@ public class SpellListOverlay implements IGuiOverlay {
         
         int x1 = screenWidth + spellIconInsetX;
         int y1 = screenHeight - spellIconInsetY - 16;
-        float spellCooldownPercent = getSpellCooldownPercent(getCastingItem(player));
-        float castCompletionPercent = getCastCompletionPercent(player);
         
-        ClassType classType = getWielderClassType(player);
-        ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
-        ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
+        //ClassType classType = getWielderClassType(player);
+        //ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
+        //ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
         ResourceLocation spellFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_frame");
         ResourceLocation spellSlotFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_slot_frame");
         
@@ -89,16 +87,16 @@ public class SpellListOverlay implements IGuiOverlay {
         //poseStack.popPose();
     }
     
-    public float getSpellCooldownPercent(ItemStack stack) {
-        if (!(stack.getItem() instanceof SpellCastingItem staffItem))
-            return 0;
-        int selectedSpell = SpellUtils.getSelectedSpellSlot(stack.getOrCreateTag());
-        if (staffItem.getCoolDown(selectedSpell, stack) == 0) {
-            return 0;
-        }
-        
-        return 1 - (staffItem.getCoolDown(selectedSpell, stack) / (float) staffItem.getSelectedSpell(stack).getCoolDown());
-    }
+    //public float getSpellCooldownPercent(ItemStack stack) {
+    //    if (!(stack.getItem() instanceof SpellCastingItem staffItem))
+    //        return 0;
+    //    int selectedSpell = SpellUtils.getSelectedSpellSlot(stack.getOrCreateTag());
+    //    if (staffItem.getCoolDown(selectedSpell, stack) == 0) {
+    //        return 0;
+    //    }
+    //
+    //    return 1 - (staffItem.getCoolDown(selectedSpell, stack) / (float) staffItem.getSelectedSpell(stack).getCoolDown());
+    //}
     public float getSpellCooldownTimer(ItemStack stack) {
         if (!(stack.getItem() instanceof SpellCastingItem staffItem))
             return 0;

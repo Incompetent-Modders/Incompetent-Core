@@ -4,12 +4,8 @@ import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
-import com.incompetent_modders.incomp_core.registry.ModArgumentTypes;
-import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
-import com.incompetent_modders.incomp_core.registry.dev.DevEntities;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
 import com.mojang.logging.LogUtils;
@@ -49,6 +45,7 @@ public class IncompCore
         ModClassTypes.register(modEventBus);
         ModArgumentTypes.register(modEventBus);
         Spells.SPELLS.register(modEventBus);
+        ModEffects.register(modEventBus);
         IncompNetwork.register();
         NeoForge.EVENT_BUS.register(this);
         
@@ -62,7 +59,6 @@ public class IncompCore
             DevClassTypes.register(modEventBus);
             DevSpells.register(modEventBus);
             DevItems.register(modEventBus);
-            DevEntities.register(modEventBus);
         }
     }
 

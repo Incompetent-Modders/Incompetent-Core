@@ -3,12 +3,16 @@ package com.incompetent_modders.incomp_core.util;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.spell.SpellEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -77,5 +81,21 @@ public class CommonUtils {
     
     public static float secondsToTicks(float seconds) {
         return seconds * 20.0F;
+    }
+    
+    public static PlayerTeam createTeam(Scoreboard scoreboard, String name, ChatFormatting color) {
+        if (scoreboard.getTeamNames().contains(name)) {
+            return scoreboard.getPlayerTeam(name);
+        } else {
+            PlayerTeam team = scoreboard.addPlayerTeam(name);
+            team.setDisplayName(Component.literal(name));
+            team.setColor(color);
+            return team;
+        }
+    }
+    public static void removeTeam(Scoreboard scoreboard, PlayerTeam team) {
+        if (scoreboard.getTeamNames().contains(team.getName())) {
+            scoreboard.removePlayerTeam(team);
+        }
     }
 }

@@ -2,7 +2,7 @@ package com.incompetent_modders.incomp_core.api.spell;
 
 public enum SpellCategory {
     CURSE,
-    PROJECTILE,
+    RANGED,
     BUFF,
     DEBUFF,
     HEALING,

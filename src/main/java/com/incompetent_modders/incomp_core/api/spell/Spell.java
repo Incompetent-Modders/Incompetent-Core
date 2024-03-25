@@ -5,19 +5,18 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.registry.ModCapabilities;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +28,6 @@ import javax.annotation.Nullable;
  * @see Spells
  */
 public class Spell {
-    private final boolean isRangedAttack;
     private final int manaCost;
     private final int drawTime;
     private final int coolDown;
@@ -38,16 +36,14 @@ public class Spell {
     @Nullable
     private String descriptionId;
     
-    public Spell(boolean isRangedAttack, int manaCost, int drawTime, int coolDown, SpellCategory category, ResourceLocation casterClassType) {
-        this.isRangedAttack = isRangedAttack;
+    public Spell(int manaCost, int drawTime, int coolDown, SpellCategory category, ResourceLocation casterClassType) {
         this.manaCost = manaCost;
         this.drawTime = drawTime;
         this.coolDown = coolDown;
         this.category = category;
         this.casterClassType = ModRegistries.CLASS_TYPE.get(casterClassType);
     }
-    public Spell(boolean isRangedAttack, int manaCost, int drawTime, int coolDown, SpellCategory category) {
-        this.isRangedAttack = isRangedAttack;
+    public Spell(int manaCost, int drawTime, int coolDown, SpellCategory category) {
         this.manaCost = manaCost;
         this.drawTime = drawTime;
         this.coolDown = coolDown;
@@ -62,12 +58,11 @@ public class Spell {
      * @see Spells#EMPTY
      */
     public Spell() {
-        this.isRangedAttack = false;
         this.manaCost = 0;
         this.drawTime = 0;
         this.coolDown = 0;
         this.category = SpellCategory.DEBUFF;
-        this.casterClassType = ModRegistries.CLASS_TYPE.get(ModClassTypes.SIMPLE_HUMAN.get().getClassTypeIdentifier());
+        this.casterClassType = null;
     }
     
     /**
@@ -107,7 +102,7 @@ public class Spell {
     private SoundEvent getSpellSound(SpellCategory category) {
         return switch (category) {
             case CURSE -> SoundEvents.ALLAY_DEATH;
-            case PROJECTILE -> SoundEvents.ALLAY_ITEM_TAKEN;
+            case RANGED -> SoundEvents.ALLAY_ITEM_TAKEN;
             case BUFF -> SoundEvents.WARDEN_AGITATED;
             case DEBUFF -> SoundEvents.WARDEN_HURT;
             case HEALING -> SoundEvents.ALLAY_AMBIENT_WITH_ITEM;
@@ -195,31 +190,6 @@ public class Spell {
         return manaCost;
     }
     
-    /**
-     * Returns true if the spells is a ranged attack.
-     * <p>
-     * A ranged attack is a spells that can be cast from a distance.
-     */
-    public boolean isRangedAttack() {
-        return isRangedAttack;
-    }
-    
-    /**
-     * Casts the spells.
-     * <p>
-     * If the spells is cast by a player, the player's mana is reduced by the mana cost of the spells.
-     * <p>
-     * The spells is cast by a player, Triggers the CastEvent.
-     * @param level The level in which the spells is cast.
-     * @param player The player that casts the spells.
-     * @param hand The hand in which the spells is cast.
-     * @see CommonUtils#onCastEvent(Level, Player, InteractionHand)
-     * @see SpellEvent.CastEvent
-     */
-    protected void onCast(Level level, Player player, InteractionHand hand) {
-        CommonUtils.onCastEvent(level, player, hand);
-        SpellUtils.removeMana(player, this.getManaCost());
-    }
     
     /**
      * Casts the spells.
@@ -232,19 +202,6 @@ public class Spell {
      * @see SpellEvent.EntityCastEvent
      */
     protected void onCast(Level level, LivingEntity entity, InteractionHand hand) {
-        CommonUtils.onEntityCastEvent(level, entity, hand);
-    }
-    
-    /**
-     * Called when the spells is cast and fails.
-     * <p>
-     * If the spells is cast by a player, the player's mana is reduced by half of the mana cost of the spells.
-     * @param level The level in which the spells is cast.
-     * @param player The player that casts the spells.
-     * @param hand The hand in which the spells is cast.
-     */
-    protected void onFail(Level level, Player player, InteractionHand hand) {
-        SpellUtils.removeMana(player, this.getManaCost() / 2);
     }
     
     /**
@@ -266,31 +223,28 @@ public class Spell {
      * @param hand The hand in which the spells is cast.
      * @param ignoreRequirements If true, the spells is cast without checking if the player can cast the spells.
      * @see Spell#onCast(Level, LivingEntity, InteractionHand)
-     * @see Spell#onCast(Level, Player, InteractionHand)
      * @see Spell#onFail(Level, LivingEntity, InteractionHand)
-     * @see Spell#onFail(Level, Player, InteractionHand)
      * @see Spell#canCast(Level, Player, InteractionHand)
      * @see Spell#shouldFail(Level, Player, InteractionHand)
      */
     public void cast(Level level, LivingEntity entity, InteractionHand hand, boolean ignoreRequirements) {
+        level.playSound((Player) entity, entity.getX(), entity.getY(), entity.getZ(), getSpellSound(), entity.getSoundSource(), 1.0F, 1.0F);
         if (ignoreRequirements) {
             this.onCast(level, entity, hand);
         } else {
-            if (entity instanceof Player player) {
-                if (!this.canCast(level, player, hand)) {
-                    this.onFail(level, player, hand);
-                }
-                if (this.shouldFail(level, player, hand)) {
-                    this.onFail(level, player, hand);
-                } else {
-                    this.onCast(level, player, hand);
-                }
+            Player player = (Player) entity;
+            if (!this.canCast(level, player, hand)) {
+                this.onFail(level, player, hand);
+                SpellUtils.removeMana(player, this.getManaCost() / 2);
+            }
+            if (this.shouldFail(level, player, hand)) {
+                this.onFail(level, player, hand);
+                SpellUtils.removeMana(player, this.getManaCost() / 2);
             } else {
-                if (this.shouldFail(level, entity, hand)) {
-                    this.onFail(level, entity, hand);
-                } else {
-                    this.onCast(level, entity, hand);
-                }
+                CommonUtils.onCastEvent(level, player, hand);
+                player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(hand).getItem()));
+                SpellUtils.removeMana(player, this.getManaCost());
+                this.onCast(level, player, hand);
             }
         }
     }
@@ -331,15 +285,7 @@ public class Spell {
         
     }
     
-    /**
-     * Called when the spells hits an entity.
-     *
-     * @param level     The level in which the spells hits the entity.
-     * @param entity    The entity that casts the spells.
-     * @param hitresult
-     */
-    public void onHit(Level level, Entity entity, HitResult hitresult) {
-    }
+    
     
     
     /**
