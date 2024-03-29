@@ -1,103 +1,169 @@
-[25Mar2024 22:39:10.576] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, 20.2.86, --assetIndex, asset-index, --assetsDir, C:\Users\pouff\.gradle\caches\minecraft\assets\1.20.2, --gameDir, ., --fml.neoForgeVersion, 20.2.86, --fml.fmlVersion, 1.0.16, --fml.mcVersion, 1.20.2, --fml.neoFormVersion, 20231019.002635]
-[25Mar2024 22:39:10.580] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.4.1 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
-[25Mar2024 22:39:10.684] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
-[25Mar2024 22:39:10.760] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
-[25Mar2024 22:39:10.897] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
-[25Mar2024 22:39:10.969] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/pouff/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23180!/ Service=ModLauncher Env=CLIENT
-[25Mar2024 22:39:11.050] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 4070/PCIe/SSE2 GL version 4.6.0 NVIDIA 536.23, NVIDIA Corporation
-[25Mar2024 22:39:11.169] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-lowcode\1.0.16\e627c78870d4286826c4b14c0137319ff03b4e0\language-lowcode-1.0.16.jar is missing mods.toml file
-[25Mar2024 22:39:11.173] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-minecraft\1.0.16\c1f7785ff7fc0b18aa6d2d4056dcff4fee1b32be\language-minecraft-1.0.16.jar is missing mods.toml file
-[25Mar2024 22:39:11.175] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\core\1.0.16\6bab0913ca1635a8e272ef89c17befb52115a3c2\core-1.0.16.jar is missing mods.toml file
-[25Mar2024 22:39:11.177] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-java\1.0.16\2ddedcd8a488fd73e3e92a59949845e9c3a7d9f2\language-java-1.0.16.jar is missing mods.toml file
-[25Mar2024 22:39:11.185] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-lowcode-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.185] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-minecraft-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.185] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "core-1.0.16.jar" of type LIBRARY with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.185] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-java-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.186] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-20.2.86.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.186] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "main" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.186] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
-[25Mar2024 22:39:11.202] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "events-1.0.16.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.BuiltinGameLibraryLocator@511816c0
-[25Mar2024 22:39:11.294] [main/INFO] [net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 1 dependencies adding them to mods collection
-[25Mar2024 22:39:11.295] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mixinextras-neoforge-0.3.1.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@55120f99
-[25Mar2024 22:39:12.071] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, 20.2.86, --gameDir, ., --assetsDir, C:\Users\pouff\.gradle\caches\minecraft\assets\1.20.2, --assetIndex, asset-index]
-[25Mar2024 22:39:12.126] [main/WARN] [mixin/]: Reference map 'incompetent_core.refmap.json' for incompetent_core.mixins.json could not be read. If this is a development environment you can ignore this message
-[25Mar2024 22:39:14.942] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 192 Datafixer optimizations took 154 milliseconds
-[25Mar2024 22:39:16.610] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/pouff/Documents/GitHub/Incompetent/Incompetent-Core/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.86/neoforge-20.2.86.jar%23192!/assets/.mcassetsroot' uses unexpected schema
-[25Mar2024 22:39:16.610] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/pouff/Documents/GitHub/Incompetent/Incompetent-Core/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.86/neoforge-20.2.86.jar%23192!/data/.mcassetsroot' uses unexpected schema
-[25Mar2024 22:39:16.621] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[25Mar2024 22:39:16.632] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[25Mar2024 22:39:16.715] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.2+13
-[25Mar2024 22:39:16.912] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 20.2.86, for MC 1.20.2 with MCP 20231019.002635
-[25Mar2024 22:39:17.560] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
-[25Mar2024 22:39:17.670] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
-[25Mar2024 22:39:17.706] [Worker-Main-8/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO FROM COMMON SETUP
-[25Mar2024 22:39:17.760] [Worker-Main-5/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
-[25Mar2024 22:39:17.896] [Worker-Main-3/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO FROM CLIENT SETUP
-[25Mar2024 22:39:17.897] [Worker-Main-3/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: MINECRAFT NAME >> Dev
-[25Mar2024 22:39:17.897] [Worker-Main-3/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Class type ResourceKey[incompetent_core:class_type / incompetent_core:simple_human] does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!
-[25Mar2024 22:39:17.897] [Worker-Main-3/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Class type ResourceKey[incompetent_core:class_type / incompetent_core:test_class] does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!
-[25Mar2024 22:39:18.364] [Worker-Main-6/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:test_casting_item#inventory' referenced from: incompetent_core:test_casting_item#inventory: java.io.FileNotFoundException: incompetent_core:models/item/test_casting_item.json
-[25Mar2024 22:39:18.365] [Worker-Main-6/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:simple_human#inventory' referenced from: incompetent_core:simple_human#inventory: java.io.FileNotFoundException: incompetent_core:models/item/simple_human.json
-[25Mar2024 22:39:18.365] [Worker-Main-6/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:test_class#inventory' referenced from: incompetent_core:test_class#inventory: java.io.FileNotFoundException: incompetent_core:models/item/test_class.json
-[25Mar2024 22:39:18.919] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
-[25Mar2024 22:39:18.919] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[25Mar2024 22:39:19.137] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Headphones (WF-C500)
-[25Mar2024 22:39:19.137] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[25Mar2024 22:39:19.210] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
-[25Mar2024 22:39:19.216] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[25Mar2024 22:39:19.216] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[25Mar2024 22:39:19.217] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[25Mar2024 22:39:19.217] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[25Mar2024 22:39:19.220] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[25Mar2024 22:39:19.220] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[25Mar2024 22:39:19.220] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[25Mar2024 22:39:19.221] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[25Mar2024 22:39:19.467] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[25Mar2024 22:39:19.554] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[25Mar2024 22:39:19.555] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[25Mar2024 22:39:19.555] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[25Mar2024 22:39:19.556] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
-[25Mar2024 22:39:23.344] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
-[25Mar2024 22:39:23.433] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1271 advancements
-[25Mar2024 22:39:23.779] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.2
-[25Mar2024 22:39:23.779] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[25Mar2024 22:39:24.690] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[25Mar2024 22:39:27.232] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.232] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.250] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.250] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.250] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.250] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[25Mar2024 22:39:27.703] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 61%
-[25Mar2024 22:39:27.824] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
-[25Mar2024 22:39:27.824] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO from server starting
-[25Mar2024 22:39:27.830] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 3127 ms
-[25Mar2024 22:39:27.922] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 32, from 10
-[25Mar2024 22:39:27.922] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 32, from 0
-[25Mar2024 22:39:28.367] [Netty Server IO #1/WARN] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Unknown custom packet payload: minecraft:brand
-[25Mar2024 22:39:28.402] [Render thread/INFO] [net.neoforged.neoforge.network.NetworkHooks/]: Connected to a modded server.
-[25Mar2024 22:39:28.446] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:8eec400d] logged in with entity id 89 at (-740.1234869552349, 75.54837766090952, 123.20267956862983)
-[25Mar2024 22:39:28.496] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
-[25Mar2024 22:39:30.466] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 84 advancements
-[25Mar2024 22:39:41.085] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=-741, y=71, z=127} (Grass Block)
-[25Mar2024 22:39:42.188] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=-742, y=71, z=127} (Grass Block)
-[25Mar2024 22:39:42.935] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=-743, y=71, z=127} (Grass Block)
-[25Mar2024 22:39:44.236] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=-743, y=71, z=129} (Grass Block)
-[25Mar2024 22:39:57.575] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
-[25Mar2024 22:39:57.589] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[25Mar2024 22:39:57.639] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[25Mar2024 22:39:57.640] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
-[25Mar2024 22:39:58.198] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
-[25Mar2024 22:39:58.199] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
-[25Mar2024 22:39:58.210] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
-[25Mar2024 22:39:58.224] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
-[25Mar2024 22:39:58.224] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
-[25Mar2024 22:39:58.224] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
-[25Mar2024 22:39:58.892] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[25Mar2024 22:39:59.234] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[25Mar2024 22:39:59.235] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
-[25Mar2024 22:39:59.239] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
-[25Mar2024 22:39:59.239] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[25Mar2024 22:39:59.239] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[25Mar2024 22:39:59.239] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
-[25Mar2024 22:40:14.842] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[29Mar2024 15:48:19.255] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, 20.2.86, --assetIndex, asset-index, --assetsDir, C:\Users\pouff\.gradle\caches\minecraft\assets\1.20.2, --gameDir, ., --fml.neoForgeVersion, 20.2.86, --fml.fmlVersion, 1.0.16, --fml.mcVersion, 1.20.2, --fml.neoFormVersion, 20231019.002635]
+[29Mar2024 15:48:19.258] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.4.1 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[29Mar2024 15:48:19.342] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[29Mar2024 15:48:19.407] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[29Mar2024 15:48:19.541] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+[29Mar2024 15:48:19.601] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/pouff/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23180!/ Service=ModLauncher Env=CLIENT
+[29Mar2024 15:48:19.646] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 4070/PCIe/SSE2 GL version 4.6.0 NVIDIA 536.23, NVIDIA Corporation
+[29Mar2024 15:48:19.776] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-lowcode\1.0.16\e627c78870d4286826c4b14c0137319ff03b4e0\language-lowcode-1.0.16.jar is missing mods.toml file
+[29Mar2024 15:48:19.778] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-minecraft\1.0.16\c1f7785ff7fc0b18aa6d2d4056dcff4fee1b32be\language-minecraft-1.0.16.jar is missing mods.toml file
+[29Mar2024 15:48:19.782] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\core\1.0.16\6bab0913ca1635a8e272ef89c17befb52115a3c2\core-1.0.16.jar is missing mods.toml file
+[29Mar2024 15:48:19.785] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\pouff\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-java\1.0.16\2ddedcd8a488fd73e3e92a59949845e9c3a7d9f2\language-java-1.0.16.jar is missing mods.toml file
+[29Mar2024 15:48:19.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-lowcode-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-minecraft-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "core-1.0.16.jar" of type LIBRARY with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-java-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-20.2.86.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.795] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "main" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.795] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@2a415aa9
+[29Mar2024 15:48:19.813] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "events-1.0.16.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.BuiltinGameLibraryLocator@511816c0
+[29Mar2024 15:48:19.898] [main/INFO] [net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 1 dependencies adding them to mods collection
+[29Mar2024 15:48:19.898] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mixinextras-neoforge-0.3.1.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@55120f99
+[29Mar2024 15:48:20.659] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, 20.2.86, --gameDir, ., --assetsDir, C:\Users\pouff\.gradle\caches\minecraft\assets\1.20.2, --assetIndex, asset-index]
+[29Mar2024 15:48:20.713] [main/WARN] [mixin/]: Reference map 'incompetent_core.refmap.json' for incompetent_core.mixins.json could not be read. If this is a development environment you can ignore this message
+[29Mar2024 15:48:23.312] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 192 Datafixer optimizations took 88 milliseconds
+[29Mar2024 15:48:24.640] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/pouff/Documents/GitHub/Incompetent/Incompetent-Core/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.86/neoforge-20.2.86.jar%23192!/assets/.mcassetsroot' uses unexpected schema
+[29Mar2024 15:48:24.640] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/pouff/Documents/GitHub/Incompetent/Incompetent-Core/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.86/neoforge-20.2.86.jar%23192!/data/.mcassetsroot' uses unexpected schema
+[29Mar2024 15:48:24.650] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[29Mar2024 15:48:24.657] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[29Mar2024 15:48:24.724] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.2+13
+[29Mar2024 15:48:24.884] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 20.2.86, for MC 1.20.2 with MCP 20231019.002635
+[29Mar2024 15:48:25.476] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
+[29Mar2024 15:48:25.555] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[29Mar2024 15:48:25.580] [Worker-Main-9/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO FROM COMMON SETUP
+[29Mar2024 15:48:25.618] [Worker-Main-3/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[29Mar2024 15:48:25.750] [Worker-Main-8/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO FROM CLIENT SETUP
+[29Mar2024 15:48:25.750] [Worker-Main-8/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: MINECRAFT NAME >> Dev
+[29Mar2024 15:48:25.751] [Worker-Main-8/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Class type ResourceKey[incompetent_core:class_type / incompetent_core:test_class] does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!
+[29Mar2024 15:48:25.751] [Worker-Main-8/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Class type ResourceKey[incompetent_core:class_type / incompetent_core:simple_human] does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!
+[29Mar2024 15:48:26.189] [Worker-Main-8/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:test_casting_item#inventory' referenced from: incompetent_core:test_casting_item#inventory: java.io.FileNotFoundException: incompetent_core:models/item/test_casting_item.json
+[29Mar2024 15:48:26.190] [Worker-Main-8/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:simple_human#inventory' referenced from: incompetent_core:simple_human#inventory: java.io.FileNotFoundException: incompetent_core:models/item/simple_human.json
+[29Mar2024 15:48:26.190] [Worker-Main-8/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'incompetent_core:test_class#inventory' referenced from: incompetent_core:test_class#inventory: java.io.FileNotFoundException: incompetent_core:models/item/test_class.json
+[29Mar2024 15:48:26.770] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[29Mar2024 15:48:26.770] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[29Mar2024 15:48:26.810] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on U34G2G4R3 (2- NVIDIA High Definition Audio)
+[29Mar2024 15:48:26.811] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[29Mar2024 15:48:26.891] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[29Mar2024 15:48:26.897] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[29Mar2024 15:48:26.898] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[29Mar2024 15:48:26.898] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[29Mar2024 15:48:26.898] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[29Mar2024 15:48:26.901] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[29Mar2024 15:48:26.901] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[29Mar2024 15:48:26.901] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[29Mar2024 15:48:26.901] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[29Mar2024 15:48:27.081] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[29Mar2024 15:48:27.162] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[29Mar2024 15:48:27.163] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[29Mar2024 15:48:27.164] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[29Mar2024 15:48:27.164] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[29Mar2024 16:15:15.452] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[29Mar2024 16:15:15.531] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1271 advancements
+[29Mar2024 16:15:15.891] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.2
+[29Mar2024 16:15:15.891] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[29Mar2024 16:15:16.085] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[29Mar2024 16:15:17.072] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[29Mar2024 16:15:17.072] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[29Mar2024 16:15:17.110] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[29Mar2024 16:15:17.610] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 51%
+[29Mar2024 16:15:17.731] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[29Mar2024 16:15:17.732] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO from server starting
+[29Mar2024 16:15:17.738] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1633 ms
+[29Mar2024 16:15:17.796] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 32, from 10
+[29Mar2024 16:15:17.796] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 32, from 0
+[29Mar2024 16:15:18.218] [Netty Server IO #1/WARN] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Unknown custom packet payload: minecraft:brand
+[29Mar2024 16:15:18.253] [Render thread/INFO] [net.neoforged.neoforge.network.NetworkHooks/]: Connected to a modded server.
+[29Mar2024 16:15:18.283] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:48ec7e98] logged in with entity id 6 at (-0.6188813117625608, -60.0, 16.288828665199972)
+[29Mar2024 16:15:18.316] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[29Mar2024 16:15:20.145] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 83 advancements
+[29Mar2024 16:15:20.682] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[29Mar2024 16:15:20.694] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 16:15:21.690] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 16:15:21.691] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 16:15:33.159] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=8, y=-59, z=8} (Tinted Glass)
+[29Mar2024 16:15:41.608] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=18, y=-60, z=15} (Block of Diamond)
+[29Mar2024 16:15:41.958] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=19, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:15:42.310] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=18, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:15:44.310] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=17, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:15:50.762] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=17, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:15:51.012] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=17, y=-58, z=15} (Block of Diamond)
+[29Mar2024 16:15:52.563] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=18, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:17:00.512] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=17, y=-59, z=15} (Block of Diamond)
+[29Mar2024 16:17:32.882] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[29Mar2024 16:17:32.888] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 16:17:32.895] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 16:17:32.896] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 16:17:45.088] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
+[29Mar2024 16:17:45.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
+[29Mar2024 16:17:45.096] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[29Mar2024 16:17:45.146] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[29Mar2024 16:17:45.147] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[29Mar2024 16:17:45.147] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[29Mar2024 16:17:45.651] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 16:17:45.789] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 16:17:45.790] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 16:17:45.794] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (Dev Spell Testing): All chunks are saved
+[29Mar2024 16:17:45.794] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[29Mar2024 16:17:45.794] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[29Mar2024 16:17:45.794] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[29Mar2024 16:26:55.297] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[29Mar2024 16:26:55.320] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1271 advancements
+[29Mar2024 16:26:55.590] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.2
+[29Mar2024 16:26:55.590] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[29Mar2024 16:26:55.611] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[29Mar2024 16:26:55.936] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[29Mar2024 16:26:56.138] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 22%
+[29Mar2024 16:26:56.372] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[29Mar2024 16:26:56.372] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: HELLO from server starting
+[29Mar2024 16:26:56.374] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 32, from 10
+[29Mar2024 16:26:56.374] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 32, from 0
+[29Mar2024 16:26:56.388] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 767 ms
+[29Mar2024 16:26:56.578] [Netty Server IO #3/WARN] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Unknown custom packet payload: minecraft:brand
+[29Mar2024 16:26:56.594] [Render thread/INFO] [net.neoforged.neoforge.network.NetworkHooks/]: Connected to a modded server.
+[29Mar2024 16:26:56.602] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:4b3b4468] logged in with entity id 18 at (12.789761920105468, -59.2032643993313, 9.849836357775098)
+[29Mar2024 16:26:56.608] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[29Mar2024 16:26:56.793] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 83 advancements
+[29Mar2024 16:27:28.185] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=19, y=-61, z=15} (Stone)
+[29Mar2024 16:27:28.585] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=18, y=-61, z=14} (Stone)
+[29Mar2024 16:27:29.035] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=19, y=-61, z=14} (Stone)
+[29Mar2024 16:27:29.686] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=20, y=-59, z=17} (Stone)
+[29Mar2024 16:27:31.187] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=17, y=-61, z=12} (Stone)
+[29Mar2024 16:27:31.187] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=16, y=-61, z=11} (Stone)
+[29Mar2024 16:28:51.191] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a: Pig
+[29Mar2024 16:29:15.283] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 111 advancements
+[29Mar2024 16:29:25.889] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=20, y=-59, z=17} (Block of Diamond)
+[29Mar2024 16:29:26.440] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=72, y=-36, z=166} (Air)
+[29Mar2024 16:29:26.440] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=80, y=-36, z=162} (Air)
+[29Mar2024 16:29:26.939] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=39, y=-51, z=178} (Air)
+[29Mar2024 16:29:26.940] [Server thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=40, y=-51, z=178} (Air)
+[29Mar2024 16:29:30.372] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[29Mar2024 16:29:30.379] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 16:29:30.385] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 16:29:30.386] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 16:30:48.527] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=20, y=-59, z=17} (Block of Diamond)
+[29Mar2024 16:32:05.330] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=19, y=-61, z=11} (Stone)
+[29Mar2024 16:32:05.731] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: MutableBlockPos{x=16, y=-61, z=18} (Stone)
+[29Mar2024 16:32:15.985] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=20, y=113, z=11} (Air)
+[29Mar2024 16:33:27.973] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[29Mar2024 16:33:27.978] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 16:33:27.984] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 16:33:27.985] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 18:41:42.659] [Render thread/INFO] [com.incompetent_modders.incomp_core.IncompCore/]: Dev Has selected a block at: BlockPos{x=110, y=77, z=-120} (Air)
+[29Mar2024 18:41:57.622] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[29Mar2024 18:41:57.631] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 18:41:57.637] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 18:41:57.638] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 19:14:51.779] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
+[29Mar2024 19:14:51.779] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
+[29Mar2024 19:14:51.785] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[29Mar2024 19:14:51.835] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[29Mar2024 19:14:51.835] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[29Mar2024 19:14:51.836] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[29Mar2024 19:14:52.134] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:overworld
+[29Mar2024 19:14:52.310] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_end
+[29Mar2024 19:14:52.311] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Dev Spell Testing]'/minecraft:the_nether
+[29Mar2024 19:14:52.314] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (Dev Spell Testing): All chunks are saved
+[29Mar2024 19:14:52.314] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[29Mar2024 19:14:52.314] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[29Mar2024 19:14:52.314] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[29Mar2024 19:15:09.916] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!

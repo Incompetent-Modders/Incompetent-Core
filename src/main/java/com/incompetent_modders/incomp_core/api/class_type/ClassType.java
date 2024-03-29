@@ -178,6 +178,10 @@ public class ClassType {
         if (event.player.level().isClientSide) {
             return;
         }
+        if (PlayerDataCore.getPlayerClassType(event.player) == null) {
+            PlayerDataCore.setPlayerClassType(event.player, ModClassTypes.SIMPLE_HUMAN.get());
+            return;
+        }
         if (PlayerDataCore.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
             return;
         }

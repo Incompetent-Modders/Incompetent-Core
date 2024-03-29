@@ -130,13 +130,11 @@ public class SpellCastingItem extends Item {
         if (spell instanceof PreCastSpell<?> preCastSpell) {
             preCastSpell.onPreCast(player.getCommandSenderWorld(), player, hand);
             if (preCastSpell.getSelectedEntities() != null && preCastSpell.getSelectedEntities().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.writeToCaster(player.getCommandSenderWorld(), player, itemstack);
                 preCastSpell.stopPreCast();
                 SpellUtils.setPreCasting(tag, false);
                 return InteractionResultHolder.consume(itemstack);
             }
             if (preCastSpell.getSelectedPositions() != null && preCastSpell.getSelectedPositions().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.writeToCaster(player.getCommandSenderWorld(), player, itemstack);
                 preCastSpell.stopPreCast();
                 SpellUtils.setPreCasting(tag, false);
                 return InteractionResultHolder.consume(itemstack);
@@ -150,7 +148,6 @@ public class SpellCastingItem extends Item {
             Spell spell = getSelectedSpell(itemstack);
             if (spell instanceof PreCastSpell<?> preCastSpell) {
                 if (preCastSpell.canStopPreCast()) {
-                    preCastSpell.writeToCaster(player.getCommandSenderWorld(), player, itemstack);
                     SpellUtils.setPreCasting(tag, false);
                     return InteractionResultHolder.consume(itemstack);
                 } else {
@@ -222,7 +219,10 @@ public class SpellCastingItem extends Item {
                 if (selectedPositions.size() > 0) {
                     tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT)));
                     selectedPositions.forEach(pos -> {
-                        tooltip.add(CommonComponents.space().append(Component.literal("- ").append(Component.literal(" " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))).withStyle(DESCRIPTION_FORMAT));
+                        if (level != null) {
+                            Component blockName = Component.translatable(level.getBlockState(pos).getBlock().getDescriptionId());
+                            tooltip.add(CommonComponents.space().append(Component.literal("- ").append(Component.literal(" " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())).append(" (" + blockName.getString() + ")")).withStyle(DESCRIPTION_FORMAT));
+                        }
                     });
                 }
             }

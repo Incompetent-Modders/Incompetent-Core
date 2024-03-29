@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.data.IncompBlockTagsProvider;
 import com.incompetent_modders.incomp_core.registry.ModEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.ChatFormatting;
@@ -27,6 +28,9 @@ public interface PreCastSpell<T extends Spell> {
     Class<T> getSpellClass();
     int minSelections();
     int maxSelections();
+    default boolean onlySurface() {
+        return false;
+    }
     default boolean canStopPreCast() {
         return selectedEntities.size() >= minSelections() || selectedPositions.size() >= minSelections();
     }
@@ -44,7 +48,7 @@ public interface PreCastSpell<T extends Spell> {
         if (onlyLiving && target instanceof LivingEntity livingTarget) {
             if (selectedEntities.contains(livingTarget))
                 return;
-            livingTarget.addEffect(new MobEffectInstance(MobEffects.GLOWING, 5, 0, true, true, false));
+            livingTarget.addEffect(new MobEffectInstance(MobEffects.GLOWING, 5, 0, true, true, false), livingTarget);
             livingTarget.addEffect(new MobEffectInstance(ModEffects.ARCANE_SELECTION.get(), 999999, 1, true, true, false), livingTarget);
             selectedEntities.add(livingTarget);
             player.displayClientMessage(Component.translatable("spell.incompetent_core.select_entity").append(entityName(livingTarget)), true);
@@ -68,9 +72,17 @@ public interface PreCastSpell<T extends Spell> {
     default void selectPosition(Player player, BlockPos pos, Level level) {
         if (selectedPositions.contains(pos))
             return;
+        if (onlySurface()) {
+            if (!level.getBlockState(pos.above()).is(IncompBlockTagsProvider.modBlockTag("spell_transparent"))) {
+                selectedPositions.remove(pos);
+                player.displayClientMessage(Component.translatable("spell.incompetent_core.select_position.invalid.block_above"), true);
+                return;
+            }
+        }
         selectedPositions.add(pos);
         Component blockName = Component.translatable(level.getBlockState(pos).getBlock().getDescriptionId());
-        IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a block at: " + pos.toString() + " (" + blockName.getString() + ")");
+        player.displayClientMessage(Component.translatable("spell.incompetent_core.select_position", blockName, pos.toString()), true);
+        IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a block at: " + pos + " (" + blockName.getString() + ")");
     }
     
     default void afterCast() {
