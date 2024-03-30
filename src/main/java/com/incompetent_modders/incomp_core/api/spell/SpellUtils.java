@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.spell;
 import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -66,8 +67,34 @@ public class SpellUtils {
     public static boolean isPreCasting(CompoundTag tag) {
         return tag.contains("preCasting") && tag.getBoolean("preCasting");
     }
+    public static boolean hasSpellBeenCast(CompoundTag tag) {
+        return tag.contains("hasBeenCast") && tag.getBoolean("hasBeenCast");
+    }
     public static void setPreCasting(CompoundTag tag, boolean preCasting) {
         tag.putBoolean("preCasting", preCasting);
+    }
+    public static void setHasBeenCast(CompoundTag tag, boolean hasBeenCast) {
+        tag.putBoolean("hasBeenCast", hasBeenCast);
+    }
+    public static boolean playerIsHoldingSpellCatalyst(Player player, Spell spell) {
+        if (spell.hasSpellCatalyst()) {
+            ItemStack catalyst = spell.getSpellCatalyst();
+            return player.getOffhandItem().copy() == catalyst;
+        }
+        return false;
+    }
+    public static void handleCatalystConsumption(Player player, Spell spell) {
+        if (spell.getSpellCatalyst().isEmpty()) {
+            return;
+        }
+        if (playerIsHoldingSpellCatalyst(player, spell)) {
+            if (!player.isCreative()) {
+                player.getOffhandItem().shrink(1);
+            }
+        } else {
+            Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", spell.getSpellCatalyst().getDisplayName());
+            player.displayClientMessage(message, true);
+        }
     }
     public static @Nullable EntityHitResult traceEntities(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance) {
         Level world = shooter.level();

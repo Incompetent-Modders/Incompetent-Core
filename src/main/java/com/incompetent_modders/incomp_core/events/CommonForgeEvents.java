@@ -132,37 +132,7 @@ public class CommonForgeEvents {
             if (positions.isEmpty())
                 return;
             for (BlockPos pos : positions) {
-                ClientUtil.createCubeOutlineParticle(pos, level);
-                //BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
-                //double minX = Math.min(mutable.getX(), mutable.getX() + 1);
-                //double minY = Math.min(mutable.getY(), mutable.getY() + 1);
-                //double minZ = Math.min(mutable.getZ(), mutable.getZ() + 1);
-                //double maxX = Math.max(mutable.getX(), mutable.getX() + 1);
-                //double maxY = Math.max(mutable.getY(), mutable.getY() + 1);
-                //double maxZ = Math.max(mutable.getZ(), mutable.getZ() + 1);
-                //List<Double> xList = ClientUtil.generateSequenceDoubleStream(minX, maxX, 0.1);
-                //List<Double> yList = ClientUtil.generateSequenceDoubleStream(minY, maxY, 0.1);
-                //List<Double> zList = ClientUtil.generateSequenceDoubleStream(minZ, maxZ, 0.1);
-                //xList.forEach(x -> yList.forEach(y -> zList.forEach(z -> {
-                //    if (Objects.equals(x, y) || Objects.equals(x, z) || Objects.equals(y, z))
-                //        return;
-                //    level.addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
-                //})));
-                //for (double x = minX; x <= maxX; x++) {
-                //    for (double y = minY; y <= maxY; y++) {
-                //        for (double z = minZ; z <= maxZ; z++) {
-                //            int components = 0;
-                //            if (x == minX || x == maxX) components++;
-                //            if (y == minY || y == maxY) components++;
-                //            if (z == minZ || z == maxZ) components++;
-                //            if (components >= 3) {
-                //                level.addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
-                //            }
-                //        }
-                //    }
-                //}
-                
-                
+                ClientUtil.createCubeOutlineParticle(pos, level, ParticleTypes.ELECTRIC_SPARK);
             }
         }
     }

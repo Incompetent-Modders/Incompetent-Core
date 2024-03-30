@@ -46,17 +46,6 @@ public class TestBlockPreCastSpell extends Spell implements PreCastSpell<TestBlo
     }
     
     @Override
-    public void writeToCaster(Level level, Player entity, ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        CompoundTag selectedSpell = tag.getCompound("selectedSpell");
-        CompoundTag preCastTag = selectedSpell.getCompound("PreCast");
-        selectedPositions.forEach(selected -> {
-            CompoundTag posTag = preCastTag.getCompound("SelectedPositions");
-            posTag.putString("position", selected.toString());
-        });
-    }
-    
-    @Override
     public void onCast(Level level, LivingEntity entity, InteractionHand hand) {
         super.onCast(level, entity, hand);
         selectedPositions.forEach(selected -> {

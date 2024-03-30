@@ -1,19 +1,45 @@
 package com.incompetent_modders.incomp_core;
 
+import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.spell.PreCastSpell;
+import com.incompetent_modders.incomp_core.api.spell.Spell;
+import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
+import com.incompetent_modders.incomp_core.util.CommonUtils;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.stream.DoubleStream;
 
+import static com.incompetent_modders.incomp_core.IncompCore.*;
 import static java.util.stream.Collectors.toList;
 
 public class ClientUtil {
+    private static final Component SELECTED_SPELL_TITLE = Component.translatable(
+            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.selected_spell"))
+    ).withStyle(TITLE_FORMAT);
+    private static final Component AVAILABLE_SPELLS_TITLE = Component.translatable(
+            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.available_spells"))
+    ).withStyle(TITLE_FORMAT);
+    private static final Component SPELL_INFO_TITLE = Component.translatable(
+            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.spell_info"))
+    ).withStyle(TITLE_FORMAT);
+    private static final Component PRECAST_INFO_TITLE = Component.translatable(
+            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.pre_cast_info"))
+    ).withStyle(TITLE_FORMAT);
     public static Level getWorld() {
         return Minecraft.getInstance().level;
     }
@@ -49,7 +75,7 @@ public class ClientUtil {
                 .boxed()
                 .collect(toList());
     }
-    public static void createCubeOutlineParticle(BlockPos pos, Level level) {
+    public static void createCubeOutlineParticle(BlockPos pos, Level level, ParticleOptions particle) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
         if (level.isClientSide()) {
             double minX = mutable.getX();
@@ -62,24 +88,90 @@ public class ClientUtil {
             List<Double> yList = generateSequenceDoubleStream(minY, maxY, 0.1);
             List<Double> zList = generateSequenceDoubleStream(minZ, maxZ, 0.1);
             xList.forEach(x -> {
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, x, mutable.getY(), mutable.getZ() - 0.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, x, mutable.getY(), mutable.getZ() + 1.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, x, mutable.getY() + 1, mutable.getZ() - 0.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, x, mutable.getY() + 1, mutable.getZ() + 1.01, 0, 0, 0);
+                level.addParticle(particle, x, mutable.getY(), mutable.getZ() - 0.01, 0, 0, 0);
+                level.addParticle(particle, x, mutable.getY(), mutable.getZ() + 1.01, 0, 0, 0);
+                level.addParticle(particle, x, mutable.getY() + 1, mutable.getZ() - 0.01, 0, 0, 0);
+                level.addParticle(particle, x, mutable.getY() + 1, mutable.getZ() + 1.01, 0, 0, 0);
             });
             zList.forEach(z -> {
-                level.addParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() - 0.01, mutable.getY(), z, 0, 0, 0);
-                level.addParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() + 1.01, mutable.getY(), z, 0, 0, 0);
-                level.addParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() + 0.01, mutable.getY() + 1, z, 0, 0, 0);
-                level.addParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() + 1.01, mutable.getY() + 1, z, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() - 0.01, mutable.getY(), z, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() + 1.01, mutable.getY(), z, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() + 0.01, mutable.getY() + 1, z, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() + 1.01, mutable.getY() + 1, z, 0, 0, 0);
             });
             yList.forEach(y -> {
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() - 0.01, y + 0.05, mutable.getZ() - 0.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() + 0.99, y + 0.05, mutable.getZ() - 0.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX() + 1.01, y + 0.05, mutable.getZ() + 1.01, 0, 0, 0);
-                level.addAlwaysVisibleParticle(ParticleTypes.ELECTRIC_SPARK, mutable.getX(), y + 0.05, mutable.getZ() + 1.01, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() - 0.01, y + 0.05, mutable.getZ() - 0.01, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() + 0.99, y + 0.05, mutable.getZ() - 0.01, 0, 0, 0);
+                level.addParticle(particle, mutable.getX() + 1.01, y + 0.05, mutable.getZ() + 1.01, 0, 0, 0);
+                level.addParticle(particle, mutable.getX(), y + 0.05, mutable.getZ() + 1.01, 0, 0, 0);
             });
         }
-        
+    }
+    private static final Component manaCost = Component.translatable("item." + MODID + ".spellcasting.mana_cost").withStyle(TITLE_FORMAT);
+    private static final Component castTime = Component.translatable("item." + MODID + ".spellcasting.cast_time").withStyle(TITLE_FORMAT);
+    private static final Component requiredCatalyst = Component.translatable("item." + MODID + ".spellcasting.required_catalyst").withStyle(TITLE_FORMAT);
+    private static final Component selectedEntitiesComp = Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT);
+    private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
+    public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
+        CompoundTag tag = castingStack.getOrCreateTag();
+        String selectedSlotCoolDown = CommonUtils.timeFromTicks(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack), 2);
+        Spell spell = SpellCastingItem.getSelectedSpell(castingStack);
+        tooltip.add(SELECTED_SPELL_TITLE);
+        tooltip.add(CommonComponents.space().append(spell.getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack) > 0 ? " - " + selectedSlotCoolDown : "").append(String.valueOf(" " + SpellUtils.getSelectedSpellSlot(tag))).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.EMPTY);
+        tooltip.add(SPELL_INFO_TITLE);
+        tooltip.add(CommonComponents.space().append(manaCost));
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spell.getManaCost())).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(castTime));
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spell.getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
+        if (spell.hasSpellCatalyst()) {
+            tooltip.add(CommonComponents.space().append(requiredCatalyst));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(getPlayer(), spell) ? "✔" : "✘").withStyle(DESCRIPTION_FORMAT));
+        }
+        tooltip.add(CommonComponents.EMPTY);
+    }
+    public static void createAvailableSpellsTooltip(List<Component> tooltip, ItemStack castingStack, SpellCastingItem spellCastingItem) {
+        CompoundTag tag = castingStack.getOrCreateTag();
+        tooltip.add(AVAILABLE_SPELLS_TITLE);
+        for (int i = 0; i < SpellCastingItem.getSpellSlots(spellCastingItem.getLevel()); i++) {
+            if (i == SpellUtils.getSelectedSpellSlot(tag)) {
+                continue;
+            }
+            String slotCoolDown = CommonUtils.timeFromTicks(SpellCastingItem.getCoolDown(i, castingStack), 2);
+            tooltip.add(CommonComponents.space().append(SpellCastingItem.getSpellNameInSlot(tag, i)).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(i, castingStack) > 0 ? " - " + slotCoolDown : "").append(" " + i).withStyle(DESCRIPTION_FORMAT));
+        }
+    }
+    public static void createPreCastTooltip(List<Component> tooltip, ItemStack castingStack, PreCastSpell<?> preCastSpell, Level level) {
+        CompoundTag tag = castingStack.getOrCreateTag();
+        String selectedSlotCoolDown = CommonUtils.timeFromTicks(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack), 2);
+        List<LivingEntity> selectedEntities = preCastSpell.getSelectedEntities();
+        List<BlockPos> selectedPositions = preCastSpell.getSelectedPositions();
+        tooltip.add(SELECTED_SPELL_TITLE);
+        tooltip.add(CommonComponents.space().append(SpellCastingItem.getSelectedSpell(castingStack).getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack) > 0 ? " - " + selectedSlotCoolDown : "").withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.EMPTY);
+        tooltip.add(PRECAST_INFO_TITLE);
+        tooltip.add(CommonComponents.EMPTY);
+        if (!SpellUtils.hasSpellBeenCast(tag)) {
+            if (!SpellUtils.isPreCasting(tag))
+                tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.ready_to_cast")).withStyle(DESCRIPTION_FORMAT));
+            else
+                tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.pre_casting")).withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.EMPTY);
+        }
+        if (selectedEntities.size() > 0) {
+            tooltip.add(CommonComponents.space().append(selectedEntitiesComp));
+            selectedEntities.forEach(selected -> {
+                tooltip.add(CommonComponents.space().append(Component.literal("- ").append(selected.getDisplayName())).withStyle(DESCRIPTION_FORMAT));
+            });
+        }
+        if (selectedPositions.size() > 0) {
+            tooltip.add(CommonComponents.space().append(selectedPositionsComp));
+            selectedPositions.forEach(pos -> {
+                if (level != null) {
+                    Component blockName = Component.translatable(level.getBlockState(pos).getBlock().getDescriptionId());
+                    tooltip.add(CommonComponents.space().append(Component.literal("- ").append(Component.literal(" " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())).append(" (" + blockName.getString() + ")")).withStyle(DESCRIPTION_FORMAT));
+                }
+            });
+        }
     }
 }

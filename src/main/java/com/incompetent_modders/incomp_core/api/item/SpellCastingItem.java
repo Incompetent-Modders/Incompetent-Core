@@ -1,14 +1,12 @@
 package com.incompetent_modders.incomp_core.api.item;
 
+import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.*;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
-import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -26,14 +24,12 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.incompetent_modders.incomp_core.IncompCore.*;
-
 public class SpellCastingItem extends Item {
     private final String selSpellSlot_NBT = "selectedSpellSlot";
     private final String spellSlot_NBT = "spellSlot_";
     private final String wielderClassType_NBT = "wielderClassType";
-    private final String spellSlotCooldown_NBT = "spellSlotCoolDown_";
-    private final String remainingDrawTime_NBT = "castProgress";
+    private static final String spellSlotCooldown_NBT = "spellSlotCoolDown_";
+    private static final String remainingDrawTime_NBT = "castProgress";
     private final int level;
     public SpellCastingItem(Properties properties, int level) {
         super(properties);
@@ -67,16 +63,21 @@ public class SpellCastingItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         CompoundTag tag = itemstack.getOrCreateTag();
-        if (player.isCrouching()) {
+        if (player.isShiftKeyDown()) {
             if (SpellUtils.isPreCasting(tag)) {
-                return stopPreCasting(player, itemstack, tag);
-            } else
-                SpellUtils.setPreCasting(tag, true);
-        } else {
-            if (!SpellUtils.isPreCasting(tag)) {
-                handleStartUsing(player, hand, itemstack, tag);
+                return CommonUtils.stopPreCasting(player, itemstack, tag);
             } else {
-                handlePreCasting(player, hand, itemstack, tag);
+                SpellUtils.setPreCasting(tag, true);
+                SpellUtils.setHasBeenCast(tag, false);
+            }
+        } else {
+            if (SpellUtils.playerIsHoldingSpellCatalyst(player, getSelectedSpell(itemstack))) {
+                CommonUtils.handleStartUsing(player, hand, itemstack, tag);
+            }
+            if (!SpellUtils.isPreCasting(tag)) {
+                CommonUtils.handleStartUsing(player, hand, itemstack, tag);
+            } else {
+                CommonUtils.handlePreCasting(player, hand, itemstack, tag);
             }
         }
         return InteractionResultHolder.consume(itemstack);
@@ -90,7 +91,7 @@ public class SpellCastingItem extends Item {
         };
     }
     public void handleUseTick(Level level, LivingEntity entity, ItemStack itemstack) {
-        if (!SpellUtils.isPreCasting(itemstack.getOrCreateTag())) {
+        if (!SpellUtils.isPreCasting(itemstack.getOrCreateTag()) && !SpellUtils.hasSpellBeenCast(itemstack.getOrCreateTag())) {
             if (getCastProgress(itemstack) > 0) {
                 decrementCastProgress(itemstack);
             }
@@ -99,12 +100,24 @@ public class SpellCastingItem extends Item {
                 Spell spell = getSelectedSpell(itemstack);
                 if (spell != null && !isCoolDown(SpellUtils.getSelectedSpellSlot(tag), itemstack) && !casting) {
                     casting = true;
-                    spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
-                    if (spell instanceof PreCastSpell<?> preCastSpell) {
-                        preCastSpell.afterCast();
+                    if (spell.hasSpellCatalyst() && SpellUtils.playerIsHoldingSpellCatalyst((Player) entity, spell)) {
+                        SpellUtils.handleCatalystConsumption((Player) entity, spell);
+                        spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
+                        SpellUtils.setHasBeenCast(tag, true);
+                        if (spell instanceof PreCastSpell<?> preCastSpell) {
+                            preCastSpell.afterCast(level);
+                        }
+                        addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
+                        casting = false;
+                    } else if (!spell.hasSpellCatalyst()) {
+                        spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
+                        SpellUtils.setHasBeenCast(tag, true);
+                        if (spell instanceof PreCastSpell<?> preCastSpell) {
+                            preCastSpell.afterCast(level);
+                        }
+                        addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
+                        casting = false;
                     }
-                    addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
-                    casting = false;
                 }
                 entity.stopUsingItem();
             }
@@ -112,124 +125,22 @@ public class SpellCastingItem extends Item {
             casting = false;
         }
     }
-    public InteractionResultHolder<ItemStack> handleStartUsing(Player player, InteractionHand hand, ItemStack itemstack, CompoundTag tag) {
-        if (getCastProgress(itemstack) == 0) {
-            setCastProgress(getSelectedSpell(itemstack), itemstack);
-        }
-        if (player.getItemInHand(hand) == itemstack && hand == InteractionHand.OFF_HAND)
-            return InteractionResultHolder.fail(itemstack);
-        if (isCoolDown(SpellUtils.getSelectedSpellSlot(tag), itemstack))
-            return InteractionResultHolder.fail(itemstack);
-        if (getSelectedSpell(itemstack) instanceof EmptySpell)
-            return InteractionResultHolder.fail(itemstack);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.consume(itemstack);
-    }
-    public InteractionResultHolder<ItemStack> handlePreCasting(Player player, InteractionHand hand, ItemStack itemstack, CompoundTag tag) {
-        Spell spell = getSelectedSpell(itemstack);
-        if (spell instanceof PreCastSpell<?> preCastSpell) {
-            preCastSpell.onPreCast(player.getCommandSenderWorld(), player, hand);
-            if (preCastSpell.getSelectedEntities() != null && preCastSpell.getSelectedEntities().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.stopPreCast();
-                SpellUtils.setPreCasting(tag, false);
-                return InteractionResultHolder.consume(itemstack);
-            }
-            if (preCastSpell.getSelectedPositions() != null && preCastSpell.getSelectedPositions().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.stopPreCast();
-                SpellUtils.setPreCasting(tag, false);
-                return InteractionResultHolder.consume(itemstack);
-            }
-            return InteractionResultHolder.consume(itemstack);
-        }
-        return InteractionResultHolder.fail(itemstack);
-    }
-    public InteractionResultHolder<ItemStack> stopPreCasting(Player player, ItemStack itemstack, CompoundTag tag) {
-        if (SpellUtils.isPreCasting(tag)) {
-            Spell spell = getSelectedSpell(itemstack);
-            if (spell instanceof PreCastSpell<?> preCastSpell) {
-                if (preCastSpell.canStopPreCast()) {
-                    SpellUtils.setPreCasting(tag, false);
-                    return InteractionResultHolder.consume(itemstack);
-                } else {
-                    SpellUtils.setPreCasting(tag, true);
-                    return InteractionResultHolder.consume(itemstack);
-                }
-            }
-        }
-        return InteractionResultHolder.fail(itemstack);
-    }
     public static String getSpellNameInSlot(CompoundTag tag, int slot) {
         return SpellUtils.deserializeFromSlot(tag, slot).getDisplayName().getString();
     }
     
-    private static final Component SELECTED_SPELL_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.selected_spell"))
-            ).withStyle(TITLE_FORMAT);
-    private static final Component AVAILABLE_SPELLS_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.available_spells"))
-            ).withStyle(TITLE_FORMAT);
-    private static final Component SPELL_INFO_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.spell_info"))
-            ).withStyle(TITLE_FORMAT);
-    private static final Component PRECAST_INFO_TITLE = Component.translatable(
-                    Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.pre_cast_info"))
-            ).withStyle(TITLE_FORMAT);
+    
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = stack.getOrCreateTag();
-        String selectedSlotCoolDown = CommonUtils.timeFromTicks(getCoolDown(SpellUtils.getSelectedSpellSlot(tag), stack), 2);
-        if (!SpellUtils.isPreCasting(tag)) {
-            tooltip.add(SELECTED_SPELL_TITLE);
-            tooltip.add(CommonComponents.space().append(getSelectedSpell(stack).getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(getCoolDown(SpellUtils.getSelectedSpellSlot(tag), stack) > 0 ? " - " + selectedSlotCoolDown : "").append(String.valueOf(" " + SpellUtils.getSelectedSpellSlot(tag))).withStyle(DESCRIPTION_FORMAT));
-            tooltip.add(CommonComponents.EMPTY);
-            tooltip.add(SPELL_INFO_TITLE);
-            tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.mana_cost").withStyle(TITLE_FORMAT)));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(getSelectedSpell(stack).getManaCost())).withStyle(DESCRIPTION_FORMAT));
-            tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.cast_time").withStyle(TITLE_FORMAT)));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(getSelectedSpell(stack).getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
-            tooltip.add(CommonComponents.EMPTY);
-            tooltip.add(AVAILABLE_SPELLS_TITLE);
-            for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
-                
-                if (i == SpellUtils.getSelectedSpellSlot(tag)) {
-                    continue;
-                }
-                String slotCoolDown = CommonUtils.timeFromTicks(getCoolDown(i, stack), 2);
-                tooltip.add(CommonComponents.space().append(getSpellNameInSlot(tag, i)).withStyle(DESCRIPTION_FORMAT).append(getCoolDown(i, stack) > 0 ? " - " + slotCoolDown : "").append(String.valueOf(" " + i)).withStyle(DESCRIPTION_FORMAT));
-                
-            }
+        if (!SpellUtils.isPreCasting(tag) && SpellUtils.hasSpellBeenCast(tag)) {
+            ClientUtil.createSelectedSpellTooltip(tooltip, stack);
+            ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
         } else {
             Spell spell = getSelectedSpell(stack);
-            CompoundTag selectedSpell = tag.getCompound("selectedSpell");
-            CompoundTag preCastTag = selectedSpell.getCompound("PreCast");
-            CompoundTag entityTag = preCastTag.getCompound("SelectedEntities");
             if (spell instanceof PreCastSpell<?> preCastSpell) {
-                List<LivingEntity> selectedEntities = preCastSpell.getSelectedEntities();
-                List<BlockPos> selectedPositions = preCastSpell.getSelectedPositions();
-                tooltip.add(SELECTED_SPELL_TITLE);
-                tooltip.add(CommonComponents.space().append(getSelectedSpell(stack).getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(getCoolDown(SpellUtils.getSelectedSpellSlot(tag), stack) > 0 ? " - " + selectedSlotCoolDown : "").withStyle(DESCRIPTION_FORMAT));
-                tooltip.add(CommonComponents.EMPTY);
-                tooltip.add(PRECAST_INFO_TITLE);
-                tooltip.add(CommonComponents.EMPTY);
-                if (selectedEntities.size() > 0) {
-                    tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT)));
-                    selectedEntities.forEach(selected -> {
-                        tooltip.add(CommonComponents.space().append(Component.literal("- ").append(selected.getDisplayName())).withStyle(DESCRIPTION_FORMAT));
-                    });
-                }
-                if (selectedPositions.size() > 0) {
-                    tooltip.add(CommonComponents.space().append(Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT)));
-                    selectedPositions.forEach(pos -> {
-                        if (level != null) {
-                            Component blockName = Component.translatable(level.getBlockState(pos).getBlock().getDescriptionId());
-                            tooltip.add(CommonComponents.space().append(Component.literal("- ").append(Component.literal(" " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())).append(" (" + blockName.getString() + ")")).withStyle(DESCRIPTION_FORMAT));
-                        }
-                    });
-                }
+                ClientUtil.createPreCastTooltip(tooltip, stack, preCastSpell, level);
             }
-            
         }
-        
-        
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {
@@ -247,9 +158,6 @@ public class SpellCastingItem extends Item {
                 tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
             }
         }
-        
-        
-        
         for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
             if (!tag.contains(spellSlot_NBT + i) || tag.getString(spellSlot_NBT + i).isEmpty()) {
                 tag.putString(spellSlot_NBT + i, Spells.EMPTY.get().getSpellIdentifier().toString());
@@ -258,7 +166,6 @@ public class SpellCastingItem extends Item {
                 tag.putString(spellSlot_NBT + i, Spells.EMPTY.get().getSpellIdentifier().toString());
             }
             decrementCoolDowns(stack, level, (Player) entity);
-            
         }
         if (!tag.contains(selSpellSlot_NBT))
             tag.putInt(selSpellSlot_NBT, 0);
@@ -267,7 +174,7 @@ public class SpellCastingItem extends Item {
         CompoundTag tag = stack.getOrCreateTag();
         return ModRegistries.CLASS_TYPE.get(new ResourceLocation(tag.getString(wielderClassType_NBT)));
     }
-    public Spell getSelectedSpell(ItemStack stack) {
+    public static Spell getSelectedSpell(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
             return SpellUtils.deserializeFromSlot(tag, SpellUtils.getSelectedSpellSlot(tag));
@@ -294,21 +201,21 @@ public class SpellCastingItem extends Item {
         }
     }
     
-    private boolean isCoolDown(int slot, ItemStack stack) {
+    public static boolean isCoolDown(int slot, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getInt(spellSlotCooldown_NBT + slot) > 0;
     }
-    public int getCoolDown(int slot, ItemStack stack) {
+    public static int getCoolDown(int slot, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getInt(spellSlotCooldown_NBT + slot);
     }
     
-    private int getCastProgress(ItemStack stack) {
+    public static int getCastProgress(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getInt(remainingDrawTime_NBT);
     }
     
-    private void setCastProgress(Spell spell, ItemStack stack) {
+    public static void setCastProgress(Spell spell, ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         int ticks = spell.getDrawTime();
         tag.putInt(remainingDrawTime_NBT, ticks);

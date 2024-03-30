@@ -1,11 +1,13 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
+import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.data.IncompBlockTagsProvider;
 import com.incompetent_modders.incomp_core.registry.ModEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -42,17 +44,14 @@ public interface PreCastSpell<T extends Spell> {
     }
     void onPreCast(Level level, LivingEntity entity, InteractionHand hand);
     
-    void writeToCaster(Level level, Player entity, ItemStack stack);
-    
     default void selectEntity(Player player, Level level, Entity target, boolean onlyLiving) {
         if (onlyLiving && target instanceof LivingEntity livingTarget) {
             if (selectedEntities.contains(livingTarget))
                 return;
-            livingTarget.addEffect(new MobEffectInstance(MobEffects.GLOWING, 5, 0, true, true, false), livingTarget);
-            livingTarget.addEffect(new MobEffectInstance(ModEffects.ARCANE_SELECTION.get(), 999999, 1, true, true, false), livingTarget);
             selectedEntities.add(livingTarget);
+            livingTarget.addEffect(new MobEffectInstance(ModEffects.ARCANE_SELECTION.get(), 999999, 1, true, true, false));
             player.displayClientMessage(Component.translatable("spell.incompetent_core.select_entity").append(entityName(livingTarget)), true);
-            IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a: " + target.getDisplayName().getString());
+            IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a: " + entityName(livingTarget) + " At: " + target.position());
         }
     }
     default Component entityName(LivingEntity entity) {
@@ -85,8 +84,12 @@ public interface PreCastSpell<T extends Spell> {
         IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a block at: " + pos + " (" + blockName.getString() + ")");
     }
     
-    default void afterCast() {
+    default void afterCast(Level level) {
+        selectedPositions.forEach(pos -> spawnCastParticles(level, pos));
         selectedEntities.clear();
         selectedPositions.clear();
+    }
+    default void spawnCastParticles(Level level, BlockPos pos) {
+        ClientUtil.createCubeOutlineParticle(pos, level, ParticleTypes.GLOW);
     }
 }

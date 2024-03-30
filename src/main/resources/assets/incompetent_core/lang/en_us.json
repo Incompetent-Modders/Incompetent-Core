@@ -9,6 +9,9 @@
   "item.incompetent_core.spellcasting.pre_cast_info": "Pre-Cast Info:",
   "item.incompetent_core.spellcasting.selected_positions": "Selected Positions:",
   "item.incompetent_core.spellcasting.selected_entities": "Selected Entities:",
+  "item.incompetent_core.spellcasting.ready_to_cast": "Ready to Cast",
+  "item.incompetent_core.spellcasting.pre_casting": "Pre-Casting",
+  "item.incompetent_core.spellcasting.catalyst_required": "%s is Required to Cast this Spell",
 
   "spell.incompetent_core.empty": "Empty Spell Slot",
   "spell.incompetent_core.empty_projectile": "Empty Projectile Spell",
@@ -20,7 +23,7 @@
   "commands.clear_spell.single": "Cleared Spell from Slot %s",
   "commands.clear_spell.all": "Cleared Spells from All Slots",
   "argument.spell.id.invalid": "Invalid Spell ID: %s",
-  "spell.incompetent_core.select_entity": "Selected:",
+  "spell.incompetent_core.select_entity": "Selected: ",
   "spell.incompetent_core.select_position": "Selected Block: %s at: %s",
   "spell.incompetent_core.select_position.invalid.block_above": "Invalid Position: Block Above."
 }

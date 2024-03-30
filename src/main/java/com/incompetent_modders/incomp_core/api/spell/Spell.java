@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -89,6 +90,21 @@ public class Spell {
         return category;
     }
     
+    /**
+     * Returns the spell catalyst of the spells.
+     * <p>
+     * The spell catalyst is the item required to cast the spells.
+     */
+    public ItemStack getSpellCatalyst() {
+        return ItemStack.EMPTY;
+    }
+    
+    /**
+     * Returns true if the spells has a spell catalyst.
+     */
+    public boolean hasSpellCatalyst() {
+        return !this.getSpellCatalyst().isEmpty();
+    }
     /**
      * Returns the sound of the spells.
      * <p>
