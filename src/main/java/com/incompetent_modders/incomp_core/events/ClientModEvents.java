@@ -17,7 +17,6 @@ public class ClientModEvents {
     static ResourceLocation selected_spell = new ResourceLocation(MODID, "selected_spell");
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-        
         event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), mana, ManaOverlay.INSTANCE);
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), selected_spell, SpellListOverlay.INSTANCE);
     }

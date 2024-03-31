@@ -11,13 +11,13 @@ description='''${mod_description}'''
 config="incompetent_core.mixins.json"
 [[dependencies.incompetent_core]] #optional
 modId="neoforge" #mandatory
-mandatory=true #mandatory
+type="required"
 versionRange="${neo_version_range}" #mandatory
 ordering="NONE"
 side="BOTH"
 [[dependencies.incompetent_core]]
 modId="minecraft"
-mandatory=true
+type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"

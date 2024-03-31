@@ -1,10 +1,3 @@
-/summon incompetent_core:spell_projectile
-/summon incompetent_core:spell_projectile -454.16 77.00 3.35 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
-/summon incompetent_core:spell_projectile
-/summon incompetent_core:spell_projectile -454.16 77.00 3.35 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
-/summon incompetent_core:spell_projectile -454.16 77.00 3.35 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00], Owner:[380df991-f603-344c-a090-369bad2a924a]}
-/summon incompetent_core:spell_projectile
-/summon incompetent_core:spell_projectile -454.16 77.00 3.35 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
 /summon incompetent_core:spell_projectile ~ ~ ~ {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
 /summon incompetent_core:spell_projectile -466.63 85.40 2.00 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
 /summon incompetent_core:spell_projectile ~ ~ ~ {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
@@ -48,3 +41,10 @@
 /summon minecraft:block_display 10.38 -60.00 6.95
 /kill @e[type=minecraft:block_display]
 /i_c setSpell 1 "incompetent_core:test_precast_spell"
+/give Dev incompetent_core:test_casting_item
+/incompetent_core setSpell 0 "incompetent_core:test_block_precast_spell"
+/give Dev incompetent_core:test_class
+/advancement revoke Dev everything
+/recipe take Dev *
+/data get entity Dev
+/data get entity @s

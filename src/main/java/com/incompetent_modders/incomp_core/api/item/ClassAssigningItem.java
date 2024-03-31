@@ -50,10 +50,10 @@ public class ClassAssigningItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (player.isShiftKeyDown()) {
-            if (PlayerDataCore.getPlayerClassType(player) == getClassType(itemstack)) {
+            if (PlayerDataCore.ClassData.getPlayerClassType(player) == getClassType(itemstack)) {
                 return InteractionResultHolder.fail(itemstack);
             } else {
-                PlayerDataCore.setPlayerClassType(player, getClassType(itemstack));
+                PlayerDataCore.ClassData.setPlayerClassType(player, getClassType(itemstack));
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.TOTEM_OF_UNDYING, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.ENCHANT, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.SCULK_SOUL, 10);

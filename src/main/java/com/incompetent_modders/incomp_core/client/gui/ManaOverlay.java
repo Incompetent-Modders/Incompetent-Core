@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,8 +25,8 @@ public class ManaOverlay implements IGuiOverlay {
         if (player == null)
             return;
         
-        double mana = ModCapabilities.getMana(player).orElseThrow(() -> new IllegalStateException("Mana capability not found!")).getCurrentMana();
-        double maxMana = player.getAttributeValue(ModAttributes.MAX_MANA.get());
+        double mana = PlayerDataCore.ManaData.getMana(player);
+        double maxMana = PlayerDataCore.ManaData.getMaxMana(player);
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate((double) screenWidth / 2 + 120, screenHeight - 53, 0);

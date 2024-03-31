@@ -4,7 +4,6 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
@@ -251,11 +250,11 @@ public class Spell {
             Player player = (Player) entity;
             if (!this.canCast(level, player, hand)) {
                 this.onFail(level, player, hand);
-                SpellUtils.removeMana(player, this.getManaCost() / 2);
+                SpellUtils.removeMana(player, (double) this.getManaCost() / 2);
             }
             if (this.shouldFail(level, player, hand)) {
                 this.onFail(level, player, hand);
-                SpellUtils.removeMana(player, this.getManaCost() / 2);
+                SpellUtils.removeMana(player, (double) this.getManaCost() / 2);
             } else {
                 CommonUtils.onCastEvent(level, player, hand);
                 player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(hand).getItem()));
@@ -286,16 +285,15 @@ public class Spell {
      * @param player The player that casts the spells.
      * @param hand The hand in which the spells is cast.
      * @see ClassType#canCastSpells()
-     * @see ModCapabilities#getMana(LivingEntity)
      */
     protected boolean canCast(Level level, Player player, InteractionHand hand) {
         if (casterClassType != null) {
-            if (casterClassType.equals(PlayerDataCore.getPlayerClassType(player)))
+            if (casterClassType.equals(PlayerDataCore.ClassData.getPlayerClassType(player)))
                 return true;
-            if (ModCapabilities.getMana(player).isPresent()) {
-                return ModCapabilities.getMana(player).orElseThrow(NullPointerException::new).getCurrentMana() >= this.getManaCost();
-            }
-            return PlayerDataCore.getPlayerClassType(player).canCastSpells();
+            else if (casterClassType.canCastSpells())
+                return PlayerDataCore.ManaData.getMana(player) >= this.getManaCost();
+            
+            return PlayerDataCore.ClassData.getPlayerClassType(player).canCastSpells();
         }
         else return true;
         

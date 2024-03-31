@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -148,16 +149,16 @@ public class SpellCastingItem extends Item {
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag tag = stack.getOrCreateTag();
-        if (entity instanceof Player player) {
-            ClassType classType = PlayerDataCore.getPlayerClassType(player);
-            if (classType == null)
-                return;
-            if (!tag.contains(wielderClassType_NBT)) {
-                tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
-            } else if (!tag.getString(wielderClassType_NBT).equals(classType.getClassTypeIdentifier().toString())) {
-                tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
-            }
-        }
+        //if (entity instanceof Player player) {
+        //    ClassType classType = PlayerDataCore.ClassData.getPlayerClassType(player);
+        //    if (classType != null) {
+        //        if (!tag.contains(wielderClassType_NBT)) {
+        //            tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
+        //        } else if (!tag.getString(wielderClassType_NBT).equals(classType.getClassTypeIdentifier().toString())) {
+        //            tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
+        //        }
+        //    }
+        //}
         for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
             if (!tag.contains(spellSlot_NBT + i) || tag.getString(spellSlot_NBT + i).isEmpty()) {
                 tag.putString(spellSlot_NBT + i, Spells.EMPTY.get().getSpellIdentifier().toString());

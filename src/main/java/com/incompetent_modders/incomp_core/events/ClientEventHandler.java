@@ -27,7 +27,7 @@ public class ClientEventHandler {
             {
                 if(equipped.getItem() instanceof SpellCastingItem)
                 {
-                    IncompNetwork.sendToServer(new SpellSlotScrollPacket(event.getScrollDeltaY() < 0));
+                    IncompNetwork.sendToServer(new SpellSlotScrollPacket(player.getUUID(), event.getScrollDeltaY() < 0));
                     event.setCanceled(true);
                 }
             }

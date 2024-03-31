@@ -4,20 +4,19 @@ import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
-import com.incompetent_modders.incomp_core.api.mana.IManaCap;
+import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
+import com.incompetent_modders.incomp_core.api.network.packets.IncompPlayerDataSyncPacket;
+import com.incompetent_modders.incomp_core.api.network.packets.SpellSlotScrollPacket;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.PreCastSpell;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.registry.ModEffects;
-import com.incompetent_modders.incomp_core.util.ClientUtils;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
@@ -32,44 +31,56 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.DoubleStream;
 
-import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.DATA_ID;
+import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.CLASS_DATA_ID;
 
 @Mod.EventBusSubscriber(modid = IncompCore.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {
+    static int regenInterval = 0;
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START && event.player instanceof ServerPlayer player) {
-            var data = PlayerDataCore.getIncompCoreData(player);
-            PlayerDataCore.setIncompCoreData(player, data);
-            if (PlayerDataCore.getPlayerClassType(player) == null)
-                PlayerDataCore.setPlayerClassType(player, ModClassTypes.SIMPLE_HUMAN.get());
-            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(data.getString("class_type")));
-            @NotNull LazyOptional<IManaCap> inst = player.getCapability(ModCapabilities.MANA_CAPABILITY);
+            IncompNetwork.sendToPlayer(new IncompPlayerDataSyncPacket(player), player);
+            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(PlayerDataCore.getClassData(player).getString("classType")));
             if (classType != null) {
-                PlayerDataCore.setCanRegenMana(player, classType.canRegenerateMana());
-                if (inst.isPresent()) {
-                    AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN.get());
-                    IManaCap mana = inst.orElseThrow(RuntimeException::new);
-                    if (mana.getCurrentMana() < mana.getMaxMana() && manaRegen != null && PlayerDataCore.canRegenMana(player)) {
-                        mana.healMana(manaRegen.getValue());
-                        CommonUtils.onManaHeal(player, manaRegen.getValue());
+                AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN.get());
+                    if (PlayerDataCore.ManaData.getMana(player) < PlayerDataCore.ManaData.getMaxMana(player) && manaRegen != null && PlayerDataCore.ClassData.canRegenMana(player)) {
+                         regenInterval++;
+                        if (regenInterval >= 20) {
+                            PlayerDataCore.ManaData.healMana(player, manaRegen.getValue());
+                            CommonUtils.onManaHeal(player, manaRegen.getValue());
+                            regenInterval = 0;
+                        }
                     }
-                    PlayerDataCore.setMana(player, mana.getCurrentMana());
+                AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA.get());
+                if (maxMana != null) {
+                    PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
                 }
             }
+            //Setting Data :3
+            PlayerDataCore.setClassData(player, PlayerDataCore.getClassData(player));
+            PlayerDataCore.setManaData(player, PlayerDataCore.getManaData(player));
             
+            PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMana(player));
+            PlayerDataCore.ManaData.setMaxMana(player, PlayerDataCore.ManaData.getMaxMana(player));
+            
+            if (player.getPersistentData().contains(IncompCore.MODID + ":data")) {
+                IncompCore.LOGGER.info("Player has old data format for ClassType & Mana Data, removing...");
+                player.getPersistentData().remove(IncompCore.MODID + ":data");
+            }
+            if (PlayerDataCore.ClassData.getPlayerClassType(player) == null)
+                PlayerDataCore.ClassData.setPlayerClassType(player, ModClassTypes.SIMPLE_HUMAN.get());
+            if (classType != null) {
+                PlayerDataCore.ClassData.setPlayerClassType(player, classType);
+                PlayerDataCore.ClassData.setCanRegenMana(player, classType.canRegenerateMana());
+                PlayerDataCore.ClassData.setPacifist(player, classType.isPacifist());
+            }
         }
     }
     static AttributeModifier PACIFIST = new AttributeModifier(UUID.fromString("70eeca5e-46ed-4b8a-bf75-f102419395cc"), "Pacifist", 0.25F, AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -77,18 +88,13 @@ public class CommonForgeEvents {
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            CompoundTag tag = player.getPersistentData().getCompound(DATA_ID);
-            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(tag.getString("class_type")));
-            AttributeInstance inst = player.getAttribute(ModAttributes.MAX_MANA.get());
-            @NotNull LazyOptional<IManaCap> manaCap = player.getCapability(ModCapabilities.MANA_CAPABILITY);
-            if (manaCap.isPresent()) {
-                IManaCap mana = manaCap.orElseThrow(RuntimeException::new);
-                boolean hasClassMana = classType != null && inst != null && mana.getMaxMana() == classType.getMaxMana();
-                if (inst != null && classType != null) {
-                    if (!hasClassMana)
-                        inst.setBaseValue(classType.getMaxMana());
-                }
+            CompoundTag classData = player.getPersistentData().getCompound(CLASS_DATA_ID);
+            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(classData.getString("classType")));
+            AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA.get());
+            if (maxMana != null) {
+                PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
             }
+            
             AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
             if (classType != null && damage != null) {
                 if (classType.isPacifist()) {

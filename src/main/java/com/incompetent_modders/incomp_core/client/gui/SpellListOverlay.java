@@ -137,8 +137,8 @@ public class SpellListOverlay implements IGuiOverlay {
     }
     
     public ClassType getWielderClassType(LocalPlayer player) {
-        if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
+        if (PlayerDataCore.ClassData.getPlayerClassType(player) == null)
             return ModClassTypes.SIMPLE_HUMAN.get();
-        return ((SpellCastingItem) getCastingItem(player).getItem()).getWielderClassType(getCastingItem(player));
+        return PlayerDataCore.ClassData.getPlayerClassType(player);
     }
 }

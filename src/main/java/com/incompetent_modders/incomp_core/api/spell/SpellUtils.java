@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
-import com.incompetent_modders.incomp_core.registry.ModCapabilities;
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -31,8 +31,8 @@ public class SpellUtils {
         return player.getInventory().getFreeSlot() == -1;
     }
     
-    public static void removeMana(Player player, int amount) {
-        ModCapabilities.getMana(player).ifPresent(cap -> cap.removeMana(amount));
+    public static void removeMana(Player player, double amount) {
+        PlayerDataCore.ManaData.removeMana(player, amount);
     }
     public static HitResult genericSpellRayTrace(Player playerCaster) {
         return SpellUtils.rayTrace(playerCaster, 160 + playerCaster.getEntityReach(), 0, true);

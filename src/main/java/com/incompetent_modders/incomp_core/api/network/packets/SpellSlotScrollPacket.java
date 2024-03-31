@@ -1,39 +1,62 @@
 package com.incompetent_modders.incomp_core.api.network.packets;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.network.Packet;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-public class SpellSlotScrollPacket {
+import java.util.UUID;
+
+public class SpellSlotScrollPacket extends Packet {
+    public static final ResourceLocation ID = new ResourceLocation(IncompCore.MODID, "spell_slot_scroll");
     private final boolean forward;
+    private final UUID playerUUID;
     private static int selectedSpellSlot;
-    public SpellSlotScrollPacket(boolean forward)
+    public SpellSlotScrollPacket(UUID playerUUID, boolean forward)
     {
         this.forward = forward;
+        this.playerUUID = playerUUID;
     }
     
     public SpellSlotScrollPacket(FriendlyByteBuf buf)
     {
         this.forward = buf.readBoolean();
+        this.playerUUID = buf.readUUID();
     }
     
-    public void toBytes(FriendlyByteBuf buf)
-    {
-        buf.writeBoolean(forward);
-    }
-    public void handle(NetworkEvent.Context ctx) {
-        ServerPlayer serverPlayer = ctx.getSender();
-        if (serverPlayer != null) {
-            ctx.enqueueWork(() -> {
-                ItemStack equipped = serverPlayer.getItemInHand(InteractionHand.MAIN_HAND);
+    @Override
+    public void handleServer(PlayPayloadContext context) {
+        Player player = Minecraft.getInstance().level.getPlayerByUUID(playerUUID);
+        if (player != null) {
+            context.workHandler().execute(() -> {
+                ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
                 if (equipped.getItem() instanceof SpellCastingItem)
                     changeSelectedSpell(equipped, forward);
             });
         }
+    }
+    
+    @Override
+    public void handleClient(PlayPayloadContext context) {
+    
+    }
+    
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeBoolean(forward);
+    }
+    
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
     
     public void changeSelectedSpell(ItemStack stack, boolean up) {

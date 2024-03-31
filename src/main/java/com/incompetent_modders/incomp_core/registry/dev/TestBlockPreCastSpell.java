@@ -17,7 +17,7 @@ import net.minecraft.world.phys.HitResult;
 public class TestBlockPreCastSpell extends Spell implements PreCastSpell<TestBlockPreCastSpell> {
     
     public TestBlockPreCastSpell() {
-        super(0, 5, 120, SpellCategory.ENVIRONMENTAL);
+        super(20, 5, 120, SpellCategory.ENVIRONMENTAL);
     }
     @Override
     public Class<TestBlockPreCastSpell> getSpellClass() {

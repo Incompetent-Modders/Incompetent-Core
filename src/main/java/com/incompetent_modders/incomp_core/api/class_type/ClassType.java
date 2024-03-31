@@ -164,12 +164,12 @@ public class ClassType {
     /**
      * Returns true if the class type can regenerate mana.
      * <p>
-     * If left empty, the class type will not be able to regenerate mana.
+     * If left empty, the class type will be able to regenerate mana.
      * <p>
      * <b>Useful for classes that need to meet certain conditions to regenerate mana.</b>
      */
     public boolean canRegenerateMana() {
-        return false;
+        return true;
     }
     
     
@@ -178,16 +178,16 @@ public class ClassType {
         if (event.player.level().isClientSide) {
             return;
         }
-        if (PlayerDataCore.getPlayerClassType(event.player) == null) {
-            PlayerDataCore.setPlayerClassType(event.player, ModClassTypes.SIMPLE_HUMAN.get());
+        if (PlayerDataCore.ClassData.getPlayerClassType(event.player) == null) {
+            PlayerDataCore.ClassData.setPlayerClassType(event.player, ModClassTypes.SIMPLE_HUMAN.get());
             return;
         }
-        if (PlayerDataCore.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
+        if (PlayerDataCore.ClassData.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
             return;
         }
         // Only call the method if the tickFrequency is less than or equal to 0 and then reset the tickFrequency to the passiveEffectTickFrequency
-        if (event.player.tickCount % PlayerDataCore.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
-            PlayerDataCore.getPlayerClassType(event.player).classPassiveEffect();
+        if (event.player.tickCount % PlayerDataCore.ClassData.getPlayerClassType(event.player).getPassiveEffectTickFrequency() == 0) {
+            PlayerDataCore.ClassData.getPlayerClassType(event.player).classPassiveEffect();
         }
     }
     
