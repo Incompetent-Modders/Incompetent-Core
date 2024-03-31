@@ -88,8 +88,7 @@ public class CommonForgeEvents {
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            CompoundTag classData = player.getPersistentData().getCompound(CLASS_DATA_ID);
-            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(classData.getString("classType")));
+            ClassType classType = PlayerDataCore.ClassData.getPlayerClassType(player);
             AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA.get());
             if (maxMana != null) {
                 PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
@@ -97,8 +96,11 @@ public class CommonForgeEvents {
             
             AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
             if (classType != null && damage != null) {
-                if (classType.isPacifist()) {
+                if (classType.isPacifist() && !damage.hasModifier(PACIFIST)) {
                     damage.addPermanentModifier(PACIFIST);
+                }
+                if (!classType.isPacifist()) {
+                    damage.removeModifier(PACIFIST.getId());
                 }
             }
         }

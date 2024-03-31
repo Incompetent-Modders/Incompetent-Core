@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -89,6 +90,7 @@ public class SpellUtils {
         }
         if (playerIsHoldingSpellCatalyst(player, spell)) {
             if (!player.isCreative()) {
+                player.awardStat(Stats.ITEM_USED.get(spell.getSpellCatalyst().getItem()));
                 player.getOffhandItem().shrink(1);
             }
         } else {
