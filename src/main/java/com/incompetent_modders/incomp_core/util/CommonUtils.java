@@ -95,7 +95,6 @@ public class CommonUtils {
         
         return result;
     }
-    Blocks.WEEPING_VINES
     public static float secondsToTicks(float seconds) {
         return seconds * 20.0F;
     }
