@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.data.IncompDatagen;
@@ -25,6 +26,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.slf4j.Logger;
 
 @Mod(IncompCore.MODID)
@@ -36,6 +38,7 @@ public class IncompCore
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final ChatFormatting TITLE_FORMAT = ChatFormatting.GRAY;
     public static final ChatFormatting DESCRIPTION_FORMAT = ChatFormatting.BLUE;
+    public static final ChatFormatting ERROR_FORMAT = ChatFormatting.RED;
     private final IEventBus modEventBus;
     public IncompCore(IEventBus modEventBus) {
         this.modEventBus = modEventBus;
@@ -88,7 +91,10 @@ public class IncompCore
             });
         }
     }
-    
+    @SubscribeEvent
+    public void jsonReading(AddReloadListenerEvent event) {
+        event.addListener(SpellPropertyListener.instance);
+    }
     public static boolean shouldRegisterDevFeatures() {
         return !FMLEnvironment.production && !Boolean.getBoolean(DISABLE_EXAMPLES_PROPERTY_KEY);
     }

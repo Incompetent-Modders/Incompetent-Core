@@ -5,6 +5,7 @@
   "item.incompetent_core.spellcasting.spell_info": "Spell Info:",
   "item.incompetent_core.spellcasting.mana_cost": "Mana Cost:",
   "item.incompetent_core.spellcasting.cooldown": "Cooldown:",
+  "item.incompetent_core.spellcasting.required_catalyst": "Required Catalyst:",
   "item.incompetent_core.spellcasting.cast_time": "Cast Time:",
   "item.incompetent_core.spellcasting.pre_cast_info": "Pre-Cast Info:",
   "item.incompetent_core.spellcasting.selected_positions": "Selected Positions:",
@@ -12,6 +13,9 @@
   "item.incompetent_core.spellcasting.ready_to_cast": "Ready to Cast",
   "item.incompetent_core.spellcasting.pre_casting": "Pre-Casting",
   "item.incompetent_core.spellcasting.catalyst_required": "%s is Required to Cast this Spell",
+  "item.incompetent_core.spellcasting.not_holding_catalyst": "Not Holding The Required Catalyst",
+  "item.incompetent_core.spellcasting.not_enough_mana": "Not Enough Mana to Cast this Spell",
+  "item.incompetent_core.spellcasting.on_cooldown": "Spell is on Cooldown",
 
   "spell.incompetent_core.empty": "Empty Spell Slot",
   "spell.incompetent_core.empty_projectile": "Empty Projectile Spell",

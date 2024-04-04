@@ -24,11 +24,12 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 public class SpellCastingItem extends Item {
     private final String selSpellSlot_NBT = "selectedSpellSlot";
     private final String spellSlot_NBT = "spellSlot_";
-    private final String wielderClassType_NBT = "wielderClassType";
+    private final String playerUUID_NBT = "playerUUID";
     private static final String spellSlotCooldown_NBT = "spellSlotCoolDown_";
     private static final String remainingDrawTime_NBT = "castProgress";
     private final int level;
@@ -68,7 +69,10 @@ public class SpellCastingItem extends Item {
             if (SpellUtils.isPreCasting(tag)) {
                 return CommonUtils.stopPreCasting(player, itemstack, tag);
             } else {
-                SpellUtils.setPreCasting(tag, true);
+                if (getSelectedSpell(itemstack) instanceof PreCastSpell<?>) {
+                    SpellUtils.setPreCasting(tag, true);
+                    SpellUtils.setHasBeenCast(tag, false);
+                }
                 SpellUtils.setHasBeenCast(tag, false);
             }
         } else {
@@ -101,23 +105,25 @@ public class SpellCastingItem extends Item {
                 Spell spell = getSelectedSpell(itemstack);
                 if (spell != null && !isCoolDown(SpellUtils.getSelectedSpellSlot(tag), itemstack) && !casting) {
                     casting = true;
-                    if (spell.hasSpellCatalyst() && SpellUtils.playerIsHoldingSpellCatalyst((Player) entity, spell)) {
-                        SpellUtils.handleCatalystConsumption((Player) entity, spell);
-                        spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
-                        SpellUtils.setHasBeenCast(tag, true);
-                        if (spell instanceof PreCastSpell<?> preCastSpell) {
-                            preCastSpell.afterCast(level);
+                    if (entity instanceof Player player) {
+                        if (spell.hasSpellCatalyst() && SpellUtils.playerIsHoldingSpellCatalyst(player, spell)) {
+                            SpellUtils.handleCatalystConsumption(player, spell);
+                            spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
+                            SpellUtils.setHasBeenCast(tag, true);
+                            if (spell instanceof PreCastSpell<?> preCastSpell) {
+                                preCastSpell.afterCast(level);
+                            }
+                            addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
+                            casting = false;
+                        } else if (!spell.hasSpellCatalyst()) {
+                            spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
+                            SpellUtils.setHasBeenCast(tag, true);
+                            if (spell instanceof PreCastSpell<?> preCastSpell) {
+                                preCastSpell.afterCast(level);
+                            }
+                            addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
+                            casting = false;
                         }
-                        addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
-                        casting = false;
-                    } else if (!spell.hasSpellCatalyst()) {
-                        spell.cast(level, entity, InteractionHand.MAIN_HAND, false);
-                        SpellUtils.setHasBeenCast(tag, true);
-                        if (spell instanceof PreCastSpell<?> preCastSpell) {
-                            preCastSpell.afterCast(level);
-                        }
-                        addCoolDown(SpellUtils.getSelectedSpellSlot(tag), getSpellCoolDown(itemstack), itemstack);
-                        casting = false;
                     }
                 }
                 entity.stopUsingItem();
@@ -133,8 +139,12 @@ public class SpellCastingItem extends Item {
     
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = stack.getOrCreateTag();
-        if (!SpellUtils.isPreCasting(tag) && SpellUtils.hasSpellBeenCast(tag)) {
-            ClientUtil.createSelectedSpellTooltip(tooltip, stack);
+        if (!SpellUtils.hasSpellBeenCast(tag) && tag.contains(playerUUID_NBT) && level != null) {
+            ClientUtil.createSelectedSpellTooltip(tooltip, stack, level, level.getPlayerByUUID(tag.getUUID(playerUUID_NBT)));
+            //if (level != null && tag.contains(playerUUID_NBT))
+            //    ClientUtil.createCastingInfoTooltip(tooltip, stack, level.getPlayerByUUID(tag.getUUID(playerUUID_NBT)));
+        } else if (!SpellUtils.isPreCasting(tag) && SpellUtils.hasSpellBeenCast(tag) && tag.contains(playerUUID_NBT) && level != null) {
+            ClientUtil.createSelectedSpellTooltip(tooltip, stack, level, level.getPlayerByUUID(tag.getUUID(playerUUID_NBT)));
             ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
         } else {
             Spell spell = getSelectedSpell(stack);
@@ -149,16 +159,21 @@ public class SpellCastingItem extends Item {
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag tag = stack.getOrCreateTag();
-        //if (entity instanceof Player player) {
-        //    ClassType classType = PlayerDataCore.ClassData.getPlayerClassType(player);
-        //    if (classType != null) {
-        //        if (!tag.contains(wielderClassType_NBT)) {
-        //            tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
-        //        } else if (!tag.getString(wielderClassType_NBT).equals(classType.getClassTypeIdentifier().toString())) {
-        //            tag.putString(wielderClassType_NBT, classType.getClassTypeIdentifier().toString());
-        //        }
-        //    }
-        //}
+        if (entity instanceof Player player) {
+            UUID playerUUID = player.getUUID();
+            if (!tag.contains(playerUUID_NBT)) {
+                tag.putUUID(playerUUID_NBT, playerUUID);
+            } else {
+                if (!tag.getUUID(playerUUID_NBT).equals(playerUUID)) {
+                    tag.putUUID(playerUUID_NBT, playerUUID);
+                }
+            }
+        }
+        if (!(getSelectedSpell(stack) instanceof PreCastSpell<?>)) {
+            if (SpellUtils.isPreCasting(tag)) {
+                SpellUtils.setPreCasting(tag, false);
+            }
+        }
         for (int i = 0; i < getSpellSlots(this.getLevel()); i++) {
             if (!tag.contains(spellSlot_NBT + i) || tag.getString(spellSlot_NBT + i).isEmpty()) {
                 tag.putString(spellSlot_NBT + i, Spells.EMPTY.get().getSpellIdentifier().toString());
@@ -170,10 +185,6 @@ public class SpellCastingItem extends Item {
         }
         if (!tag.contains(selSpellSlot_NBT))
             tag.putInt(selSpellSlot_NBT, 0);
-    }
-    public ClassType getWielderClassType(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return ModRegistries.CLASS_TYPE.get(new ResourceLocation(tag.getString(wielderClassType_NBT)));
     }
     public static Spell getSelectedSpell(ItemStack stack) {
         CompoundTag tag = stack.getTag();

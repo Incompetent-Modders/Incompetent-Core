@@ -1,4 +1,4 @@
-version:3578
+version:3700
 autoJump:false
 operatorItemsTab:false
 autoSuggestions:true
@@ -21,6 +21,7 @@ toggleCrouch:false
 toggleSprint:false
 darkMojangStudiosBackground:false
 hideLightningFlashes:false
+hideSplashTexts:false
 mouseSensitivity:0.5
 fov:0.0
 screenEffectScale:1.0
@@ -54,7 +55,7 @@ chatLineSpacing:0.0
 textBackgroundOpacity:0.5
 backgroundForChatOnly:true
 hideServerAddress:false
-advancedItemTooltips:false
+advancedItemTooltips:true
 pauseOnLostFocus:true
 overrideWidth:0
 overrideHeight:0

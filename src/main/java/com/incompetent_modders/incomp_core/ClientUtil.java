@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.PreCastSpell;
 import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
@@ -112,12 +113,15 @@ public class ClientUtil {
     private static final Component requiredCatalyst = Component.translatable("item." + MODID + ".spellcasting.required_catalyst").withStyle(TITLE_FORMAT);
     private static final Component selectedEntitiesComp = Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT);
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
-    public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
+    public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack, Level level, Player player) {
         CompoundTag tag = castingStack.getOrCreateTag();
         String selectedSlotCoolDown = CommonUtils.timeFromTicks(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack), 2);
         Spell spell = SpellCastingItem.getSelectedSpell(castingStack);
         tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(spell.getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack) > 0 ? " - " + selectedSlotCoolDown : "").append(String.valueOf(" " + SpellUtils.getSelectedSpellSlot(tag))).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(spell.getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack) > 0 ? " - " + selectedSlotCoolDown : "").withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.EMPTY);
+        if (level != null && tag.contains("playerUUID"))
+            ClientUtil.createCastingInfoTooltip(tooltip, castingStack, player);
         tooltip.add(CommonComponents.EMPTY);
         tooltip.add(SPELL_INFO_TITLE);
         tooltip.add(CommonComponents.space().append(manaCost));
@@ -126,7 +130,7 @@ public class ClientUtil {
         tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spell.getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
         if (spell.hasSpellCatalyst()) {
             tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName()).withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(getPlayer(), spell) ? "✔" : "✘").withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(player, spell) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
         }
         tooltip.add(CommonComponents.EMPTY);
     }
@@ -138,7 +142,7 @@ public class ClientUtil {
                 continue;
             }
             String slotCoolDown = CommonUtils.timeFromTicks(SpellCastingItem.getCoolDown(i, castingStack), 2);
-            tooltip.add(CommonComponents.space().append(SpellCastingItem.getSpellNameInSlot(tag, i)).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(i, castingStack) > 0 ? " - " + slotCoolDown : "").append(" " + i).withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.space().append(SpellCastingItem.getSpellNameInSlot(tag, i)).withStyle(DESCRIPTION_FORMAT).append(SpellCastingItem.getCoolDown(i, castingStack) > 0 ? " - " + slotCoolDown : "").withStyle(DESCRIPTION_FORMAT));
         }
     }
     public static void createPreCastTooltip(List<Component> tooltip, ItemStack castingStack, PreCastSpell<?> preCastSpell, Level level) {
@@ -172,6 +176,19 @@ public class ClientUtil {
                     tooltip.add(CommonComponents.space().append(Component.literal("- ").append(Component.literal(" " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())).append(" (" + blockName.getString() + ")")).withStyle(DESCRIPTION_FORMAT));
                 }
             });
+        }
+    }
+    public static void createCastingInfoTooltip(List<Component> tooltip, ItemStack castingStack, Player caster) {
+        CompoundTag tag = castingStack.getOrCreateTag();
+        Spell spell = SpellCastingItem.getSelectedSpell(castingStack);
+        if (spell.getManaCost() > PlayerDataCore.ManaData.getMana(caster)) {
+            tooltip.add(Component.translatable("item." + MODID + ".spellcasting.not_enough_mana").withStyle(ERROR_FORMAT));
+        }
+        if (spell.hasSpellCatalyst() && !SpellUtils.playerIsHoldingSpellCatalyst(caster, spell)) {
+            tooltip.add(Component.translatable("item." + MODID + ".spellcasting.not_holding_catalyst").withStyle(ERROR_FORMAT));
+        }
+        if (SpellCastingItem.isCoolDown(SpellUtils.getSelectedSpellSlot(tag), castingStack)) {
+            tooltip.add(Component.translatable("item." + MODID + ".spellcasting.on_cooldown").withStyle(ERROR_FORMAT));
         }
     }
 }

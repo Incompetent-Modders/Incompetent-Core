@@ -33,6 +33,10 @@ public class SpellUtils {
     }
     
     public static void removeMana(Player player, double amount) {
+        if (PlayerDataCore.ManaData.getMana(player) - amount < 0) {
+            PlayerDataCore.ManaData.setMana(player, 0);
+            return;
+        }
         PlayerDataCore.ManaData.removeMana(player, amount);
     }
     public static HitResult genericSpellRayTrace(Player playerCaster) {
@@ -80,19 +84,20 @@ public class SpellUtils {
     public static boolean playerIsHoldingSpellCatalyst(Player player, Spell spell) {
         if (spell.hasSpellCatalyst()) {
             ItemStack catalyst = spell.getSpellCatalyst();
-            return player.getOffhandItem().copy() == catalyst;
+            return player.getOffhandItem().is(catalyst.getItem());
         }
-        return false;
+        return true;
     }
     public static void handleCatalystConsumption(Player player, Spell spell) {
-        if (spell.getSpellCatalyst().isEmpty()) {
+        if (!spell.hasSpellCatalyst()) {
             return;
         }
         if (playerIsHoldingSpellCatalyst(player, spell)) {
             if (!player.isCreative()) {
                 player.awardStat(Stats.ITEM_USED.get(spell.getSpellCatalyst().getItem()));
                 player.getOffhandItem().shrink(1);
-            }
+            } else
+                player.awardStat(Stats.ITEM_USED.get(spell.getSpellCatalyst().getItem()));
         } else {
             Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", spell.getSpellCatalyst().getDisplayName());
             player.displayClientMessage(message, true);

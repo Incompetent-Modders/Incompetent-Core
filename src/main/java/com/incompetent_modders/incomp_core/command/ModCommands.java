@@ -19,6 +19,7 @@ public class ModCommands {
                 .then(SetSpellInSlotCommand.register())
                 .then(WhatSpellIsInSlotCommand.register())
                 .then(ClearSpellSlotsCommand.register())
+                .then(RefillManaCommand.register())
                 ;
         
         LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);

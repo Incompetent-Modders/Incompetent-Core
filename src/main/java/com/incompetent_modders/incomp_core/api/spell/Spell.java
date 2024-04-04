@@ -248,11 +248,12 @@ public class Spell {
             this.onCast(level, entity, hand);
         } else {
             Player player = (Player) entity;
-            if (!this.canCast(level, player, hand)) {
+            if (PlayerDataCore.ManaData.getMana(player) < this.getManaCost()) {
+                this.onFail(level, player, hand);
+            } else if (!this.canCast(level, player, hand)) {
                 this.onFail(level, player, hand);
                 SpellUtils.removeMana(player, (double) this.getManaCost() / 2);
-            }
-            if (this.shouldFail(level, player, hand)) {
+            } else if (this.shouldFail(level, player, hand)) {
                 this.onFail(level, player, hand);
                 SpellUtils.removeMana(player, (double) this.getManaCost() / 2);
             } else {
@@ -295,8 +296,7 @@ public class Spell {
             
             return PlayerDataCore.ClassData.getPlayerClassType(player).canCastSpells();
         }
-        else return true;
-        
+        return true;
     }
     
     

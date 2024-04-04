@@ -1,0 +1,13 @@
+{
+  "spell": "incompetent_core:test_spell",
+  "properties": {
+    "mana": 99,
+    "draw_time": 5,
+    "cooldown": 120
+  },
+  "catalyst": {
+    "item": "minecraft:blaze_powder",
+    "count": 1,
+    "custom_data": {}
+  }
+}

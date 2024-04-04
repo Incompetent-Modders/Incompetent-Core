@@ -1,18 +1,3 @@
-/scoreboard players get Dev
-/scoreboard objectives list
-/i_c setSpell 3 "incompetent_core:test_block_precast_spell"
-/data get entity Dev
-/give @s incompetent_core:test_class
-/give @s incompetent_core:test_casting_item
-/incompetent_core setSpell 0 "incompetent_core:test_block_precast_spell"
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 6.5 -59 8.5
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 8 -61 8
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.5
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 8 -61 8
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8.2
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8.5
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8.3
 /tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8.1
 /tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.9
 /tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.95
@@ -48,3 +33,18 @@
 /effect give Dev incompetent_core:arcane_selection
 /data get entity 9455c177-c9bf-4327-b091-123d1be277c3
 /effect give 60575e42-a658-4f57-8ead-9ec38e14e11f incompetent_core:arcane_selection
+/i_c clearSpellSlot true
+/i_c setSpell 0 "incompetent_core:test_spell"
+/give @s incompetent_core:simple_human
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/i_c refillMana true
+/i_c refillMana 20
+/gamemode survival
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/data get entity Dev
+/give @s minecraft:netherite_sword
+/summon minecraft:zombie
+/attribute Dev minecraft:generic.attack_damage get
+/gamemode creative
