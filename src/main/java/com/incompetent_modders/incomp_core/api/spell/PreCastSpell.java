@@ -8,7 +8,9 @@ import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.commands.EffectCommands;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SplashPotionItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -49,9 +52,8 @@ public interface PreCastSpell<T extends Spell> {
             if (selectedEntities.contains(livingTarget))
                 return;
             selectedEntities.add(livingTarget);
-            livingTarget.addEffect(new MobEffectInstance(ModEffects.ARCANE_SELECTION.get(), 999999, 1, true, true, false));
+            CommonUtils.onEntitySelectEvent(level, livingTarget);
             player.displayClientMessage(Component.translatable("spell.incompetent_core.select_entity").append(entityName(livingTarget)), true);
-            IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a: " + entityName(livingTarget) + " At: " + target.position());
         }
     }
     default Component entityName(LivingEntity entity) {
@@ -60,13 +62,8 @@ public interface PreCastSpell<T extends Spell> {
         }
         return entity.getType().getDescription();
     }
-    default void stopPreCast() {
-        selectedEntities.forEach(selected -> {
-            Scoreboard scoreboard = selected.level().getScoreboard();
-            PlayerTeam selectedTeam = CommonUtils.createTeam(scoreboard, "ArcaneSelection", ChatFormatting.GOLD);
-            selected.removeEffect(ModEffects.ARCANE_SELECTION.get());
-            CommonUtils.removeTeam(scoreboard, selectedTeam);
-        });
+    default void stopPreCast(Level level) {
+        selectedEntities.forEach(entity -> CommonUtils.onEntityDeselectEvent(level, entity));
     }
     default void selectPosition(Player player, BlockPos pos, Level level) {
         if (selectedPositions.contains(pos))
@@ -81,7 +78,7 @@ public interface PreCastSpell<T extends Spell> {
         selectedPositions.add(pos);
         Component blockName = Component.translatable(level.getBlockState(pos).getBlock().getDescriptionId());
         player.displayClientMessage(Component.translatable("spell.incompetent_core.select_position", blockName, pos.toString()), true);
-        IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a block at: " + pos + " (" + blockName.getString() + ")");
+        IncompCore.LOGGER.info(player.getDisplayName().getString() + " Has selected a block at: " + pos.toString() + " (" + blockName.getString() + ")");
     }
     
     default void afterCast(Level level) {

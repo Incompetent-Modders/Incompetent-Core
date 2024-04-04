@@ -1,9 +1,3 @@
-/summon incompetent_core:spell_projectile ~ ~ ~ {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
-/summon incompetent_core:spell_projectile -466.63 85.40 2.00 {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
-/summon incompetent_core:spell_projectile ~ ~ ~ {Spell:["incompetent_core:test_projectile_spell"], Gravity:[0.25f], Color:[0x00FF00]}
-/summon incompetent_core:spell_projectile
-/i_c setSpell 1 "incompetent_core:test_ranged_spell"
-/i_c setSpell 2 "incompetent_core:test_precast_spell"
 /scoreboard players get Dev
 /scoreboard objectives list
 /i_c setSpell 3 "incompetent_core:test_block_precast_spell"
@@ -48,3 +42,9 @@
 /recipe take Dev *
 /data get entity Dev
 /data get entity @s
+/i_c setSpell 1 "incompetent_core:test_precast_spell"
+/effect give Dev incompetent_core:arcane_selection
+/effect give f2e100f3-860c-4468-abaf-57f038a229c8 minecraft:glowing
+/effect give Dev incompetent_core:arcane_selection
+/data get entity 9455c177-c9bf-4327-b091-123d1be277c3
+/effect give 60575e42-a658-4f57-8ead-9ec38e14e11f incompetent_core:arcane_selection

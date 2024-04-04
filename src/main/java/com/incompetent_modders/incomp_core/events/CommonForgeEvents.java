@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.network.packets.IncompPlayerDataSyncPacket;
 import com.incompetent_modders.incomp_core.api.network.packets.SpellSlotScrollPacket;
@@ -13,12 +14,19 @@ import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.registry.ModEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.commands.EffectCommands;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,6 +47,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.CLASS_DATA_ID;
+import static com.incompetent_modders.incomp_core.util.CommonUtils.entityName;
 
 @Mod.EventBusSubscriber(modid = IncompCore.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {

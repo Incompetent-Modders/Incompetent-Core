@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.util;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.spell.*;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.fml.ModList;
@@ -43,6 +45,12 @@ public class CommonUtils {
     public static void onSpellSlotScrollEvent(Level level, boolean isScrollingUp, Player player) {
         NeoForge.EVENT_BUS.post(new SpellEvent.SpellSlotScrollEvent(level, isScrollingUp, player));
     }
+    public static void onEntitySelectEvent(Level level, Entity target) {
+        NeoForge.EVENT_BUS.post(new EntitySelectEvent.SelectEvent(target, level));
+    }
+    public static void onEntityDeselectEvent(Level level, Entity target) {
+        NeoForge.EVENT_BUS.post(new EntitySelectEvent.DeselectEvent(target, level));
+    }
     public static float onManaHeal(LivingEntity entity, double amount) {
         ManaEvent event = new ManaEvent(entity, amount);
         return NeoForge.EVENT_BUS.post(event).isCanceled() ? 0 : (float) event.getAmount();
@@ -51,7 +59,12 @@ public class CommonUtils {
         ManaEvent.ManaRegenEvent event = new ManaEvent.ManaRegenEvent(entity, amount);
         return NeoForge.EVENT_BUS.post(event).isCanceled() ? 0 : (float) event.getAmount();
     }
-    
+    public static String entityName(Entity entity) {
+        if (entity.hasCustomName()) {
+            return entity.getCustomName() + " (" + entity.getType().getDescription().toString() + ")";
+        }
+        return entity.getType().getDescription().getString();
+    }
     public static String timeFromTicks(float ticks, int decimalPlaces) {
         float ticks_to_seconds = 20;
         float seconds_to_minutes = 60;
@@ -82,7 +95,7 @@ public class CommonUtils {
         
         return result;
     }
-    
+    Blocks.WEEPING_VINES
     public static float secondsToTicks(float seconds) {
         return seconds * 20.0F;
     }
@@ -118,16 +131,17 @@ public class CommonUtils {
     }
     public static InteractionResultHolder<ItemStack> handlePreCasting(Player player, InteractionHand hand, ItemStack itemstack, CompoundTag tag) {
         Spell spell = SpellCastingItem.getSelectedSpell(itemstack);
+        Level level = player.getCommandSenderWorld();
         if (spell instanceof PreCastSpell<?> preCastSpell) {
             preCastSpell.onPreCast(player.getCommandSenderWorld(), player, hand);
             if (preCastSpell.getSelectedEntities() != null && preCastSpell.getSelectedEntities().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.stopPreCast();
+                preCastSpell.stopPreCast(level);
                 SpellUtils.setPreCasting(tag, false);
                 SpellUtils.setHasBeenCast(tag, false);
                 return InteractionResultHolder.consume(itemstack);
             }
             if (preCastSpell.getSelectedPositions() != null && preCastSpell.getSelectedPositions().size() >= preCastSpell.maxSelections()) {
-                preCastSpell.stopPreCast();
+                preCastSpell.stopPreCast(level);
                 SpellUtils.setPreCasting(tag, false);
                 SpellUtils.setHasBeenCast(tag, false);
                 return InteractionResultHolder.consume(itemstack);
