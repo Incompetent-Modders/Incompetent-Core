@@ -4,29 +4,20 @@ import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
-import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.network.packets.IncompPlayerDataSyncPacket;
-import com.incompetent_modders.incomp_core.api.network.packets.SpellSlotScrollPacket;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.spell.PreCastSpell;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.registry.ModEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.commands.EffectCommands;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,15 +30,14 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.util.List;
 import java.util.UUID;
-
-import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.CLASS_DATA_ID;
-import static com.incompetent_modders.incomp_core.util.CommonUtils.entityName;
 
 @Mod.EventBusSubscriber(modid = IncompCore.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {
@@ -115,7 +105,16 @@ public class CommonForgeEvents {
         }
     }
     @SubscribeEvent
+    public static void serverStarting(ServerStartingEvent event) {
+        ModRegistries.SPELL.entrySet().forEach(entry -> {
+            if (!SpellPropertyListener.spellHasProperties(entry.getValue())) {
+                IncompCore.LOGGER.warn("Spell {} does not have properties! This may cause issues!", entry.getValue().getSpellIdentifier());
+            }
+        });
+    }
+    @SubscribeEvent
     public static void levelOpened(PlayerEvent.PlayerLoggedInEvent event) {
+        
         List<LivingEntity> preCastEntities = PreCastSpell.selectedEntities;
         if (preCastEntities.isEmpty())
             return;
@@ -153,4 +152,6 @@ public class CommonForgeEvents {
             }
         }
     }
+    
+    
 }

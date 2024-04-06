@@ -166,4 +166,10 @@ public class CommonUtils {
         }
         return InteractionResultHolder.fail(itemstack);
     }
+    
+    public static String removeExtension(ResourceLocation resourceLocation) {
+        String path = resourceLocation.getPath(); // Get the full path from ResourceLocation
+        String[] pathElements = path.split("/");
+        return pathElements[pathElements.length - 1];
+    }
 }

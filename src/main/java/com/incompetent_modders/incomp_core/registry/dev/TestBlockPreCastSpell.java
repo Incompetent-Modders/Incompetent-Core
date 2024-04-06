@@ -5,11 +5,9 @@ import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.api.spell.SpellCategory;
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -17,7 +15,7 @@ import net.minecraft.world.phys.HitResult;
 public class TestBlockPreCastSpell extends Spell implements PreCastSpell<TestBlockPreCastSpell> {
     
     public TestBlockPreCastSpell() {
-        super(20, 5, 120, SpellCategory.ENVIRONMENTAL);
+        super(SpellCategory.ENVIRONMENTAL);
     }
     @Override
     public Class<TestBlockPreCastSpell> getSpellClass() {

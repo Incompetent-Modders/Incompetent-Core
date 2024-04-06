@@ -1,0 +1,10 @@
+{
+  "catalyst": {
+    "count": 1,
+    "item": "minecraft:blaze_powder"
+  },
+  "cooldown": 120,
+  "draw_time": 10,
+  "mana_cost": 50,
+  "spell": "incompetent_core:test_spell"
+}

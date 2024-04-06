@@ -4,9 +4,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public class InstantSpell extends Spell {
     public InstantSpell(boolean isRangedAttack, int manaCost, int coolDown, SpellCategory category, ResourceLocation casterClassType) {
-        super(manaCost, 0, coolDown, category, casterClassType);
+        super(category, casterClassType);
     }
     public InstantSpell(boolean isRangedAttack, int manaCost, int coolDown, SpellCategory category) {
-        super(manaCost, 0, coolDown, category);
+        super(category);
     }
 }

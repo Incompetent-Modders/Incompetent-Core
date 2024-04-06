@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 
 public class EmptySpell extends Spell {
     public EmptySpell() {
-        super(0, 0, 0, SpellCategory.DEBUFF);
+        super(SpellCategory.DEBUFF);
     }
     
     @Override

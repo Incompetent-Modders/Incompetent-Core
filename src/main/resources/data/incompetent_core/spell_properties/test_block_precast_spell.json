@@ -1,0 +1,6 @@
+{
+  "cooldown": 120,
+  "draw_time": 60,
+  "mana_cost": 75,
+  "spell": "incompetent_core:test_block_precast_spell"
+}

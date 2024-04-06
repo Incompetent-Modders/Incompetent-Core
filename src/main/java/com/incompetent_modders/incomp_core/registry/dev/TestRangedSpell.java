@@ -14,7 +14,7 @@ import static com.incompetent_modders.incomp_core.util.CommonUtils.secondsToTick
 
 public class TestRangedSpell extends RangedSpell {
     public TestRangedSpell() {
-        super(0, (int) secondsToTicks(2), (int) secondsToTicks(5));
+        super();
     }
     @Override
     public void onCast(Level level, LivingEntity entity, InteractionHand hand) {

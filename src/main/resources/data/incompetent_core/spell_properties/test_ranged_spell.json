@@ -1,0 +1,6 @@
+{
+  "cooldown": 120,
+  "draw_time": 40,
+  "mana_cost": 50,
+  "spell": "incompetent_core:test_ranged_spell"
+}

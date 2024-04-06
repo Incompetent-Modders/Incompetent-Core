@@ -8,11 +8,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
 public class RangedSpell extends Spell {
-    public RangedSpell(int manaCost, int drawTime, int coolDown, ResourceLocation casterClassType) {
-        super(manaCost, drawTime, coolDown, SpellCategory.RANGED, casterClassType);
+    public RangedSpell(ResourceLocation casterClassType) {
+        super(SpellCategory.RANGED, casterClassType);
     }
-    public RangedSpell(int manaCost, int drawTime, int coolDown) {
-        super(manaCost, drawTime, coolDown, SpellCategory.RANGED);
+    public RangedSpell() {
+        super(SpellCategory.RANGED);
     }
     /**
      * Called when the spell hits an object.

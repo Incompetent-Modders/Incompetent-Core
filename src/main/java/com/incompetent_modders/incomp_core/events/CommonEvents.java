@@ -1,8 +1,10 @@
 package com.incompetent_modders.incomp_core.events;
 
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.command.ModCommands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 @Mod.EventBusSubscriber
 public class CommonEvents {

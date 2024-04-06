@@ -1,11 +1,11 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
 import com.incompetent_modders.incomp_core.api.spell.Spells;
 import com.incompetent_modders.incomp_core.data.IncompDatagen;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
+import com.incompetent_modders.incomp_core.events.CommonEventHandler;
 import com.incompetent_modders.incomp_core.registry.ModArgumentTypes;
 import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModClassTypes;
@@ -26,7 +26,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.slf4j.Logger;
 
 @Mod(IncompCore.MODID)
@@ -55,7 +54,9 @@ public class IncompCore
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         
         ClientEventHandler handler = new ClientEventHandler();
+        CommonEventHandler commonHandler = new CommonEventHandler();
         NeoForge.EVENT_BUS.register(handler);
+        NeoForge.EVENT_BUS.register(commonHandler);
         
         if (shouldRegisterDevFeatures())
         {
@@ -72,7 +73,7 @@ public class IncompCore
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
     }
-
+    
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
@@ -91,10 +92,7 @@ public class IncompCore
             });
         }
     }
-    @SubscribeEvent
-    public void jsonReading(AddReloadListenerEvent event) {
-        event.addListener(SpellPropertyListener.instance);
-    }
+    
     public static boolean shouldRegisterDevFeatures() {
         return !FMLEnvironment.production && !Boolean.getBoolean(DISABLE_EXAMPLES_PROPERTY_KEY);
     }

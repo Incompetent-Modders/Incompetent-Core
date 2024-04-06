@@ -130,7 +130,7 @@ public class ClientUtil {
         tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spell.getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
         if (spell.hasSpellCatalyst()) {
             tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(player, spell) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spell.getSpellCatalyst().getCount() > 1 ? " x" + spell.getSpellCatalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(player, spell) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
         }
         tooltip.add(CommonComponents.EMPTY);
     }

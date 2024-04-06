@@ -1,20 +1,3 @@
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 8.1
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.9
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.95
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.5 -61 7.99
-/tp abf2b4fe-4a7f-419f-8656-bd8214423770 7.99 -61 7.99
-/setblock 8 -61 8 minecraft:cobblestone
-/setblock 8 -61 7 minecraft:red_wool
-/setblock 7 -61 7 minecraft:red_wool
-/setblock 7 -61 8 minecraft:yellow_wool
-/data modify entity abf2b4fe-4a7f-419f-8656-bd8214423770 CustomName set value "0, 0, 0"
-/data modify entity abf2b4fe-4a7f-419f-8656-bd8214423770 Name set value "0, 0, 0"
-/data merge entity abf2b4fe-4a7f-419f-8656-bd8214423770 {CustomName: "0, 0, 0"}
-/summon armor_stand ~ ~ ~ {CustomNameVisible:1b,CustomName:'{"text":"0, 0, 0"}'}
-/tp 42ed3ee8-8134-45db-aa57-4f8ae6100e4e 7.99 -61 7.99
-/setblock 7 -61 8 minecraft:yellow_wool
-/setblock 7 -61 7 minecraft:red_wool
-/setblock 8 -61 8 minecraft:cobblestone
 /setblock 8 -61 7 minecraft:red_wool
 /effect give 42ed3ee8-8134-45db-aa57-4f8ae6100e4e minecraft:invisibility infinite 1 true
 /summon minecraft:block_display 10.38 -60.00 6.95
@@ -48,3 +31,20 @@
 /summon minecraft:zombie
 /attribute Dev minecraft:generic.attack_damage get
 /gamemode creative
+/incompetent_core setSpell 1 "incompetent_core:test_block_precast_spell"
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/datapack list available
+/datapack list enabled
+/datapack disable vanilla
+/datapack list available
+/datapack enable "file/spell_properties"
+/reload
+/datapack disable vanilla
+/execute in minecraft:overworld run tp Dev ~ ~ ~
+/i_c setSpell 1 "incompetent_core:test_ranged_spell"
+/datapack list available
+/datapack list enabled
+/reload
+/i_c refillMana true
+/reload

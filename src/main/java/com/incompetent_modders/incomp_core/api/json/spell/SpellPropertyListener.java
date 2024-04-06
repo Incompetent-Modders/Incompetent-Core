@@ -6,7 +6,9 @@ import com.google.gson.*;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.spell.Spell;
+import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -17,19 +19,18 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-@ParametersAreNonnullByDefault
+import java.util.concurrent.atomic.AtomicReference;
+
 public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
-    public static final SpellPropertyListener instance = new SpellPropertyListener();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = IncompCore.LOGGER;
-    public static Map<Spell, Map<ResourceLocation, Spell>> spells = ImmutableMap.of();
+    
+    public static Map<Spell, SpellProperties> properties = new HashMap<>();
     public Map<ResourceLocation, Spell> byName = ImmutableMap.of();
-    public static Map<Spell, Integer> manaCosts = ImmutableMap.of();
-    public static Map<Spell, Integer> drawTimes = ImmutableMap.of();
-    public static Map<Spell, Integer> cooldowns = ImmutableMap.of();
-    public static Map<Spell, ItemStack> catalysts = ImmutableMap.of();
     
     public SpellPropertyListener() {
         super(GSON, "spell_properties");
@@ -37,48 +38,61 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
     
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-        Map<Spell, ImmutableMap.Builder<ResourceLocation, Spell>> map = Maps.newHashMap();
-        ImmutableMap.Builder<ResourceLocation, Spell> builder = ImmutableMap.builder();
+        properties.clear();
         
         for(Map.Entry<ResourceLocation, JsonElement> entry : files.entrySet()) {
+            ResourceLocation resourceLocation = entry.getKey();
+            
+            if (resourceLocation.getPath().startsWith("_")) {
+                continue;
+            }
+            
             try {
-                Spell spell = getSpell(entry.getValue());
-                LOGGER.info("%s ||| %s".formatted(entry.getKey(), entry.getValue()));
-                builder.put(entry.getKey(), spell);
-                manaCosts.put(spell, entry.getValue().getAsJsonObject().get("properties").getAsJsonObject().get("mana").getAsInt());
-                drawTimes.put(spell, entry.getValue().getAsJsonObject().get("properties").getAsJsonObject().get("draw_time").getAsInt());
-                cooldowns.put(spell, entry.getValue().getAsJsonObject().get("properties").getAsJsonObject().get("cooldown").getAsInt());
-                catalysts.put(spell, deserializeCatalyst(entry.getValue()));
-                map.computeIfAbsent(spell, s -> ImmutableMap.builder()).put(entry.getKey(), spell);
+                Spell spell = getSpell(resourceLocation);
+                SpellProperties spellProperties = SpellProperties.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow(false, errorMsg -> {});
+                if (spellProperties != null) {
+                    properties.put(spell, spellProperties);
+                }
             } catch (IllegalArgumentException | JsonParseException jsonParseException) {
-                LOGGER.error("Parsing error loading spell properties {}", entry.getKey(), jsonParseException);
+                IncompCore.LOGGER.error("Parsing error loading spell properties input {}", resourceLocation, jsonParseException);
             }
         }
-        
-        spells = map.entrySet().stream().collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> e.getValue().build()));
-        this.byName = builder.build();
-        LOGGER.info("Loaded Properties for {} spells", spells.size());
+        IncompCore.LOGGER.info("Load Complete for {} spells", properties.size());
     }
-    
-    protected Spell getSpell(JsonElement jsonElement) {
-        JsonObject json = jsonElement.getAsJsonObject();
-        return ModRegistries.SPELL.get(new ResourceLocation(json.get("spell").getAsString()));
+    protected static Spell getSpell(ResourceLocation resourceLocation) {
+        return ModRegistries.SPELL.get(new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", "")));
     }
-    protected ItemStack deserializeCatalyst(JsonElement jsonElement) {
+    protected static ItemStack deserializeCatalyst(JsonElement jsonElement) {
         JsonObject json = jsonElement.getAsJsonObject();
-        JsonObject catalyst = json.get("catalyst").getAsJsonObject();
-        String itemId = GsonHelper.getAsString(catalyst, "item");
-        int count = GsonHelper.getAsInt(catalyst, "count", 1);
+        String itemId = GsonHelper.getAsString(json, "item");
+        int count = GsonHelper.getAsInt(json, "count", 1);
         ItemStack itemstack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(itemId)), count);
         if (GsonHelper.isValidNode(json, "custom_data")) {
             try {
                 JsonElement element = json.get("custom_data");
-                itemstack.setTag(TagParser.parseTag(
-                        element.isJsonObject() ? GSON.toJson(element) : GsonHelper.convertToString(element, "nbt")));
+                itemstack.setTag(TagParser.parseTag(element.isJsonObject() ? GSON.toJson(element) : GsonHelper.convertToString(element, "custom_data")));
             } catch (CommandSyntaxException e) {
                 e.printStackTrace();
             }
         }
         return itemstack;
+    }
+    public static SpellProperties getSpellProperties(Spell spell) {
+        return properties.get(spell);
+    }
+    public static List<SpellProperties> getAllSpellProperties() {
+        List<SpellProperties> properties = new ArrayList<>();
+        for (Map.Entry<Spell, SpellProperties> entry : SpellPropertyListener.properties.entrySet()) {
+            properties.add(entry.getValue());
+        }
+        return properties;
+    }
+    
+    public static void setProperties(Map<Spell, SpellProperties> properties) {
+        SpellPropertyListener.properties = properties;
+    }
+    
+    public static boolean spellHasProperties(Spell spell) {
+        return properties.containsKey(spell);
     }
 }

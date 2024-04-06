@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,18 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class SpellUtils {
+    public static int getSpellManaCost(Spell spell) {
+        return SpellPropertyListener.getSpellProperties(spell).manaCost();
+    }
+    public static int getSpellDrawTime(Spell spell) {
+        return SpellPropertyListener.getSpellProperties(spell).drawTime();
+    }
+    public static int getSpellCooldown(Spell spell) {
+        return SpellPropertyListener.getSpellProperties(spell).cooldown();
+    }
+    public static ItemStack getSpellCatalyst(Spell spell) {
+        return SpellPropertyListener.getSpellProperties(spell).catalyst();
+    }
     public static void giveItems(Level level, Player player, int amount, Item item) {
         ItemStack stack = new ItemStack(item);
         stack.setCount(amount);

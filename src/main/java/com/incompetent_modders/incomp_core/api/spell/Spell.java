@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.spell;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.Util;
@@ -28,25 +29,16 @@ import javax.annotation.Nullable;
  * @see Spells
  */
 public class Spell {
-    private final int manaCost;
-    private final int drawTime;
-    private final int coolDown;
     private final SpellCategory category;
     private final ClassType casterClassType;
     @Nullable
     private String descriptionId;
     
-    public Spell(int manaCost, int drawTime, int coolDown, SpellCategory category, ResourceLocation casterClassType) {
-        this.manaCost = manaCost;
-        this.drawTime = drawTime;
-        this.coolDown = coolDown;
+    public Spell(SpellCategory category, ResourceLocation casterClassType) {
         this.category = category;
         this.casterClassType = ModRegistries.CLASS_TYPE.get(casterClassType);
     }
-    public Spell(int manaCost, int drawTime, int coolDown, SpellCategory category) {
-        this.manaCost = manaCost;
-        this.drawTime = drawTime;
-        this.coolDown = coolDown;
+    public Spell(SpellCategory category) {
         this.category = category;
         this.casterClassType = null;
     }
@@ -58,9 +50,6 @@ public class Spell {
      * @see Spells#EMPTY
      */
     public Spell() {
-        this.manaCost = 0;
-        this.drawTime = 0;
-        this.coolDown = 0;
         this.category = SpellCategory.DEBUFF;
         this.casterClassType = null;
     }
@@ -95,7 +84,7 @@ public class Spell {
      * The spell catalyst is the item required to cast the spells.
      */
     public ItemStack getSpellCatalyst() {
-        return ItemStack.EMPTY;
+        return SpellPropertyListener.getSpellProperties(this).catalyst();
     }
     
     /**
@@ -156,7 +145,7 @@ public class Spell {
      * The draw time is the time it takes to cast the spells.
      */
     public int getDrawTime() {
-        return drawTime;
+        return SpellPropertyListener.getSpellProperties(this).drawTime();
     }
     
     /**
@@ -165,7 +154,7 @@ public class Spell {
      * The cooldown is the time it takes to cast the spells again.
      */
     public int getCoolDown() {
-        return coolDown;
+        return SpellPropertyListener.getSpellProperties(this).cooldown();
     }
     
     
@@ -202,7 +191,7 @@ public class Spell {
      * The mana cost is the amount of mana required to cast the spells.
      */
     public int getManaCost() {
-        return manaCost;
+        return SpellPropertyListener.getSpellProperties(this).manaCost();
     }
     
     
