@@ -1,50 +1,50 @@
-/setblock 8 -61 7 minecraft:red_wool
-/effect give 42ed3ee8-8134-45db-aa57-4f8ae6100e4e minecraft:invisibility infinite 1 true
-/summon minecraft:block_display 10.38 -60.00 6.95
-/kill @e[type=minecraft:block_display]
-/i_c setSpell 1 "incompetent_core:test_precast_spell"
-/give Dev incompetent_core:test_casting_item
-/incompetent_core setSpell 0 "incompetent_core:test_block_precast_spell"
-/give Dev incompetent_core:test_class
-/advancement revoke Dev everything
-/recipe take Dev *
-/data get entity Dev
-/data get entity @s
-/i_c setSpell 1 "incompetent_core:test_precast_spell"
-/effect give Dev incompetent_core:arcane_selection
-/effect give f2e100f3-860c-4468-abaf-57f038a229c8 minecraft:glowing
-/effect give Dev incompetent_core:arcane_selection
-/data get entity 9455c177-c9bf-4327-b091-123d1be277c3
-/effect give 60575e42-a658-4f57-8ead-9ec38e14e11f incompetent_core:arcane_selection
-/i_c clearSpellSlot true
-/i_c setSpell 0 "incompetent_core:test_spell"
-/give @s incompetent_core:simple_human
-/i_c cast_spell Dev "incompetent_core:test_spell"
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/i_c refillMana true
-/i_c refillMana 20
 /gamemode survival
-/give @s incompetent_core:test_casting_item
-/i_c setSpell 0 "incompetent_core:test_spell"
-/data get entity Dev
-/give @s minecraft:netherite_sword
-/summon minecraft:zombie
-/attribute Dev minecraft:generic.attack_damage get
 /gamemode creative
-/incompetent_core setSpell 1 "incompetent_core:test_block_precast_spell"
+/give @s incompetent_core:zombie_virus_postpone
+/gamemode survival
+/effect give Dev incompetent_core:zombie_virus 180
+/execute at Dev summon minecraft:tnt_minecart
+/execute at Dev run summon minecraft:tnt_minecart
+/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {}}
+/gamemode creative
+/data get entity 7b9b79d2-b1dd-4fa0-9c97-f9a9c8e7955a
+/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {TNTFuse: 1}}
+/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {TNTFuse: 10}}
+/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {OnGround: false}}
+/execute run function explode
+/summon creeper ~ ~ ~ {Fuse:0,ExplosionRadius:10}
+/summon tnt ~ ~ ~ {Fuse: 0}
+/summon tnt 30.82 69.00 -291.90 {Fuse: 0}
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/function incompetent_core:test_ranged_spell
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/function incompetent_core:test_ranged_spell
+/i_c cast_spell Dev "incompetent_core:test_spell"
 /give @s incompetent_core:test_casting_item
-/i_c setSpell 0 "incompetent_core:test_spell"
-/datapack list available
-/datapack list enabled
-/datapack disable vanilla
-/datapack list available
-/datapack enable "file/spell_properties"
-/reload
-/datapack disable vanilla
-/execute in minecraft:overworld run tp Dev ~ ~ ~
+/i_c setSpell "incompetent_core:test_ranged_spell"
 /i_c setSpell 1 "incompetent_core:test_ranged_spell"
-/datapack list available
-/datapack list enabled
-/reload
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/give @s incompetent_core:test_class
+/give @s incompetent_core:zombie
 /i_c refillMana true
-/reload
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c setSpell 0 "incompetent_core:test_ranged_spell"
+/i_c setSpell 1 "incompetent_core:test_ranged_spell"
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c getSpell 0
+/i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c setSpell 0 "incompetent_core:test_ranged_spell"
+/i_c setSpell 1 "incompetent_core:test_ranged_spell"
+/i_c setSpell 6 "incompetent_core:test_ranged_spell"
+/i_c setSpell 5 "incompetent_core:test_ranged_spell"
+/i_c setSpell 5 "incompetent_core:test_spell"
+/data get entity Dev
+/i_c getSpell 1
+/i_c getSpell 2
+/i_c getSpell 3
+/i_c getSpell 4
+/i_c getSpell 5
+/i_c getSpell 6
+/i_c cast_spell Dev "incompetent_core:test_spell"

@@ -1,23 +1,22 @@
 package com.incompetent_modders.incomp_core.events;
 
-import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.effect.SpeciesAlteringEffect;
+import com.incompetent_modders.incomp_core.api.json.species.DietType;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
-import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
-import com.incompetent_modders.incomp_core.api.network.packets.IncompPlayerDataSyncPacket;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.api.spell.PreCastSpell;
-import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
-import com.incompetent_modders.incomp_core.registry.ModEffects;
+import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
+import com.incompetent_modders.incomp_core.data.IncompItemTags;
+import com.incompetent_modders.incomp_core.data.IncompSpeciesTags;
+import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,46 +24,69 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
-@Mod.EventBusSubscriber(modid = IncompCore.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+import static com.incompetent_modders.incomp_core.util.CommonUtils.applyDamage;
+
+@EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class CommonForgeEvents {
-    static int regenInterval = 0;
+    static float regenInterval = 0;
+    static float abilityCooldownInterval = 0;
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START && event.player instanceof ServerPlayer player) {
-            IncompNetwork.sendToPlayer(new IncompPlayerDataSyncPacket(player), player);
-            ClassType classType = ModRegistries.CLASS_TYPE.get(new ResourceLocation(PlayerDataCore.getClassData(player).getString("classType")));
+            ClassType classType = PlayerDataCore.ClassData.getPlayerClassType(player);
+            SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
             if (classType != null) {
-                AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN.get());
+                AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN);
                     if (PlayerDataCore.ManaData.getMana(player) < PlayerDataCore.ManaData.getMaxMana(player) && manaRegen != null && PlayerDataCore.ClassData.canRegenMana(player)) {
+                        AtomicReference<Float> mod = new AtomicReference<>(1.0F);
+                        if (!player.getActiveEffects().isEmpty()) {
+                            player.getActiveEffects().forEach(effect -> {
+                                float manaRegenModifier = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()) == null ? 1.0F : PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()).manaRegenModifier();
+                                if (manaRegenModifier != 1.0F) {
+                                    mod.set(manaRegenModifier);
+                                }
+                            });
+                        }
                          regenInterval++;
-                        if (regenInterval >= 20) {
+                        if (regenInterval >= (20 * mod.get())) {
                             PlayerDataCore.ManaData.healMana(player, manaRegen.getValue());
                             CommonUtils.onManaHeal(player, manaRegen.getValue());
                             regenInterval = 0;
                         }
                     }
-                AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA.get());
+                AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
                 if (maxMana != null) {
-                    PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
+                    PlayerDataCore.ManaData.setMaxMana(player, classType.getMaxMana());
+                }
+                abilityCooldownInterval++;
+                if (abilityCooldownInterval >= 20) {
+                    if (PlayerDataCore.ClassData.getAbilityCooldown(player) > 0) {
+                        PlayerDataCore.ClassData.setAbilityCooldown(player, PlayerDataCore.ClassData.getAbilityCooldown(player) - 1);
+                    }
+                    abilityCooldownInterval = 0;
                 }
             }
             //Setting Data :3
             PlayerDataCore.setClassData(player, PlayerDataCore.getClassData(player));
             PlayerDataCore.setManaData(player, PlayerDataCore.getManaData(player));
+            PlayerDataCore.setSpeciesData(player, PlayerDataCore.getSpeciesData(player));
             
             PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMana(player));
             PlayerDataCore.ManaData.setMaxMana(player, PlayerDataCore.ManaData.getMaxMana(player));
@@ -73,22 +95,54 @@ public class CommonForgeEvents {
                 IncompCore.LOGGER.info("Player has old data format for ClassType & Mana Data, removing...");
                 player.getPersistentData().remove(IncompCore.MODID + ":data");
             }
+            if (PlayerDataCore.ClassData.getPlayerClassType(player) != null) {
+                if (PlayerDataCore.ClassData.getPlayerClassType(player).getClassTypeIdentifier().equals(new ResourceLocation(IncompCore.MODID, "simple_human"))) {
+                    PlayerDataCore.ClassData.setPlayerClassType(player, ModClassTypes.NONE.get());
+                }
+            }
             if (PlayerDataCore.ClassData.getPlayerClassType(player) == null)
-                PlayerDataCore.ClassData.setPlayerClassType(player, ModClassTypes.SIMPLE_HUMAN.get());
+                PlayerDataCore.ClassData.setPlayerClassType(player, ModClassTypes.NONE.get());
             if (classType != null) {
                 PlayerDataCore.ClassData.setPlayerClassType(player, classType);
-                PlayerDataCore.ClassData.setCanRegenMana(player, classType.canRegenerateMana());
+                PlayerDataCore.ClassData.setCanRegenMana(player, classType.canRegenerateMana(player, player.level()));
                 PlayerDataCore.ClassData.setPacifist(player, classType.isPacifist());
+                PlayerDataCore.ClassData.setAbilityCooldown(player, classType.abilityCooldown());
+                PlayerDataCore.ClassData.setAbility(player, classType.classAbility().getType());
+                PlayerDataCore.ClassData.setPassiveEffect(player, classType.classPassiveEffect().getType());
+            }
+            if (speciesType != null) {
+                PlayerDataCore.SpeciesData.setSpecies(player, speciesType);
+                PlayerDataCore.SpeciesData.setInvertedHealAndHarm(player, speciesType.isInvertedHealAndHarm());
+                PlayerDataCore.SpeciesData.setKeepOnDeath(player, speciesType.keepOnDeath());
+                PlayerDataCore.SpeciesData.setDiet(player, speciesType.dietType());
+                PlayerDataCore.SpeciesData.setMaxHealth(player, speciesType.maxHealth());
+                PlayerDataCore.SpeciesData.setAttackDamage(player, speciesType.attackDamage());
+                PlayerDataCore.SpeciesData.setAttackKnockback(player, speciesType.attackKnockback());
+                PlayerDataCore.SpeciesData.setMovementSpeed(player, speciesType.movementSpeed());
+                PlayerDataCore.SpeciesData.setArmor(player, speciesType.armor());
+                PlayerDataCore.SpeciesData.setLuck(player, speciesType.luck());
+                PlayerDataCore.SpeciesData.setBlockInteractionRange(player, speciesType.blockInteractionRange());
+                PlayerDataCore.SpeciesData.setEntityInteractionRange(player, speciesType.entityInteractionRange());
+                PlayerDataCore.SpeciesData.setGravity(player, speciesType.gravity());
+                PlayerDataCore.SpeciesData.setJumpStrength(player, speciesType.jumpStrength());
+                PlayerDataCore.SpeciesData.setKnockbackResistance(player, speciesType.knockbackResistance());
+                PlayerDataCore.SpeciesData.setSafeFallDistance(player, speciesType.safeFallDistance());
+                PlayerDataCore.SpeciesData.setScale(player, speciesType.scale());
+                PlayerDataCore.SpeciesData.setStepHeight(player, speciesType.stepHeight());
+                PlayerDataCore.SpeciesData.setArmourToughness(player, speciesType.armourToughness());
+                PlayerDataCore.SpeciesData.setBehaviour(player, speciesType.speciesBehaviour().getType());
             }
         }
     }
-    static AttributeModifier PACIFIST = new AttributeModifier(UUID.fromString("70eeca5e-46ed-4b8a-bf75-f102419395cc"), "Pacifist", 0.25F, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    
+    static AttributeModifier PACIFIST = new AttributeModifier(UUID.fromString("70eeca5e-46ed-4b8a-bf75-f102419395cc"), "Pacifist", 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
             ClassType classType = PlayerDataCore.ClassData.getPlayerClassType(player);
-            AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA.get());
+            SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+            AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
             if (maxMana != null) {
                 PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
             }
@@ -99,8 +153,11 @@ public class CommonForgeEvents {
                     damage.addPermanentModifier(PACIFIST);
                 }
                 if (!classType.isPacifist()) {
-                    damage.removeModifier(PACIFIST.getId());
+                    damage.removeModifier(PACIFIST);
                 }
+            }
+            if (speciesType == null) {
+                PlayerDataCore.SpeciesData.setSpecies(player, ModSpeciesTypes.HUMAN.get());
             }
         }
     }
@@ -113,42 +170,62 @@ public class CommonForgeEvents {
         });
     }
     @SubscribeEvent
-    public static void levelOpened(PlayerEvent.PlayerLoggedInEvent event) {
-        
-        List<LivingEntity> preCastEntities = PreCastSpell.selectedEntities;
-        if (preCastEntities.isEmpty())
-            return;
-        for (LivingEntity entity : preCastEntities) {
-            if (entity.hasEffect(ModEffects.ARCANE_SELECTION.get())) {
-                if (entity.hasEffect(MobEffects.GLOWING)) {
-                    entity.removeEffect(MobEffects.GLOWING);
+    public static void onPlayerHurt(LivingHurtEvent event) {
+        LivingEntity entity = event.getEntity();
+        DamageSource source = event.getSource();
+        Entity attacker = source.getEntity();
+        ItemStack weapon = attacker instanceof LivingEntity livingEntity ? livingEntity.getMainHandItem() : ItemStack.EMPTY;
+        if (entity instanceof Player player) {
+            applyDamage(event, player, weapon, IncompSpeciesTags.smiteVulnerable, Enchantments.SMITE);
+            applyDamage(event, player, weapon, IncompSpeciesTags.arthropod, Enchantments.BANE_OF_ARTHROPODS);
+            applyDamage(event, player, weapon, IncompSpeciesTags.impalingVulnerable, Enchantments.IMPALING);
+        }
+    }
+    
+    @SubscribeEvent
+    public static void onItemStartUse(LivingEntityUseItemEvent.Start event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getItem();
+        if (entity instanceof Player player) {
+            SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+            DietType dietType = speciesType.dietType();
+            if (stack.getFoodProperties(entity) != null && dietType != DietType.OMNIVORE) {
+                TagKey<Item> tag = dietType.getTag();
+                if (tag != null) {
+                    if (!stack.is(tag)) {
+                        event.setCanceled(true);
+                    }
                 }
-                entity.removeEffect(ModEffects.ARCANE_SELECTION.get());
             }
         }
     }
     @SubscribeEvent
-    public static void levelEmptied(PlayerEvent.PlayerLoggedOutEvent event) {
-        Level level = event.getEntity().level();
-        if (level instanceof ServerLevel serverLevel) {
-            List<ServerPlayer> players = serverLevel.players();
-            if (players.isEmpty()) {
-                IncompCore.LOGGER.info("Level is empty, clearing all Pre-Cast data.");
-                PreCastSpell.selectedEntities.clear();
-                PreCastSpell.selectedPositions.clear();
+    public static void onItemFinishUse(LivingEntityUseItemEvent.Finish event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getItem();
+        if (entity instanceof Player player) {
+            SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+            if (speciesType.is(IncompSpeciesTags.ignoresHungerFromFood)) {
+                if (stack.is(IncompItemTags.givesHunger)) {
+                    if (player.hasEffect(MobEffects.HUNGER)) {
+                        player.removeEffect(MobEffects.HUNGER);
+                    }
+                }
             }
         }
     }
+    
     @SubscribeEvent
-    public static void levelTick(TickEvent.LevelTickEvent event) {
-        Level level = event.level;
-        
-        if (level.isClientSide()) {
-            List<BlockPos> positions = PreCastSpell.selectedPositions;
-            if (positions.isEmpty())
-                return;
-            for (BlockPos pos : positions) {
-                ClientUtil.createCubeOutlineParticle(pos, level, ParticleTypes.ELECTRIC_SPARK);
+    public static void onPotionEffectFinish(MobEffectEvent.Expired event) {
+        LivingEntity entity = event.getEntity();
+        if (entity instanceof Player player) {
+            if (event.getEffectInstance().getEffect().value() instanceof SpeciesAlteringEffect speciesAlteringEffect) {
+                SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+                if (speciesType != null) {
+                    if (speciesAlteringEffect.getConvertTo() != null) {
+                        PlayerDataCore.SpeciesData.setSpecies(player, speciesAlteringEffect.getConvertTo());
+                    }
+                }
             }
         }
     }

@@ -1,18 +1,15 @@
 package com.incompetent_modders.incomp_core;
 
-import com.incompetent_modders.incomp_core.api.class_type.ClassType;
-import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
-import com.incompetent_modders.incomp_core.api.spell.Spells;
+import com.incompetent_modders.incomp_core.api.network.SyncHandler;
+import com.incompetent_modders.incomp_core.registry.ModSpells;
 import com.incompetent_modders.incomp_core.data.IncompDatagen;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
 import com.incompetent_modders.incomp_core.events.CommonEventHandler;
-import com.incompetent_modders.incomp_core.registry.ModArgumentTypes;
-import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
-import com.incompetent_modders.incomp_core.registry.ModEffects;
+import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
+import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,12 +17,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.slf4j.Logger;
 
 @Mod(IncompCore.MODID)
@@ -47,11 +46,17 @@ public class IncompCore
         ModAttributes.register(modEventBus);
         ModClassTypes.register(modEventBus);
         ModArgumentTypes.register(modEventBus);
-        Spells.SPELLS.register(modEventBus);
+        ModSpells.SPELLS.register(modEventBus);
         ModEffects.register(modEventBus);
-        IncompNetwork.init();
+        ModSpeciesTypes.register(modEventBus);
+        ModSpeciesBehaviourTypes.register(modEventBus);
+        ModManaRegenConditions.register(modEventBus);
+        ModClassPassiveEffects.register(modEventBus);
+        ModClassAbilities.register(modEventBus);
+        ModDataComponents.DATA_COMPONENTS.register(modEventBus);
+        ModSpellResultTypes.register(modEventBus);
         
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         
         ClientEventHandler handler = new ClientEventHandler();
         CommonEventHandler commonHandler = new CommonEventHandler();
@@ -64,7 +69,6 @@ public class IncompCore
             DevSpells.register(modEventBus);
             DevItems.register(modEventBus);
         }
-        
         this.modEventBus.addListener(IncompDatagen::gatherDataEvent);
         this.modEventBus.register(this);
     }
@@ -73,8 +77,12 @@ public class IncompCore
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
     }
-    
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @SubscribeEvent
+    private void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event)
+    {
+        SyncHandler.register(event);
+    }
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
         @SubscribeEvent
@@ -82,14 +90,14 @@ public class IncompCore
         {
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-            ModRegistries.CLASS_TYPE.entrySet().forEach(entry -> {
-                ClassType classType = entry.getValue();
-                if (classType.useClassSpecificTexture()) {
-                    LOGGER.info("Class type {} uses class specific Spell Overlay sprites!", entry.getKey());
-                } else {
-                    LOGGER.info("Class type {} does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!", entry.getKey());
-                }
-            });
+            //ModRegistries.CLASS_TYPE.entrySet().forEach(entry -> {
+            //    ClassType classType = entry.getValue();
+            //    if (classType.useClassSpecificTexture()) {
+            //        LOGGER.info("Class type {} uses class specific Spell Overlay sprites!", entry.getKey());
+            //    } else {
+            //        LOGGER.info("Class type {} does not use class specific Spell Overlay sprites. Defaulting to fallback sprites!", entry.getKey());
+            //    }
+            //});
         }
     }
     

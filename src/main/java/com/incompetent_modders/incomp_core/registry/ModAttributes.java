@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Function;
 
-@Mod.EventBusSubscriber(modid = IncompCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
     public static final HashMap<DeferredHolder<Attribute, Attribute>, UUID> UUIDS = new HashMap<>();
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, IncompCore.MODID);
@@ -41,8 +42,8 @@ public class ModAttributes {
     @SubscribeEvent
     public static void modifyEntityAttributes(EntityAttributeModificationEvent e) {
         e.getTypes().forEach(entity -> {
-            e.add(entity, MAX_MANA.get());
-            e.add(entity, MANA_REGEN.get());
+            e.add(entity, MAX_MANA);
+            e.add(entity, MANA_REGEN);
         });
     }
     public static void register(IEventBus eventBus) {

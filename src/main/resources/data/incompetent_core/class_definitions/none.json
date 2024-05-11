@@ -1,0 +1,20 @@
+{
+  "can_cast_spells": false,
+  "max_mana": 0,
+  "pacifist": false,
+  "use_class_specific_texture": false,
+  "mana_regen_condition": {
+    "type": "incompetent_core:default",
+    "chance": 0.0
+  },
+  "passive_effect": {
+    "type": "incompetent_core:default",
+    "debug": false
+  },
+  "ability": {
+    "type": "incompetent_core:default",
+    "debug": false
+  },
+  "passive_effect_tick_frequency": 0.0,
+  "ability_cooldown": 0
+}

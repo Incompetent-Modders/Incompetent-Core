@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.util;
 
-import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

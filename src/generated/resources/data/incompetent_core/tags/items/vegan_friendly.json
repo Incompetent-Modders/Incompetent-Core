@@ -1,0 +1,26 @@
+{
+  "values": [
+    "minecraft:apple",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:beetroot",
+    "minecraft:beetroot_soup",
+    "minecraft:carrot",
+    "minecraft:carrot_on_a_stick",
+    "minecraft:chorus_fruit",
+    "minecraft:dried_kelp",
+    "minecraft:golden_carrot",
+    "minecraft:golden_apple",
+    "minecraft:melon_slice",
+    "minecraft:potato",
+    "minecraft:mushroom_stew",
+    "minecraft:sweet_berries",
+    "minecraft:wheat",
+    "minecraft:wheat_seeds",
+    "minecraft:bread",
+    "minecraft:glow_berries",
+    "minecraft:suspicious_stew",
+    "minecraft:cookie",
+    "#incompetent_core:effect_postpones"
+  ]
+}

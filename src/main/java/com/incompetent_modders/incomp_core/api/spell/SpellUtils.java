@@ -1,13 +1,10 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
-import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +24,6 @@ public class SpellUtils {
     }
     public static int getSpellDrawTime(Spell spell) {
         return SpellPropertyListener.getSpellProperties(spell).drawTime();
-    }
-    public static int getSpellCooldown(Spell spell) {
-        return SpellPropertyListener.getSpellProperties(spell).cooldown();
     }
     public static ItemStack getSpellCatalyst(Spell spell) {
         return SpellPropertyListener.getSpellProperties(spell).catalyst();
@@ -53,35 +47,10 @@ public class SpellUtils {
         PlayerDataCore.ManaData.removeMana(player, amount);
     }
     public static HitResult genericSpellRayTrace(Player playerCaster) {
-        return SpellUtils.rayTrace(playerCaster, 160 + playerCaster.getEntityReach(), 0, true);
+        return SpellUtils.rayTrace(playerCaster, 160 + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, true);
     }
     
-    public static Spell deserializeFromSlot(CompoundTag tag, int slot) {
-        if (tag == null) {
-            return Spells.EMPTY.get();
-        }
-        if (tag.contains("spellSlot_" + slot)) {
-            //The NBT formats the spells as modid:spellname. We need to separate them into two strings.
-            String spellModid = tag.getString("spellSlot_" + slot).split(":")[0];
-            String spellName = tag.getString("spellSlot_" + slot).split(":")[1];
-            return ModRegistries.SPELL.get(new ResourceLocation(spellModid, spellName));
-        }
-        return Spells.EMPTY.get();
-        
-    }
-    public static void serializeToSlot(CompoundTag tag, int slot, Spell spell) {
-        if (tag == null) {
-            return;
-        }
-        tag.putString("spellSlot_" + slot, spell.getSpellIdentifier().toString());
-    }
     
-    public static int getSelectedSpellSlot(CompoundTag tag) {
-        if (tag.contains("selectedSpellSlot")) {
-            return tag.getInt("selectedSpellSlot");
-        }
-        return 0;
-    }
     public static boolean isPreCasting(CompoundTag tag) {
         return tag.contains("preCasting") && tag.getBoolean("preCasting");
     }
@@ -95,26 +64,14 @@ public class SpellUtils {
         tag.putBoolean("hasBeenCast", hasBeenCast);
     }
     public static boolean playerIsHoldingSpellCatalyst(Player player, Spell spell) {
+        if (spell == null) {
+            return false;
+        }
         if (spell.hasSpellCatalyst()) {
             ItemStack catalyst = spell.getSpellCatalyst();
             return player.getOffhandItem().is(catalyst.getItem());
         }
         return true;
-    }
-    public static void handleCatalystConsumption(Player player, Spell spell) {
-        if (!spell.hasSpellCatalyst()) {
-            return;
-        }
-        if (playerIsHoldingSpellCatalyst(player, spell)) {
-            if (!player.isCreative()) {
-                player.awardStat(Stats.ITEM_USED.get(spell.getSpellCatalyst().getItem()));
-                player.getOffhandItem().shrink(1);
-            } else
-                player.awardStat(Stats.ITEM_USED.get(spell.getSpellCatalyst().getItem()));
-        } else {
-            Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", spell.getSpellCatalyst().getDisplayName());
-            player.displayClientMessage(message, true);
-        }
     }
     public static @Nullable EntityHitResult traceEntities(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance) {
         Level world = shooter.level();

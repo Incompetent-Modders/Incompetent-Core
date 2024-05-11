@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core.events;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.network.IncompNetwork;
-import com.incompetent_modders.incomp_core.api.network.packets.SpellSlotScrollPacket;
+import com.incompetent_modders.incomp_core.api.network.MessageClassAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.MessageSpellSlotScrollSync;
 import com.incompetent_modders.incomp_core.util.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -10,8 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import static com.incompetent_modders.incomp_core.events.ClientModEvents.ACTIVATE_CLASS_ABILITY;
 
 public class ClientEventHandler {
     @SubscribeEvent
@@ -27,9 +29,21 @@ public class ClientEventHandler {
             {
                 if(equipped.getItem() instanceof SpellCastingItem)
                 {
-                    IncompNetwork.sendToServer(new SpellSlotScrollPacket(player.getUUID(), event.getScrollDeltaY() < 0));
+                    var msg = new MessageSpellSlotScrollSync(event.getScrollDeltaY() < 0);
+                    PacketDistributor.sendToServer(msg);
                     event.setCanceled(true);
                 }
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        Player player = Minecraft.getInstance().player;
+        if (event.phase == TickEvent.Phase.END) { // Only call code once as the tick event is called twice every tick
+            while (ACTIVATE_CLASS_ABILITY.get().consumeClick()) {
+                if (player == null)
+                    return;
+                PacketDistributor.sendToServer(new MessageClassAbilitySync(true));
             }
         }
     }

@@ -1,0 +1,8 @@
+{
+  "armor": 4.0,
+  "attack_damage": 4.0,
+  "move_speed": 0.075,
+  "scale": 1.2,
+  "max_health": 30.0,
+  "armour_toughness": 3.0
+}

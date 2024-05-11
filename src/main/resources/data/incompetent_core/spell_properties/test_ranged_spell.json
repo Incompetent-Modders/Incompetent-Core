@@ -1,6 +1,14 @@
 {
-  "cooldown": 120,
+  "category": "ranged",
   "draw_time": 40,
-  "mana_cost": 50,
-  "spell": "incompetent_core:test_ranged_spell"
+  "mana": 50,
+  "class_type": {
+    "id": "incompetent_core:test_class"
+  },
+  "results": {
+    "spell_result": {
+      "type": "incompetent_core:raycast",
+      "function": "incompetent_core:test_ranged_spell"
+    }
+  }
 }

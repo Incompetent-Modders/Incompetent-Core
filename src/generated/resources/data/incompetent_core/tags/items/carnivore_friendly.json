@@ -1,0 +1,24 @@
+{
+  "values": [
+    "minecraft:beef",
+    "minecraft:chicken",
+    "minecraft:mutton",
+    "minecraft:porkchop",
+    "minecraft:rabbit",
+    "minecraft:cooked_beef",
+    "minecraft:cooked_chicken",
+    "minecraft:cooked_mutton",
+    "minecraft:cooked_porkchop",
+    "minecraft:cooked_rabbit",
+    "minecraft:cooked_cod",
+    "minecraft:cooked_salmon",
+    "minecraft:cod",
+    "minecraft:salmon",
+    "minecraft:pufferfish",
+    "minecraft:rotten_flesh",
+    "minecraft:spider_eye",
+    "minecraft:tropical_fish",
+    "minecraft:rabbit_stew",
+    "#incompetent_core:effect_postpones"
+  ]
+}

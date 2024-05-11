@@ -1,6 +1,15 @@
 {
-  "cooldown": 0,
   "draw_time": 0,
-  "mana_cost": 0,
-  "spell": "incompetent_core:empty"
+  "mana": 0,
+  "class_type": {
+    "id": "incompetent_core:none"
+  },
+  "species_type": {
+    "id": "incompetent_core:human"
+  },
+  "results": {
+    "spell_result": {
+      "type": "incompetent_core:do_nothing"
+    }
+  }
 }

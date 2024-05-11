@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.data;
 
-import com.incompetent_modders.incomp_core.api.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.spell.Spell;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;

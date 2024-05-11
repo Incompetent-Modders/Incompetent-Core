@@ -1,0 +1,6 @@
+{
+  "behaviour": {
+    "type": "incompetent_core:default",
+    "debug": false
+  }
+}

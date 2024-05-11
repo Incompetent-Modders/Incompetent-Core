@@ -1,13 +1,9 @@
 package com.incompetent_modders.incomp_core.data;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.spell.Spells;
-import com.incompetent_modders.incomp_core.data.spell_properties.SpellPropertiesProvider;
-import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -23,8 +19,11 @@ public class IncompDatagen {
         PackOutput packOutput = dataGenerator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         IncompBlockTagsProvider blockTags = new IncompBlockTagsProvider(packOutput, lookupProvider, modId, fileHelper);
+        IncompItemTagsProvider itemTags = new IncompItemTagsProvider(packOutput, lookupProvider, blockTags.contentsGetter());
+        IncompSpeciesTagsProvider speciesTags = new IncompSpeciesTagsProvider(packOutput, lookupProvider, modId, fileHelper);
         dataGenerator.addProvider(event.includeServer(), blockTags);
-        dataGenerator.addProvider(event.includeServer(), new IncompSpellPropertiesProvider(packOutput, modId));
+        dataGenerator.addProvider(event.includeServer(), speciesTags);
+        dataGenerator.addProvider(event.includeServer(), itemTags);
     }
     
 }

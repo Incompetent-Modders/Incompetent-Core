@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
@@ -17,6 +16,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -49,12 +49,12 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
             
             try {
                 Spell spell = getSpell(resourceLocation);
-                SpellProperties spellProperties = SpellProperties.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow(false, errorMsg -> {});
+                SpellProperties spellProperties = SpellProperties.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
                 if (spellProperties != null) {
                     properties.put(spell, spellProperties);
                 }
             } catch (IllegalArgumentException | JsonParseException jsonParseException) {
-                IncompCore.LOGGER.error("Parsing error loading spell properties input {}", resourceLocation, jsonParseException);
+                IncompCore.LOGGER.error("Parsing error loading spell properties {}", resourceLocation, jsonParseException);
             }
         }
         IncompCore.LOGGER.info("Load Complete for {} spells", properties.size());
@@ -62,21 +62,7 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
     protected static Spell getSpell(ResourceLocation resourceLocation) {
         return ModRegistries.SPELL.get(new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", "")));
     }
-    protected static ItemStack deserializeCatalyst(JsonElement jsonElement) {
-        JsonObject json = jsonElement.getAsJsonObject();
-        String itemId = GsonHelper.getAsString(json, "item");
-        int count = GsonHelper.getAsInt(json, "count", 1);
-        ItemStack itemstack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(itemId)), count);
-        if (GsonHelper.isValidNode(json, "custom_data")) {
-            try {
-                JsonElement element = json.get("custom_data");
-                itemstack.setTag(TagParser.parseTag(element.isJsonObject() ? GSON.toJson(element) : GsonHelper.convertToString(element, "custom_data")));
-            } catch (CommandSyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-        return itemstack;
-    }
+    
     public static SpellProperties getSpellProperties(Spell spell) {
         return properties.get(spell);
     }

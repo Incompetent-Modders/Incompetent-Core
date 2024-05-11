@@ -26,8 +26,13 @@
   "commands.cast_spell.success.single": "Cast Spell %s from %s Player(s) [%s]",
   "commands.clear_spell.single": "Cleared Spell from Slot %s",
   "commands.clear_spell.all": "Cleared Spells from All Slots",
+  "commands.set_spell": "Set Spell %s to Slot %s",
   "argument.spell.id.invalid": "Invalid Spell ID: %s",
   "spell.incompetent_core.select_entity": "Selected: ",
   "spell.incompetent_core.select_position": "Selected Block: %s at: %s",
-  "spell.incompetent_core.select_position.invalid.block_above": "Invalid Position: Block Above."
+  "spell.incompetent_core.select_position.invalid.block_above": "Invalid Position: Block Above.",
+
+  "key.categories.incomp_core": "Incompetent Core",
+  "key.incomp_core.activate_class_ability": "Activate Class Ability"
+
 }

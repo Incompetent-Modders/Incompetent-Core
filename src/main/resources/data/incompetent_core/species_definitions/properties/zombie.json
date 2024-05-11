@@ -1,0 +1,8 @@
+{
+  "invert_heal_and_harm": true,
+  "behaviour": {
+    "type": "incompetent_core:undead",
+    "burn_in_sun": true
+  },
+  "diet_type": "carnivore"
+}

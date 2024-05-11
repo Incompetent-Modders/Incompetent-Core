@@ -26,6 +26,9 @@ public final class DrawingUtils {
     public static void blitSprite(GuiGraphics graphics, ResourceLocation sprite, int x, int y, int width, int height) {
         graphics.blitSprite(sprite, x, y, width, height);
     }
+    public static void blitSprite(GuiGraphics graphics, ResourceLocation sprite, int x, int y, int width, int height, int u, int v, int uWidth, int vHeight) {
+        graphics.blitSprite(sprite, x, y, width, height, u, v, uWidth, vHeight);
+    }
     public static void renderCooldown(GuiGraphics graphics, RenderType renderType, int x, int y, float cooldownPercent, int imageSize) {
         int i1 = y + Mth.floor(imageSize * (1.0F - cooldownPercent));
         int j1 = i1 + Mth.ceil(imageSize * cooldownPercent);
