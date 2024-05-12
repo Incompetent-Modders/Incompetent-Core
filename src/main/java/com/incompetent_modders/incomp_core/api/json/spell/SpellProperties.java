@@ -20,13 +20,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public record SpellProperties(SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results, SoundEvent castSound) {
+public record SpellProperties(SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results, SoundEvent castSound) {
     public static final Codec<SpellProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             SpellCategory.CODEC.optionalFieldOf("category", SpellCategory.UTILITY).forGetter(SpellProperties::category),
-            Codec.INT.optionalFieldOf("mana_cost", 0).forGetter(SpellProperties::manaCost),
+            Codec.DOUBLE.optionalFieldOf("mana_cost", 0.0).forGetter(SpellProperties::manaCost),
             Codec.INT.optionalFieldOf("draw_time", 0).forGetter(SpellProperties::drawTime),
             ItemStack.CODEC.optionalFieldOf("catalyst", ItemStack.EMPTY).forGetter(SpellProperties::catalyst),
             ClassType.Value.CODEC.optionalFieldOf("class_type", ClassType.valueOf(ModClassTypes.NONE)).forGetter(SpellProperties::classType),
@@ -40,18 +41,20 @@ public record SpellProperties(SpellCategory category, int manaCost, int drawTime
     }
     
     public boolean isBlankSpell() {
-        return manaCost == 0 && drawTime == 0 && catalyst.isEmpty() && Objects.equals(classType.getClassType(), ModClassTypes.NONE.get()) && Objects.equals(speciesType.getSpecies(), ModSpeciesTypes.HUMAN.get()) && results.spellResult().isEmpty() && results.function().isEmpty();
+        return manaCost == 0.0 && drawTime == 0 && catalyst.isEmpty() && Objects.equals(classType.getClassType(), ModClassTypes.NONE.get()) && Objects.equals(speciesType.getSpecies(), ModSpeciesTypes.HUMAN.get()) && results.spellResult().isEmpty() && results.function().isEmpty();
     }
     
     public void executeCast(Player player) {
         Level level = player.level();
         ClassType playerClass = PlayerDataCore.ClassData.getPlayerClassType(player);
         SpeciesType playerSpecies = PlayerDataCore.SpeciesData.getSpecies(player);
-        if (playerClass != classType.getClassType() || playerSpecies != speciesType.getSpecies()) {
+        if (!checkPlayerClass(classType, playerClass) ||  !checkPlayerSpecies(speciesType, playerSpecies)) {
+            IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeList(classType), speciesTypeList(speciesType), playerClass.getClassTypeIdentifier(), playerSpecies.getSpeciesTypeIdentifier());
             return;
         }
         int playerMana = (int) PlayerDataCore.ManaData.getMana(player);
         if (playerMana < manaCost) {
+            IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
             return;
         }
         PlayerDataCore.ManaData.removeMana(player, getManaCost(player));
@@ -103,7 +106,7 @@ public record SpellProperties(SpellCategory category, int manaCost, int drawTime
         }
     }
     
-    public int getManaCost(Player player) {
+    public double getManaCost(Player player) {
         AtomicReference<Float> mod = new AtomicReference<>(1.0F);
         if (player == null) return manaCost();
         if (!player.getActiveEffects().isEmpty()) {
@@ -114,6 +117,37 @@ public record SpellProperties(SpellCategory category, int manaCost, int drawTime
                 }
             });
         }
-        return manaCost() * mod.get().intValue();
+        return manaCost() * mod.get();
+    }
+    
+    public String classTypeList(ClassType.Value classTypes) {
+        StringBuilder classTypeList = new StringBuilder();
+        for (ClassType classType : classTypes.getClassType()) {
+            classTypeList.append(classType.getClassTypeIdentifier()).append(" / ");
+        }
+        return classTypeList.toString();
+    }
+    public String speciesTypeList(SpeciesType.Value speciesTypes) {
+        StringBuilder speciesTypeList = new StringBuilder();
+        for (SpeciesType speciesType : speciesTypes.getSpecies()) {
+            speciesTypeList.append(speciesType.getSpeciesTypeIdentifier()).append(" / ");
+        }
+        return speciesTypeList.toString();
+    }
+    
+    public boolean checkPlayerClass(ClassType.Value requiredClass, ClassType playerClass) {
+        if (requiredClass instanceof ClassType.TagValue tagValue) {
+            return tagValue.getClassType().contains(playerClass);
+        } else {
+            return requiredClass.getClassType().contains(playerClass);
+        }
+    }
+    
+    public boolean checkPlayerSpecies(SpeciesType.Value requiredSpecies, SpeciesType playerSpecies) {
+        if (requiredSpecies instanceof SpeciesType.TagValue tagValue) {
+            return tagValue.getSpecies().contains(playerSpecies);
+        } else {
+            return requiredSpecies.getSpecies().contains(playerSpecies);
+        }
     }
 }

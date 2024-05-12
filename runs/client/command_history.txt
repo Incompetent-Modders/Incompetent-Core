@@ -1,39 +1,3 @@
-/gamemode survival
-/gamemode creative
-/give @s incompetent_core:zombie_virus_postpone
-/gamemode survival
-/effect give Dev incompetent_core:zombie_virus 180
-/execute at Dev summon minecraft:tnt_minecart
-/execute at Dev run summon minecraft:tnt_minecart
-/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {}}
-/gamemode creative
-/data get entity 7b9b79d2-b1dd-4fa0-9c97-f9a9c8e7955a
-/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {TNTFuse: 1}}
-/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {TNTFuse: 10}}
-/execute at Dev run summon minecraft:tnt_minecart ~ ~ ~ {Tag: {OnGround: false}}
-/execute run function explode
-/summon creeper ~ ~ ~ {Fuse:0,ExplosionRadius:10}
-/summon tnt ~ ~ ~ {Fuse: 0}
-/summon tnt 30.82 69.00 -291.90 {Fuse: 0}
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/i_c cast_spell Dev "incompetent_core:test_spell"
-/function incompetent_core:test_ranged_spell
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/function incompetent_core:test_ranged_spell
-/i_c cast_spell Dev "incompetent_core:test_spell"
-/give @s incompetent_core:test_casting_item
-/i_c setSpell "incompetent_core:test_ranged_spell"
-/i_c setSpell 1 "incompetent_core:test_ranged_spell"
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/give @s incompetent_core:test_class
-/give @s incompetent_core:zombie
-/i_c refillMana true
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/i_c cast_spell Dev "incompetent_core:test_spell"
-/i_c setSpell 0 "incompetent_core:test_ranged_spell"
-/i_c setSpell 1 "incompetent_core:test_ranged_spell"
-/i_c cast_spell Dev "incompetent_core:test_spell"
-/i_c getSpell 0
 /i_c cast_spell Dev "incompetent_core:test_spell"
 /i_c setSpell 0 "incompetent_core:test_ranged_spell"
 /i_c setSpell 1 "incompetent_core:test_ranged_spell"
@@ -48,3 +12,39 @@
 /i_c getSpell 5
 /i_c getSpell 6
 /i_c cast_spell Dev "incompetent_core:test_spell"
+/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
+/give @s incompetent_core:human
+/give @s incompetent_core:none
+/datapack list available
+/datapack list enabled
+/datapack enable i
+/datapack list available
+/datapack enable "file/spell_properties"
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 "incompetent_core:test_spell"
+/i_c setSpell 1 "incompetent_core:test_spell"
+/give @s incompetent_core:test_class
+/give @s incompetent_core:assign_class_none
+/give @s incompetent_core:assign_class_test_class
+/give @s incompetent_core:assign_species_human
+/give @s incompetent_core:assign_species_zombie
+/reload
+/datapack list enabled
+/reload
+/i_c setSpell 2 "incompetent_core:test_ranged_spell"
+/give @s incompetent_core:postpone_effect_zombie_virus
+/effect give Dev incompetent_core:zombie_virus
+/summon minecraft:tnt ~ ~ ~ {Fuse: 10000}
+/summon minecraft:tnt ~ ~ ~ {Fuse: 100}
+/summon minecraft:tnt ~ ~ ~ {Fuse: 10}
+/summon minecraft:tnt ~ ~ ~ {Fuse: 9}
+/summon minecraft:tnt ~ ~ ~ {Fuse: 2}
+/summon minecraft:tnt ~ ~ ~ {Fuse: 200000000000}
+/tick freeze
+/data get entity 432707e5-a421-46b5-a4ed-4a73e5621230
+/summon minecraft:tnt ~ ~ ~ {Fuse: 0, Properties: {unstable: true}}
+/tick unfreeze
+/summon minecraft:tnt ~ ~ ~ {Fuse: 0, Properties: {unstable: true}}
+/summon minecraft:tnt 6.81 67.00 389.74 {Fuse: 0, Properties: {unstable: true}}
+/summon minecraft:tnt 6.81 67.00 389.74 {Fuse: 0, Properties: {unstable: true}, Fire: 10}
+/reload

@@ -52,7 +52,7 @@ public class SpellPropertiesProvider implements DataProvider {
         );
     }
     
-    private JsonObject toJson(Spell spell, int manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType) {
+    private JsonObject toJson(Spell spell, double manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("spell", spell.getSpellIdentifier().toString());
         JsonObject properties = new JsonObject();

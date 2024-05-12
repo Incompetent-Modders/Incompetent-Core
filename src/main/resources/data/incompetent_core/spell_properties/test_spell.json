@@ -1,7 +1,7 @@
 {
   "category": "mobility",
   "draw_time": 10,
-  "mana": 50,
+  "mana_cost": 50,
   "catalyst": {
     "count": 1,
     "id": "minecraft:blaze_powder"

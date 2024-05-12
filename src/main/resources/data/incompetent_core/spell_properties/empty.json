@@ -1,6 +1,6 @@
 {
   "draw_time": 0,
-  "mana": 0,
+  "mana_cost": 0,
   "class_type": {
     "id": "incompetent_core:none"
   },

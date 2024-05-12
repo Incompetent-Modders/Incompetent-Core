@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
 import com.incompetent_modders.incomp_core.registry.ModSpellResultTypes;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
@@ -16,24 +17,34 @@ import java.util.Optional;
 public class RaycastProjectileResult extends SpellResult {
     
     public static final MapCodec<RaycastProjectileResult> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            CacheableFunction.CODEC.optionalFieldOf("function").forGetter(RaycastProjectileResult::function)
+            CacheableFunction.CODEC.optionalFieldOf("function").forGetter(RaycastProjectileResult::function),
+            Codec.INT.optionalFieldOf("range_bonus", 0).forGetter(RaycastProjectileResult::rangeBonus),
+            Codec.BOOL.optionalFieldOf("hit_liquids", true).forGetter(RaycastProjectileResult::hitLiquids)
     ).apply(instance, RaycastProjectileResult::new));
     
     private final Optional<CacheableFunction> function;
-    
+    private final int rangeBonus;
+    private final boolean hitLiquids;
     public Optional<CacheableFunction> function() {
         return function;
     }
+    public int rangeBonus() {
+        return rangeBonus;
+    }
+    public boolean hitLiquids() {
+        return hitLiquids;
+    }
     
     
-    
-    public RaycastProjectileResult(Optional<CacheableFunction> function) {
+    public RaycastProjectileResult(Optional<CacheableFunction> function, int rangeBonus, boolean hitLiquids) {
         this.function = function;
+        this.rangeBonus = rangeBonus;
+        this.hitLiquids = hitLiquids;
     }
     
     @Override
     public void execute(Player player) {
-        HitResult result = SpellUtils.genericSpellRayTrace(player);
+        HitResult result = SpellUtils.genericSpellRayTrace(player, rangeBonus, hitLiquids);
         if (player instanceof ServerPlayer serverPlayer) {
             onHit(serverPlayer, result);
         }

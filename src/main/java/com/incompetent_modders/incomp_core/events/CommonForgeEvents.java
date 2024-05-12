@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.effect.SpeciesAlteringEffect;
 import com.incompetent_modders.incomp_core.api.json.species.DietType;
+import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectProperties;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
 import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
@@ -58,14 +59,16 @@ public class CommonForgeEvents {
                         AtomicReference<Float> mod = new AtomicReference<>(1.0F);
                         if (!player.getActiveEffects().isEmpty()) {
                             player.getActiveEffects().forEach(effect -> {
-                                float manaRegenModifier = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()) == null ? 1.0F : PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()).manaRegenModifier();
-                                if (manaRegenModifier != 1.0F) {
-                                    mod.set(manaRegenModifier);
+                                PotionEffectProperties properties = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value());
+                                if (properties != null) {
+                                    if (properties.manaRegenModifier() != 1.0F) {
+                                        mod.set(properties.manaRegenModifier());
+                                    }
                                 }
                             });
                         }
                          regenInterval++;
-                        if (regenInterval >= (20 * mod.get())) {
+                        if (regenInterval >= (20 / mod.get())) {
                             PlayerDataCore.ManaData.healMana(player, manaRegen.getValue());
                             CommonUtils.onManaHeal(player, manaRegen.getValue());
                             regenInterval = 0;

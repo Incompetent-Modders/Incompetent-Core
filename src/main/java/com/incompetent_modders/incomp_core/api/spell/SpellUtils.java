@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class SpellUtils {
-    public static int getSpellManaCost(Spell spell) {
+    public static double getSpellManaCost(Spell spell) {
         return SpellPropertyListener.getSpellProperties(spell).manaCost();
     }
     public static int getSpellDrawTime(Spell spell) {
@@ -49,7 +49,12 @@ public class SpellUtils {
     public static HitResult genericSpellRayTrace(Player playerCaster) {
         return SpellUtils.rayTrace(playerCaster, 160 + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, true);
     }
-    
+    public static HitResult genericSpellRayTrace(Player playerCaster, int rangeBonus) {
+        return SpellUtils.rayTrace(playerCaster, rangeBonus + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, true);
+    }
+    public static HitResult genericSpellRayTrace(Player playerCaster, int rangeBonus, boolean hitLiquids) {
+        return SpellUtils.rayTrace(playerCaster, rangeBonus + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, hitLiquids);
+    }
     
     public static boolean isPreCasting(CompoundTag tag) {
         return tag.contains("preCasting") && tag.getBoolean("preCasting");

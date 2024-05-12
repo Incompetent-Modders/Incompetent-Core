@@ -49,7 +49,7 @@ public class SpellCastingItem extends Item {
             Spell spell = getSelectedSpell(itemstack);
             if (spell != null && !casting) {
                 casting = true;
-                if (entity instanceof ServerPlayer player) {
+                if (entity instanceof Player player) {
                     spell.getSpellProperties().executeCast(player);
                     casting = false;
                 }
