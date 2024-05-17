@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.data.properties;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.incompetent_modders.incomp_core.api.json.spell.Catalyst;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellCategory;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellResults;

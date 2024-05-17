@@ -17,10 +17,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.Level;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -57,6 +60,10 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
             return;
         }
+        if (!playerIsHoldingSpellCatalyst(player)) {
+            IncompCore.LOGGER.info("{} is not holding the required catalyst to cast spell!", player.getName().getString());
+            return;
+        }
         PlayerDataCore.ManaData.removeMana(player, getManaCost(player));
         handleCatalystConsumption(player);
         results.execute(player);
@@ -67,8 +74,6 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     }
     public void executeCastNoRequirements(Player player) {
         Level level = player.level();
-        PlayerDataCore.ManaData.removeMana(player, getManaCost(player));
-        handleCatalystConsumption(player);
         results.execute(player);
         level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
         CommonUtils.onCastEvent(level, player, player.getUsedItemHand());
@@ -78,7 +83,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     
     public boolean playerIsHoldingSpellCatalyst(Player player) {
         if (!catalyst().isEmpty()) {
-            return player.getOffhandItem().is(catalyst().getItem());
+            return ItemStack.isSameItemSameComponents(player.getOffhandItem(), catalyst());
         }
         return true;
     }
@@ -123,7 +128,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     public String classTypeList(ClassType.Value classTypes) {
         StringBuilder classTypeList = new StringBuilder();
         for (ClassType classType : classTypes.getClassType()) {
-            classTypeList.append(classType.getClassTypeIdentifier()).append(" / ");
+            classTypeList.append(classType.getClassTypeIdentifier()).append(", ");
         }
         return classTypeList.toString();
     }

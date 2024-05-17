@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 public class CommonEvents {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
-        ModCommands.register(event.getDispatcher());
+        ModCommands.register(event.getDispatcher(), event.getBuildContext());
     }
     
     

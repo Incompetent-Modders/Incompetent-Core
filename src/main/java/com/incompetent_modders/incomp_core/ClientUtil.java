@@ -10,6 +10,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -17,10 +18,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.DoubleStream;
 
 import static com.incompetent_modders.incomp_core.IncompCore.*;
@@ -125,7 +128,15 @@ public class ClientUtil {
         tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spell.getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
         if (spell.hasSpellCatalyst()) {
             tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spell.getSpellCatalyst().getCount() > 1 ? " x" + spell.getSpellCatalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(SpellUtils.playerIsHoldingSpellCatalyst(player, spell) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spell.getSpellCatalyst().getCount() > 1 ? " x" + spell.getSpellCatalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spell.getSpellProperties().playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+            if (spell.getSpellCatalyst().has(DataComponents.BUNDLE_CONTENTS)) {
+                BundleContents bundleContents = spell.getSpellCatalyst().get(DataComponents.BUNDLE_CONTENTS);
+                if (bundleContents == null)
+                    return;
+                for (ItemStack content : bundleContents.itemCopyStream().toList()) {
+                    tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonComponents.space()).append(content.getDisplayName().getString().replace("[", "").replace("]", "")).append(content.getCount() > 1 ? " x" + content.getCount() : ""));
+                }
+            }
         }
         tooltip.add(CommonComponents.EMPTY);
     }
@@ -141,6 +152,9 @@ public class ClientUtil {
             }
         }
         
+    }
+    public static String itemName(ItemStack stack) {
+        return stack.getDisplayName().getString().replace("[", "").replace("]", "");
     }
     //public static void createCastingInfoTooltip(List<Component> tooltip, ItemStack castingStack) {
     //    Spell spell = SpellUtils.getSpellCasting(castingStack).getSelectedSpell().getSpell();

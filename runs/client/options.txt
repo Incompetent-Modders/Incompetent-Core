@@ -78,7 +78,7 @@ glDebugVerbosity:1
 skipMultiplayerWarning:true
 hideMatchedNames:true
 joinedFirstServer:false
-hideBundleTutorial:false
+hideBundleTutorial:true
 syncChunkWrites:true
 showAutosaveIndicator:true
 allowServerListing:true

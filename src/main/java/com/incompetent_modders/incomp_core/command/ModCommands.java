@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.player.Player;
@@ -13,13 +14,15 @@ import java.util.function.Predicate;
 
 public class ModCommands {
     public static final Predicate<CommandSourceStack> SOURCE_IS_PLAYER = cs -> cs.getEntity() instanceof Player;
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("incompetent_core")
-                .then(CastSpellCommand.register())
-                .then(SetSpellInSlotCommand.register())
+                .then(CastSpellCommand.register(context))
+                .then(SetSpellInSlotCommand.register(context))
                 .then(WhatSpellIsInSlotCommand.register())
                 .then(ClearSpellSlotsCommand.register())
                 .then(RefillManaCommand.register())
+                .then(SetSpeciesCommand.register(context))
+                .then(ExplodeCommand.register(context))
                 ;
         
         LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);

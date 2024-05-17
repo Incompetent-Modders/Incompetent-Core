@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -15,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 public class SetSpellInSlotCommand {
-    public static ArgumentBuilder<CommandSourceStack, ?> register() {
-        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", new SpellArgument()).executes(arguments -> {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
+        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", new SpellArgument(context)).executes(arguments -> {
                     ServerLevel world = arguments.getSource().getLevel();
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)

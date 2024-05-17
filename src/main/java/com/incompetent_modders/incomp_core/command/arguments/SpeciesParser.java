@@ -2,7 +2,6 @@ package com.incompetent_modders.incomp_core.command.arguments;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
-import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
@@ -22,27 +21,28 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-public class SpellParser {
-    private static final DynamicCommandExceptionType ERROR_UNKNOWN_SPELL = new DynamicCommandExceptionType(
-            p_121013_ -> Component.translatable("argument.spell.id.invalid", p_121013_)
+public class SpeciesParser {
+    private static final DynamicCommandExceptionType ERROR_UNKNOWN_SPECIES_TYPE = new DynamicCommandExceptionType(
+            p_121013_ -> Component.translatable("argument.species_type.id.invalid", p_121013_)
     );
     private static final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> SUGGEST_NOTHING = SuggestionsBuilder::buildFuture;
-    private final HolderLookup<Spell> spells;
-    private Either<Holder<Spell>, HolderSet<Spell>> result;
-    private Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestions = SUGGEST_NOTHING;
-    public SpellParser(HolderLookup.Provider provider) {
-        this.spells = provider.lookupOrThrow(ModRegistries.SPELL.key());
+    private final HolderLookup<SpeciesType> speciesTypes;
+    private Either<Holder<SpeciesType>, HolderSet<SpeciesType>> result;
+    private final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestions = SUGGEST_NOTHING;
+    public SpeciesParser(HolderLookup.Provider provider) {
+        this.speciesTypes = provider.lookupOrThrow(ModRegistries.SPECIES_TYPE.key());
     }
-    public SpellResult parse(StringReader stringReader) throws CommandSyntaxException {
-        final MutableObject<Holder<Spell>> mutableobject = new MutableObject<>();
+    public SpeciesResult parse(StringReader stringReader) throws CommandSyntaxException {
+        final MutableObject<Holder<SpeciesType>> mutableobject = new MutableObject<>();
         this.parse(stringReader, new Visitor() {
-            public void visitSpell(Holder<Spell> spellHolder) {
-                mutableobject.setValue(spellHolder);
+            public void visitSpecies(Holder<SpeciesType> speciesTypeHolder) {
+                mutableobject.setValue(speciesTypeHolder);
             }
         });
-        Holder<Spell> holder = Objects.requireNonNull(mutableobject.getValue(), "Parser gave no species type");
-        return new SpellResult(holder);
+        Holder<SpeciesType> holder = Objects.requireNonNull(mutableobject.getValue(), "Parser gave no species type");
+        return new SpeciesResult(holder);
     }
+    
     public void parse(StringReader stringReader, Visitor visitor) throws CommandSyntaxException {
         int i = stringReader.getCursor();
         
@@ -67,26 +67,25 @@ public class SpellParser {
         return suggestionsVisitor.resolveSuggestions(suggestionsBuilder, stringreader);
     }
     
-    private CompletableFuture<Suggestions> suggestSpell(SuggestionsBuilder suggestionsBuilder) {
-        return SharedSuggestionProvider.suggestResource(this.spells.listElementIds().map(ResourceKey::location), suggestionsBuilder);
+    private CompletableFuture<Suggestions> suggestSpeciesType(SuggestionsBuilder suggestionsBuilder) {
+        return SharedSuggestionProvider.suggestResource(this.speciesTypes.listElementIds().map(ResourceKey::location), suggestionsBuilder);
     }
     
-    public static record SpellResult(Holder<Spell> spellHolder) {
-        public SpellResult(Holder<Spell> spellHolder) {
-            this.spellHolder = spellHolder;
+    public static record SpeciesResult(Holder<SpeciesType> speciesTypeHolder) {
+        public SpeciesResult(Holder<SpeciesType> speciesTypeHolder) {
+            this.speciesTypeHolder = speciesTypeHolder;
         }
         
-        public Holder<Spell> spell() {
-            return this.spellHolder;
+        public Holder<SpeciesType> item() {
+            return this.speciesTypeHolder;
         }
     }
-    
     
     public interface Visitor {
-        default void visitSpell(Holder<Spell> spellHolder) {
+        default void visitSpecies(Holder<SpeciesType> speciesTypeHolder) {
         }
         
-        default void visitSuggestions(Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestionsBuilderCompletableFutureFunction) {
+        default void visitSuggestions(Function<SuggestionsBuilder, CompletableFuture<Suggestions>> p_335635_) {
         }
     }
     
@@ -94,7 +93,7 @@ public class SpellParser {
         private Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestions;
         
         SuggestionsVisitor() {
-            this.suggestions = SUGGEST_NOTHING;
+            this.suggestions = SpeciesParser.SUGGEST_NOTHING;
         }
         
         public void visitSuggestions(Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestions) {
@@ -127,9 +126,9 @@ public class SpellParser {
         private void readSpecies() throws CommandSyntaxException {
             int i = this.reader.getCursor();
             ResourceLocation resourcelocation = ResourceLocation.read(this.reader);
-            this.visitor.visitSpell(SpellParser.this.spells.get(ResourceKey.create(ModRegistries.SPELL.key(), resourcelocation)).orElseThrow(() -> {
+            this.visitor.visitSpecies(SpeciesParser.this.speciesTypes.get(ResourceKey.create(ModRegistries.SPECIES_TYPE.key(), resourcelocation)).orElseThrow(() -> {
                 this.reader.setCursor(i);
-                return ERROR_UNKNOWN_SPELL.createWithContext(this.reader, resourcelocation);
+                return ERROR_UNKNOWN_SPECIES_TYPE.createWithContext(this.reader, resourcelocation);
             }));
         }
         
@@ -142,7 +141,7 @@ public class SpellParser {
         }
         
         private CompletableFuture<Suggestions> suggestSpecies(SuggestionsBuilder suggestionsBuilder) {
-            return SharedSuggestionProvider.suggestResource(SpellParser.this.spells.listElementIds().map(ResourceKey::location), suggestionsBuilder);
+            return SharedSuggestionProvider.suggestResource(SpeciesParser.this.speciesTypes.listElementIds().map(ResourceKey::location), suggestionsBuilder);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.registry;
 
+import com.incompetent_modders.incomp_core.command.arguments.SpeciesArgument;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -18,6 +19,11 @@ public class ModArgumentTypes {
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, SingletonArgumentInfo<SpellArgument>> SPELL_ARG = ARG_TYPE.register(
             "spells", () -> ArgumentTypeInfos.registerByClass(
                     SpellArgument.class, SingletonArgumentInfo.contextFree(SpellArgument::new)
+            )
+    );
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, SingletonArgumentInfo<SpeciesArgument>> SPECIES_ARG = ARG_TYPE.register(
+            "species", () -> ArgumentTypeInfos.registerByClass(
+                    SpeciesArgument.class, SingletonArgumentInfo.contextAware(SpeciesArgument::new)
             )
     );
     

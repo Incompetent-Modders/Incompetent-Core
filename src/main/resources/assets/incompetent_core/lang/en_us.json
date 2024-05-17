@@ -28,6 +28,7 @@
   "commands.clear_spell.all": "Cleared Spells from All Slots",
   "commands.set_spell": "Set Spell %s to Slot %s",
   "argument.spell.id.invalid": "Invalid Spell ID: %s",
+  "argument.species_type.id.invalid": "Invalid Species Type ID: %s",
   "spell.incompetent_core.select_entity": "Selected: ",
   "spell.incompetent_core.select_position": "Selected Block: %s at: %s",
   "spell.incompetent_core.select_position.invalid.block_above": "Invalid Position: Block Above.",
