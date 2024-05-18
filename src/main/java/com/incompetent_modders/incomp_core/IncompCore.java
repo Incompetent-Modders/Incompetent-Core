@@ -1,14 +1,12 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.network.SyncHandler;
-import com.incompetent_modders.incomp_core.registry.ModSpells;
 import com.incompetent_modders.incomp_core.data.IncompDatagen;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
 import com.incompetent_modders.incomp_core.events.CommonEventHandler;
 import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
-import com.incompetent_modders.incomp_core.registry.dev.DevSpells;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
@@ -37,6 +35,7 @@ public class IncompCore
     public static final ChatFormatting TITLE_FORMAT = ChatFormatting.GRAY;
     public static final ChatFormatting DESCRIPTION_FORMAT = ChatFormatting.BLUE;
     public static final ChatFormatting ERROR_FORMAT = ChatFormatting.RED;
+    public static final ChatFormatting BUNDLE_CONTENTS_FORMAT = ChatFormatting.DARK_PURPLE;
     private final IEventBus modEventBus;
     public IncompCore(IEventBus modEventBus) {
         this.modEventBus = modEventBus;
@@ -46,7 +45,6 @@ public class IncompCore
         ModAttributes.register(modEventBus);
         ModClassTypes.register(modEventBus);
         ModArgumentTypes.register(modEventBus);
-        ModSpells.SPELLS.register(modEventBus);
         ModEffects.register(modEventBus);
         ModSpeciesTypes.register(modEventBus);
         ModSpeciesBehaviourTypes.register(modEventBus);
@@ -66,7 +64,6 @@ public class IncompCore
         if (shouldRegisterDevFeatures())
         {
             DevClassTypes.register(modEventBus);
-            DevSpells.register(modEventBus);
             DevItems.register(modEventBus);
         }
         this.modEventBus.addListener(IncompDatagen::gatherDataEvent);

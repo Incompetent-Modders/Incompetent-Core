@@ -10,6 +10,7 @@ import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyLi
 import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
+import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.data.IncompItemTags;
 import com.incompetent_modders.incomp_core.data.IncompSpeciesTags;
 import com.incompetent_modders.incomp_core.registry.*;
@@ -166,9 +167,9 @@ public class CommonForgeEvents {
     }
     @SubscribeEvent
     public static void serverStarting(ServerStartingEvent event) {
-        ModRegistries.SPELL.entrySet().forEach(entry -> {
-            if (!SpellPropertyListener.spellHasProperties(entry.getValue())) {
-                IncompCore.LOGGER.warn("Spell {} does not have properties! This may cause issues!", entry.getValue().getSpellIdentifier());
+        SpellPropertyListener.getAllSpells().forEach(entry -> {
+            if (!SpellPropertyListener.getSpellProperties(entry).isBlankSpell() && entry != CastingItemUtil.emptySpell) {
+                IncompCore.LOGGER.warn("Spell {} does not have properties! This may cause issues!", entry);
             }
         });
     }

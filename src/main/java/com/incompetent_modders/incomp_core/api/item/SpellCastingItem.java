@@ -2,14 +2,14 @@ package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.registry.ModSpells;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +31,7 @@ public class SpellCastingItem extends Item {
     }
     
     public int getUseDuration(ItemStack stack) {
-        return CastingItemUtil.getSelectedSpell(stack).getDrawTime();
+        return CastingItemUtil.getSpellProperties(stack).drawTime();
     }
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BOW;
@@ -46,11 +46,11 @@ public class SpellCastingItem extends Item {
             decrementCastProgress(itemstack);
         }
         if (getCastProgress(itemstack) == 0 && !casting) {
-            Spell spell = getSelectedSpell(itemstack);
+            ResourceLocation spell = getSelectedSpell(itemstack);
             if (spell != null && !casting) {
                 casting = true;
                 if (entity instanceof Player player) {
-                    spell.getSpellProperties().executeCast(player);
+                    SpellPropertyListener.getSpellProperties(spell).executeCast(player);
                     casting = false;
                 }
             }
@@ -60,18 +60,18 @@ public class SpellCastingItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack castingStack = player.getItemInHand(hand);
         if (SpellCastingItem.getCastProgress(castingStack) == 0) {
-            SpellCastingItem.setCastProgress(CastingItemUtil.getSelectedSpell(castingStack), castingStack);
+            SpellCastingItem.setCastProgress(CastingItemUtil.getSpellProperties(castingStack), castingStack);
         }
         if (player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND) {
             IncompCore.LOGGER.info("Offhand casting is not allowed.");
             return InteractionResultHolder.fail(castingStack);
         }
-        if (CastingItemUtil.getSelectedSpell(castingStack).getSpellProperties().isBlankSpell()) {
+        if (CastingItemUtil.getSpellProperties(castingStack).isBlankSpell()) {
             IncompCore.LOGGER.info("No spell selected.");
             return InteractionResultHolder.fail(castingStack);
         }
         player.startUsingItem(hand);
-        IncompCore.LOGGER.info("Player has begun casting spell: {}", CastingItemUtil.getSelectedSpell(castingStack).getDisplayName().getString());
+        IncompCore.LOGGER.info("Player has begun casting spell: {}", CastingItemUtil.getSpellProperties(castingStack).getDisplayName().getString());
         return InteractionResultHolder.consume(castingStack);
     }
     
@@ -88,13 +88,13 @@ public class SpellCastingItem extends Item {
             if (!CastingItemUtil.getCustomData(stack).contains(spellSlot_NBT + i) || CastingItemUtil.getCustomData(stack).copyTag().getString(spellSlot_NBT + i).isEmpty()) {
                 int finalI = i;
                 CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                    tag.putString(spellSlot_NBT + finalI, ModSpells.EMPTY.get().getSpellIdentifier().toString());
+                    tag.putString(spellSlot_NBT + finalI, CastingItemUtil.emptySpell.toString());
                 });
             }
             if (CastingItemUtil.deserializeFromSlot(stack, i) == null) {
                 int finalI = i;
                 CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                    tag.putString(spellSlot_NBT + finalI, ModSpells.EMPTY.get().getSpellIdentifier().toString());
+                    tag.putString(spellSlot_NBT + finalI, CastingItemUtil.emptySpell.toString());
                 });
             }
         }
@@ -112,12 +112,12 @@ public class SpellCastingItem extends Item {
             stack.set(ModDataComponents.MAX_SPELL_SLOTS, 6);
         }
     }
-    public static Spell getSelectedSpell(ItemStack stack) {
+    public static ResourceLocation getSelectedSpell(ItemStack stack) {
         return CastingItemUtil.deserializeFromSlot(stack, CastingItemUtil.getSelectedSpellSlot(stack));
     }
     
     public static String getSpellNameInSlot(ItemStack stack, int slot) {
-        return CastingItemUtil.deserializeFromSlot(stack, slot).getDisplayName().getString();
+        return CastingItemUtil.getSpellProperties(stack, slot).getDisplayName().getString();
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {
@@ -128,8 +128,8 @@ public class SpellCastingItem extends Item {
         return stack.getOrDefault(ModDataComponents.REMAINING_DRAW_TIME, 0);
     }
     
-    public static void setCastProgress(Spell spell, ItemStack stack) {
-        int ticks = spell.getDrawTime();
+    public static void setCastProgress(SpellProperties properties, ItemStack stack) {
+        int ticks = properties.drawTime();
         stack.set(ModDataComponents.REMAINING_DRAW_TIME, ticks);
     }
     

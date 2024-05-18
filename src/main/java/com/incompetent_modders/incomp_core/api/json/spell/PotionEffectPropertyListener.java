@@ -3,10 +3,7 @@ package com.incompetent_modders.incomp_core.api.json.spell;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.spell.Spell;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,7 +12,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
 import org.slf4j.Logger;
 
 import java.util.HashMap;

@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
@@ -27,8 +28,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public record SpellProperties(SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results, SoundEvent castSound) {
+public record SpellProperties(String translationKey, SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results, SoundEvent castSound) {
     public static final Codec<SpellProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("translation_key").forGetter(SpellProperties::translationKey),
             SpellCategory.CODEC.optionalFieldOf("category", SpellCategory.UTILITY).forGetter(SpellProperties::category),
             Codec.DOUBLE.optionalFieldOf("mana_cost", 0.0).forGetter(SpellProperties::manaCost),
             Codec.INT.optionalFieldOf("draw_time", 0).forGetter(SpellProperties::drawTime),
@@ -39,8 +41,8 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             SoundEvent.DIRECT_CODEC.optionalFieldOf("cast_sound", SoundEvents.ALLAY_THROW).forGetter(SpellProperties::castSound)
     ).apply(instance, SpellProperties::new));
     
-    public SpellProperties(SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results) {
-        this(category, manaCost, drawTime, catalyst, classType, speciesType, results, SoundEvents.ALLAY_THROW);
+    public SpellProperties(String translationKey, SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ClassType.Value classType, SpeciesType.Value speciesType, SpellResults results) {
+        this(translationKey, category, manaCost, drawTime, catalyst, classType, speciesType, results, SoundEvents.ALLAY_THROW);
     }
     
     public boolean isBlankSpell() {
@@ -56,7 +58,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             return;
         }
         int playerMana = (int) PlayerDataCore.ManaData.getMana(player);
-        if (playerMana < manaCost) {
+        if (playerMana < getManaCost(player)) {
             IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
             return;
         }
@@ -80,7 +82,9 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
         IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
     }
-    
+    public boolean hasSpellCatalyst() {
+        return !this.catalyst().isEmpty();
+    }
     public boolean playerIsHoldingSpellCatalyst(Player player) {
         if (!catalyst().isEmpty()) {
             return ItemStack.isSameItemSameComponents(player.getOffhandItem(), catalyst());
@@ -92,7 +96,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             return;
         }
         boolean catalystHasDurability = catalyst().isDamageableItem();
-        boolean catalystIsUnbreakable = catalyst().has(DataComponents.UNBREAKABLE);
+        boolean catalystIsUnbreakable = catalyst().has(DataComponents.UNBREAKABLE) || catalyst().getItem() instanceof BundleItem;
         if (playerIsHoldingSpellCatalyst(player)) {
             if (!player.isCreative()) {
                 if (catalystHasDurability) {
@@ -100,6 +104,9 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
                 } else {
                     if (!catalystIsUnbreakable) {
                         player.getOffhandItem().shrink(1);
+                    }
+                    if (catalyst().getItem() instanceof BundleItem) {
+                        player.getOffhandItem().set(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
                     }
                 }
                 player.awardStat(Stats.ITEM_USED.get(catalyst().getItem()));
@@ -154,5 +161,9 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         } else {
             return requiredSpecies.getSpecies().contains(playerSpecies);
         }
+    }
+    
+    public Component getDisplayName() {
+        return Component.translatable(translationKey());
     }
 }

@@ -1,4 +1,5 @@
 {
+  "translation_key": "spell.incompetent_core:test_ranged_spell",
   "category": "ranged",
   "draw_time": 40,
   "mana_cost": 50,

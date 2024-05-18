@@ -17,7 +17,6 @@
   "item.incompetent_core.spellcasting.not_enough_mana": "Not Enough Mana to Cast this Spell",
   "item.incompetent_core.spellcasting.on_cooldown": "Spell is on Cooldown",
 
-  "spell.incompetent_core.empty": "Empty Spell Slot",
   "spell.incompetent_core.empty_projectile": "Empty Projectile Spell",
 
   "class_type.incompetent_core.empty": "Empty Class",
@@ -34,6 +33,11 @@
   "spell.incompetent_core.select_position.invalid.block_above": "Invalid Position: Block Above.",
 
   "key.categories.incomp_core": "Incompetent Core",
-  "key.incomp_core.activate_class_ability": "Activate Class Ability"
+  "key.incomp_core.activate_class_ability": "Activate Class Ability",
+
+
+  "spell.incompetent_core:empty": "Empty Spell Slot",
+  "spell.incompetent_core:test_ranged_spell": "Test Ranged Spell",
+  "spell.incompetent_core:test_spell": "Test Spell"
 
 }

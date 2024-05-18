@@ -1,4 +1,5 @@
 {
+  "translation_key": "spell.incompetent_core:test_spell",
   "category": "mobility",
   "draw_time": 10,
   "mana_cost": 50,

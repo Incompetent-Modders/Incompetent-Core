@@ -6,8 +6,6 @@ import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
-import com.incompetent_modders.incomp_core.api.spell.Spell;
-import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
@@ -19,7 +17,6 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public class ModRegistries {
-    public static final ResourceKey<Registry<Spell>> SPELLS_KEY = createRegistryKey("spells");
     public static final ResourceKey<Registry<ClassType>> CLASS_TYPE_KEY = createRegistryKey("class_type");
     public static final ResourceKey<Registry<SpeciesType>> SPECIES_TYPE_KEY = createRegistryKey("species_type");
     public static final ResourceKey<Registry<ClassAbilityType<?>>> CLASS_ABILITY_TYPE_KEY = createRegistryKey("class_ability_type");
@@ -28,7 +25,6 @@ public class ModRegistries {
     public static final ResourceKey<Registry<SpeciesBehaviourType<?>>> SPECIES_BEHAVIOUR_TYPE_KEY = createRegistryKey("species_behaviour_type");
     public static final ResourceKey<Registry<SpellResultType<?>>> SPELL_RESULT_TYPES_KEY = createRegistryKey("spell_result_type");
     
-    public static final Registry<Spell> SPELL = registerSimpleWithIntrusiveHolders(SPELLS_KEY);
     public static final Registry<ClassType> CLASS_TYPE = registerSimpleWithIntrusiveHolders(CLASS_TYPE_KEY);
     public static final Registry<SpeciesType> SPECIES_TYPE = registerSimpleWithIntrusiveHolders(SPECIES_TYPE_KEY);
     public static final Registry<ClassAbilityType<?>> CLASS_ABILITY_TYPE = makeSyncedRegistry(CLASS_ABILITY_TYPE_KEY);
@@ -47,7 +43,6 @@ public class ModRegistries {
         return new MappedRegistry<>(registryKey, Lifecycle.stable(), true);
     }
     public static void register(IEventBus bus) {
-        bus.addListener(NewRegistryEvent.class, event -> event.register(SPELL));
         bus.addListener(NewRegistryEvent.class, event -> event.register(CLASS_TYPE));
         bus.addListener(NewRegistryEvent.class, event -> event.register(SPECIES_TYPE));
         bus.addListener(NewRegistryEvent.class, event -> event.register(CLASS_ABILITY_TYPE));

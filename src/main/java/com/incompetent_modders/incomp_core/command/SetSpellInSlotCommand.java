@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.command;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -17,7 +18,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 public class SetSpellInSlotCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
-        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", new SpellArgument(context)).executes(arguments -> {
+        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", new SpellArgument()).executes(arguments -> {
                     ServerLevel world = arguments.getSource().getLevel();
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)
@@ -25,7 +26,7 @@ public class SetSpellInSlotCommand {
                     if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                         CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spells"));
-                        Component outputComponent = Component.translatable("commands.set_spell", SpellArgument.getSpell(arguments, "spells").getDisplayName(), IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                        Component outputComponent = Component.translatable("commands.set_spell", SpellPropertyListener.getSpellProperties(SpellArgument.getSpell(arguments, "spells")).getDisplayName(), IntegerArgumentType.getInteger(arguments, "spellSlot"));
                         player.displayClientMessage(outputComponent, false);
                     }
                     return 0;

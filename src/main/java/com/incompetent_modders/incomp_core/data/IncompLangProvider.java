@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.data;
 
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
-import com.incompetent_modders.incomp_core.api.spell.Spell;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
@@ -45,14 +44,9 @@ public abstract class IncompLangProvider extends LanguageProvider {
         String translated = transform(containerName);
         super.add("container.%s".formatted(containerName), translated);
     }
-    
-    private void spell(Holder<Spell> holder) {
-        this.add(holder, "spells");
-    }
     private void classType(Holder<ClassType> holder) {
         this.add(holder, "class_type");
     }
-    
     
     
     private void add(Holder<?> holder, String type) {

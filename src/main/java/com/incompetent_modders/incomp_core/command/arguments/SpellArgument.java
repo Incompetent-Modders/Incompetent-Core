@@ -1,42 +1,39 @@
 package com.incompetent_modders.incomp_core.command.arguments;
 
-import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.spell.Spell;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-public class SpellArgument implements ArgumentType<SpellInput> {
+public class SpellArgument implements ArgumentType<ResourceLocation> {
     private static final Collection<String> EXAMPLES = Arrays.asList("test_spell", "incompetent_core:test_spell", "test_spell{foo=bar}");
-    private final SpellParser parser;
-    public SpellArgument(CommandBuildContext commandBuildContext) {
-        this.parser = new SpellParser(commandBuildContext);
+    public SpellArgument() {
     }
     @Override
-    public SpellInput parse(StringReader stringReader) throws CommandSyntaxException {
-        SpellParser.SpellResult spellResult = this.parser.parse(stringReader);
-        return new SpellInput(spellResult.spellHolder());
+    public ResourceLocation parse(StringReader stringReader) throws CommandSyntaxException {
+        return ResourceLocation.read(stringReader);
     }
-    public static <S> Spell getSpell(CommandContext<S> commandContext, String name) {
-        return commandContext.getArgument(name, Spell.class);
+    public static <S> ResourceLocation getSpell(CommandContext<S> commandContext, String name) {
+        return commandContext.getArgument(name, ResourceLocation.class);
     }
     
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-        return this.parser.fillSuggestions(suggestionsBuilder);
+        return SharedSuggestionProvider.suggestResource(SpellPropertyListener.getAllSpells(), suggestionsBuilder);
     }
-    private Stream<Spell> getStaticSpells()
+    private Stream<ResourceLocation> getSpells()
     {
-        return ModRegistries.SPELL.stream();
+        return SpellPropertyListener.getAllSpells().stream();
     }
     @Override
     public Collection<String> getExamples() {

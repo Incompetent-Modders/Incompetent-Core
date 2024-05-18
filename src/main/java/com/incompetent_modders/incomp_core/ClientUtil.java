@@ -1,9 +1,9 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.registry.ModSpells;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.Util;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.DoubleStream;
 
 import static com.incompetent_modders.incomp_core.IncompCore.*;
@@ -115,26 +114,27 @@ public class ClientUtil {
     private static final Component selectedEntitiesComp = Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT);
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
-        Spell spell = SpellCastingItem.getSelectedSpell(castingStack);
+        ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
+        SpellProperties spellProperties = SpellPropertyListener.getSpellProperties(spell);
         Player player = Minecraft.getInstance().player;
         tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(spell.getDisplayName()).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(spellProperties.getDisplayName()).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.EMPTY);
         tooltip.add(CommonComponents.EMPTY);
         tooltip.add(SPELL_INFO_TITLE);
         tooltip.add(CommonComponents.space().append(manaCost));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spell.getSpellProperties().getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spellProperties.getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.space().append(castTime));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spell.getDrawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
-        if (spell.hasSpellCatalyst()) {
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spellProperties.drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
+        if (spellProperties.hasSpellCatalyst()) {
             tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.getSpellCatalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spell.getSpellCatalyst().getCount() > 1 ? " x" + spell.getSpellCatalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spell.getSpellProperties().playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
-            if (spell.getSpellCatalyst().has(DataComponents.BUNDLE_CONTENTS)) {
-                BundleContents bundleContents = spell.getSpellCatalyst().get(DataComponents.BUNDLE_CONTENTS);
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().getCount() > 1 ? " x" + spellProperties.catalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+            if (spellProperties.catalyst().has(DataComponents.BUNDLE_CONTENTS)) {
+                BundleContents bundleContents = spellProperties.catalyst().get(DataComponents.BUNDLE_CONTENTS);
                 if (bundleContents == null)
                     return;
                 for (ItemStack content : bundleContents.itemCopyStream().toList()) {
-                    tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonComponents.space()).append(content.getDisplayName().getString().replace("[", "").replace("]", "")).append(content.getCount() > 1 ? " x" + content.getCount() : ""));
+                    tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonComponents.space()).append("> " + content.getDisplayName().getString().replace("[", "").replace("]", "")).withStyle(BUNDLE_CONTENTS_FORMAT).append(content.getCount() > 1 ? " x" + content.getCount() : "").withStyle(BUNDLE_CONTENTS_FORMAT));
                 }
             }
         }

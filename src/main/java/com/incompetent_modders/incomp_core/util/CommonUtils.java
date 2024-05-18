@@ -2,19 +2,15 @@ package com.incompetent_modders.incomp_core.util;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
-import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import com.incompetent_modders.incomp_core.api.spell.*;
-import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.fml.ModList;
@@ -123,23 +118,6 @@ public class CommonUtils {
         if (scoreboard.getTeamNames().contains(team.getName())) {
             scoreboard.removePlayerTeam(team);
         }
-    }
-    
-    public static InteractionResultHolder<ItemStack> handleStartUsing(Player player, InteractionHand hand, ItemStack itemstack) {
-        if (SpellCastingItem.getCastProgress(itemstack) == 0) {
-            SpellCastingItem.setCastProgress(CastingItemUtil.getSelectedSpell(itemstack), itemstack);
-        }
-        if (player.getItemInHand(hand) == itemstack && hand == InteractionHand.OFF_HAND) {
-            IncompCore.LOGGER.info("Offhand casting is not allowed.");
-            return InteractionResultHolder.fail(itemstack);
-        }
-        if (CastingItemUtil.getSelectedSpell(itemstack).getSpellProperties().isBlankSpell()) {
-            IncompCore.LOGGER.info("No spell selected.");
-            return InteractionResultHolder.fail(itemstack);
-        }
-        IncompCore.LOGGER.info("Starting to cast spell.");
-        player.startUsingItem(hand);
-        return InteractionResultHolder.sidedSuccess(itemstack, player.level().isClientSide());
     }
     
     public static String removeExtension(ResourceLocation resourceLocation) {

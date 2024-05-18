@@ -1,8 +1,6 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -19,15 +17,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class SpellUtils {
-    public static double getSpellManaCost(Spell spell) {
-        return SpellPropertyListener.getSpellProperties(spell).manaCost();
-    }
-    public static int getSpellDrawTime(Spell spell) {
-        return SpellPropertyListener.getSpellProperties(spell).drawTime();
-    }
-    public static ItemStack getSpellCatalyst(Spell spell) {
-        return SpellPropertyListener.getSpellProperties(spell).catalyst();
-    }
+    
     public static void giveItems(Level level, Player player, int amount, Item item) {
         ItemStack stack = new ItemStack(item);
         stack.setCount(amount);
@@ -56,28 +46,6 @@ public class SpellUtils {
         return SpellUtils.rayTrace(playerCaster, rangeBonus + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, hitLiquids);
     }
     
-    public static boolean isPreCasting(CompoundTag tag) {
-        return tag.contains("preCasting") && tag.getBoolean("preCasting");
-    }
-    public static boolean hasSpellBeenCast(CompoundTag tag) {
-        return tag.contains("hasBeenCast") && tag.getBoolean("hasBeenCast");
-    }
-    public static void setPreCasting(CompoundTag tag, boolean preCasting) {
-        tag.putBoolean("preCasting", preCasting);
-    }
-    public static void setHasBeenCast(CompoundTag tag, boolean hasBeenCast) {
-        tag.putBoolean("hasBeenCast", hasBeenCast);
-    }
-    public static boolean playerIsHoldingSpellCatalyst(Player player, Spell spell) {
-        if (spell == null) {
-            return false;
-        }
-        if (spell.hasSpellCatalyst()) {
-            ItemStack catalyst = spell.getSpellCatalyst();
-            return player.getOffhandItem().is(catalyst.getItem());
-        }
-        return true;
-    }
     public static @Nullable EntityHitResult traceEntities(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance) {
         Level world = shooter.level();
         double d0 = distance;

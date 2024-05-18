@@ -23,6 +23,7 @@ public class ModCommands {
                 .then(RefillManaCommand.register())
                 .then(SetSpeciesCommand.register(context))
                 .then(ExplodeCommand.register(context))
+                .then(ApplyBonemealCommand.register(context))
                 ;
         
         LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);
