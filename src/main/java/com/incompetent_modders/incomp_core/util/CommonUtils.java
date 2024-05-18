@@ -2,21 +2,21 @@ package com.incompetent_modders.incomp_core.util;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
+import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import com.incompetent_modders.incomp_core.api.spell.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -24,14 +24,14 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
-import javax.annotation.Nullable;
-import java.util.Collection;
-
 public class CommonUtils {
     
     public boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
+    public static ResourceLocation defaultSpecies = new ResourceLocation(IncompCore.MODID, "human");
+    public static ResourceLocation defaultClass = new ResourceLocation(IncompCore.MODID, "none");
+    public static ResourceLocation defaultDiet = new ResourceLocation(IncompCore.MODID, "omnivore");
     public static ResourceLocation location(String path) {
         return new ResourceLocation(IncompCore.MODID, path);
     }
@@ -126,23 +126,22 @@ public class CommonUtils {
         return pathElements[pathElements.length - 1];
     }
     
-    public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon, TagKey<SpeciesType> speciesTag, Enchantment enchantment) {
-        if (PlayerDataCore.SpeciesData.getSpecies(player) != null) {
-            SpeciesType speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
-            Collection<SpeciesType> species$affected = SpeciesType.valueOf(speciesTag).getSpecies();
-            for (SpeciesType species : species$affected) {
-                if (species == speciesType) {
-                    if (isEnchantedWith(enchantment, weapon)) {
-                        float damage = event.getAmount();
-                        event.setAmount(damage + getDamageBonus(getEnchantmentLevel(Enchantments.SMITE, weapon), speciesType, speciesTag));
-                    }
+    public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
+        ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+        SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
+        if (speciesProperties.hasEnchantWeaknesses()) {
+            for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {
+                if (isEnchantedWith(properties.getEnchantment(), weapon)) {
+                    float damage = event.getAmount();
+                    float damageMultiplier = properties.multiplier();
+                    event.setAmount(damage + getDamageBonus(getEnchantmentLevel(properties.getEnchantment(), weapon), damageMultiplier));
                 }
             }
         }
     }
     
-    public static float getDamageBonus(int level, @Nullable SpeciesType targetSpecies, TagKey<SpeciesType> targets) {
-        return targetSpecies != null && targetSpecies.is(targets) ? (float)level * 2.5F : 0.0F;
+    public static float getDamageBonus(int level, float mulBy) {
+        return  (float)level * mulBy;
     }
     public static boolean isEnchantedWith(Enchantment enchantment, ItemStack stack) {
         return getEnchantmentLevel(enchantment, stack) > 0;

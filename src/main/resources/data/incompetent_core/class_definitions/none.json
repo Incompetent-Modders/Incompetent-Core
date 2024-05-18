@@ -8,12 +8,10 @@
     "chance": 0.0
   },
   "passive_effect": {
-    "type": "incompetent_core:default",
-    "debug": false
+    "type": "incompetent_core:default"
   },
   "ability": {
-    "type": "incompetent_core:default",
-    "debug": false
+    "type": "incompetent_core:default"
   },
   "passive_effect_tick_frequency": 0.0,
   "ability_cooldown": 0

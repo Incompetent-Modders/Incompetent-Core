@@ -1,5 +1,4 @@
 {
-  "translation_key": "spell.incompetent_core:test_spell",
   "category": "mobility",
   "draw_time": 10,
   "mana_cost": 50,
@@ -7,12 +6,8 @@
     "count": 1,
     "id": "minecraft:blaze_powder"
   },
-  "class_type": {
-    "id": "incompetent_core:test_class"
-  },
-  "species_type": {
-    "tag": "incompetent_core:incompetent_core/species_type/undead"
-  },
+  "class_type": "incompetent_core:test_class",
+  "species_type": "incompetent_core:zombie",
   "results": {
     "spell_result": {
       "type": "incompetent_core:add_effect",

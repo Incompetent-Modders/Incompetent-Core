@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.registry;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.DefaultSpeciesBehaviour;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.UndeadSpeciesBehaviour;

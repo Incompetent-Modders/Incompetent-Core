@@ -5,7 +5,6 @@ import com.incompetent_modders.incomp_core.data.IncompDatagen;
 import com.incompetent_modders.incomp_core.events.ClientEventHandler;
 import com.incompetent_modders.incomp_core.events.CommonEventHandler;
 import com.incompetent_modders.incomp_core.registry.*;
-import com.incompetent_modders.incomp_core.registry.dev.DevClassTypes;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import com.mojang.logging.LogUtils;
@@ -43,10 +42,8 @@ public class IncompCore
         
         ModRegistries.register(modEventBus);
         ModAttributes.register(modEventBus);
-        ModClassTypes.register(modEventBus);
         ModArgumentTypes.register(modEventBus);
         ModEffects.register(modEventBus);
-        ModSpeciesTypes.register(modEventBus);
         ModSpeciesBehaviourTypes.register(modEventBus);
         ModManaRegenConditions.register(modEventBus);
         ModClassPassiveEffects.register(modEventBus);
@@ -63,7 +60,6 @@ public class IncompCore
         
         if (shouldRegisterDevFeatures())
         {
-            DevClassTypes.register(modEventBus);
             DevItems.register(modEventBus);
         }
         this.modEventBus.addListener(IncompDatagen::gatherDataEvent);

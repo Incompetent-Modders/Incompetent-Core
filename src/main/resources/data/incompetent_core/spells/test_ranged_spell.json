@@ -1,11 +1,8 @@
 {
-  "translation_key": "spell.incompetent_core:test_ranged_spell",
   "category": "ranged",
   "draw_time": 40,
   "mana_cost": 50,
-  "class_type": {
-    "id": "incompetent_core:test_class"
-  },
+  "class_type": "incompetent_core:test_class",
   "results": {
     "spell_result": {
       "type": "incompetent_core:raycast",

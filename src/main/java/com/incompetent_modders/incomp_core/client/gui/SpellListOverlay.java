@@ -1,12 +1,11 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -26,7 +25,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     //public static final ResourceLocation spellSlotFrameIcon = new ResourceLocation(MODID, "spell_list/spell_slot_frame");
     public static final String spriteLoc = "spell_list";
     static final int CAST_TIME = 20;
-    public static ClassType classType;
+    public static ResourceLocation classType;
     @Override
     public void render(GuiGraphics graphics, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
@@ -50,20 +49,20 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         //ClassType classType = getWielderClassType(player);
         //ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
         //ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
-        ResourceLocation spellFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_frame");
-        ResourceLocation spellSlotFrameIcon = getWielderClassType(player).getSpellOverlayTexture("spell_slot_frame");
+        ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame", player);
+        ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame", player);
         
         ResourceLocation spellIcon = new ResourceLocation(this.getSelectedSpell(player).getNamespace(), "spells/" + this.getSelectedSpell(player).getPath());
-        Component spellName = SpellPropertyListener.getSpellProperties(getSelectedSpell(player)).getDisplayName();
+        Component spellName = SpellListener.getDisplayName(getSelectedSpell(player));
         
         //PoseStack poseStack = graphics.pose();
         //poseStack.pushPose();
         //poseStack.scale(1.25F, 1.25F, 1.25F);
-        float totalDrawTime = SpellPropertyListener.getSpellProperties(getSelectedSpell(player)).drawTime();
+        float totalDrawTime = SpellListener.getSpellProperties(getSelectedSpell(player)).drawTime();
         
         //DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
         //DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
-        DrawingUtils.drawString(graphics, mc.font, spellName, 16, 5, 0x00FF00);
+        DrawingUtils.drawString(graphics, mc.font, spellName, 16, 10, 0x00FF00);
         DrawingUtils.blitSprite(graphics, spellFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
         DrawingUtils.blitSprite(graphics, spellIcon, graphics.guiWidth() - (graphics.guiWidth() - 17), graphics.guiHeight() - 37, 26, 26);
         DrawingUtils.blitSprite(graphics, spellSlotFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
@@ -102,7 +101,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     public float getCastCompletionPercent(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem castingItem))
             return 0;
-        if (SpellPropertyListener.getSpellProperties(getSelectedSpell(player)).drawTime() == 0) {
+        if (SpellListener.getSpellProperties(getSelectedSpell(player)).drawTime() == 0) {
             return 0;
         }
         
@@ -112,12 +111,19 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     public float getCastDuration(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
             return 0;
-        return SpellPropertyListener.getSpellProperties(getSelectedSpell(player)).drawTime();
+        return SpellListener.getSpellProperties(getSelectedSpell(player)).drawTime();
     }
     
-    public ClassType getWielderClassType(LocalPlayer player) {
-        if (PlayerDataCore.ClassData.getPlayerClassType(player) == null)
-            return ModClassTypes.NONE.get();
+    public ResourceLocation getWielderClassType(LocalPlayer player) {
         return PlayerDataCore.ClassData.getPlayerClassType(player);
     }
+    
+    public ResourceLocation getSpellOverlayTexture(String spriteName, LocalPlayer player) {
+        if (ClassTypeListener.getClassTypeProperties(getWielderClassType(player)) == null)
+            return new ResourceLocation(IncompCore.MODID, "spell_list/" + spriteName);
+        if (!ClassTypeListener.getClassTypeProperties(getWielderClassType(player)).useClassSpecificTexture())
+            return new ResourceLocation(IncompCore.MODID, "spell_list/" + spriteName);
+        return new ResourceLocation(getWielderClassType(player).getNamespace(), "spell_list/" + getWielderClassType(player).getPath() + "/" + spriteName);
+    }
+    
 }

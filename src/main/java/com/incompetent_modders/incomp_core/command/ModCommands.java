@@ -1,5 +1,7 @@
 package com.incompetent_modders.incomp_core.command;
 
+import com.incompetent_modders.incomp_core.command.qol.ApplyBonemealCommand;
+import com.incompetent_modders.incomp_core.command.qol.ExplodeCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
@@ -21,9 +23,10 @@ public class ModCommands {
                 .then(WhatSpellIsInSlotCommand.register())
                 .then(ClearSpellSlotsCommand.register())
                 .then(RefillManaCommand.register())
-                .then(SetSpeciesCommand.register(context))
+                .then(SetSpeciesCommand.register())
                 .then(ExplodeCommand.register(context))
                 .then(ApplyBonemealCommand.register(context))
+                .then(ListFeaturesCommand.register())
                 ;
         
         LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);

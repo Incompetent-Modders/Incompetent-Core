@@ -38,6 +38,11 @@
 
   "spell.incompetent_core:empty": "Empty Spell Slot",
   "spell.incompetent_core:test_ranged_spell": "Test Ranged Spell",
-  "spell.incompetent_core:test_spell": "Test Spell"
+  "spell.incompetent_core:test_spell": "Test Spell",
+
+  "commands.incomp_core.list_features.spells": "There Are Currently %s Spells Loaded:",
+  "commands.incomp_core.list_features.class_types": "There Are Currently %s Class Types Loaded:",
+  "commands.incomp_core.list_features.species": "There Are Currently %s Species Loaded:",
+  "commands.incomp_core.list_features.diets": "There Are Currently %s Diets Loaded:"
 
 }

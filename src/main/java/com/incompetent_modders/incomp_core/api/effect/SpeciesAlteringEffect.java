@@ -1,22 +1,21 @@
 package com.incompetent_modders.incomp_core.api.effect;
 
-import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 
 public class SpeciesAlteringEffect extends MagicallyAppliedEffect {
-    private static Holder<SpeciesType> CONVERT_TO;
-    public SpeciesAlteringEffect(MobEffectCategory category, int color, Holder<SpeciesType> convertTo) {
+    private static ResourceLocation CONVERT_TO;
+    public SpeciesAlteringEffect(MobEffectCategory category, int color, ResourceLocation convertTo) {
         super(category, color);
         CONVERT_TO = convertTo;
     }
     
-    public SpeciesType getConvertTo() {
-        return CONVERT_TO.value();
+    public ResourceLocation getConvertTo() {
+        return CONVERT_TO;
     }
     
     @SuppressWarnings("unchecked")

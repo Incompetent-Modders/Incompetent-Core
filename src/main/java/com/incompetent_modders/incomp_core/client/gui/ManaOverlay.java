@@ -1,9 +1,9 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ClassType;
+import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
-import com.incompetent_modders.incomp_core.registry.ModClassTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -23,9 +23,9 @@ public class ManaOverlay implements LayeredDraw.Layer {
         LocalPlayer player = mc.player;
         //If the player has an inventory screen open, don't render the overlay
         
-        ResourceLocation manaBar = getPlayerClassType(player).getManaOverlayTexture("bar");
-        ResourceLocation manaFrame = getPlayerClassType(player).getManaOverlayTexture("frame");
-        ResourceLocation bubbles = getPlayerClassType(player).getManaOverlayTexture("bubbles");
+        ResourceLocation manaBar = getManaOverlayTexture("bar", player);
+        ResourceLocation manaFrame = getManaOverlayTexture("frame", player);
+        ResourceLocation bubbles = getManaOverlayTexture("bubbles", player);
         
         if (player == null)
             return;
@@ -54,9 +54,15 @@ public class ManaOverlay implements LayeredDraw.Layer {
     public float getManaPercentage(LocalPlayer player) {
         return getMana(player) / getMaxMana(player);
     }
-    public ClassType getPlayerClassType(LocalPlayer player) {
-        if (PlayerDataCore.ClassData.getPlayerClassType(player) == null)
-            return ModClassTypes.NONE.get();
+    public ResourceLocation getPlayerClassType(LocalPlayer player) {
         return PlayerDataCore.ClassData.getPlayerClassType(player);
+    }
+    
+    public ResourceLocation getManaOverlayTexture(String spriteName, LocalPlayer player) {
+        if (ClassTypeListener.getClassTypeProperties(getPlayerClassType(player)) == null)
+            return new ResourceLocation(IncompCore.MODID, "mana_bar/" + spriteName);
+        if (!ClassTypeListener.getClassTypeProperties(getPlayerClassType(player)).useClassSpecificTexture())
+            return new ResourceLocation(IncompCore.MODID, "mana_bar/" + spriteName);
+        return new ResourceLocation(getPlayerClassType(player).getNamespace(), "mana_bar/" + getPlayerClassType(player).getPath() + "/" + spriteName);
     }
 }

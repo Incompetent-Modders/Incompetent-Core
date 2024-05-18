@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
@@ -115,10 +115,10 @@ public class ClientUtil {
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
         ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
-        SpellProperties spellProperties = SpellPropertyListener.getSpellProperties(spell);
+        SpellProperties spellProperties = SpellListener.getSpellProperties(spell);
         Player player = Minecraft.getInstance().player;
         tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(spellProperties.getDisplayName()).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(SpellListener.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.EMPTY);
         tooltip.add(CommonComponents.EMPTY);
         tooltip.add(SPELL_INFO_TITLE);

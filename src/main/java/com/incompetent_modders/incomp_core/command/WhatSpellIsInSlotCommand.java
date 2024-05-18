@@ -1,8 +1,7 @@
 package com.incompetent_modders.incomp_core.command;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
-import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -26,7 +25,7 @@ public class WhatSpellIsInSlotCommand {
             if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                 ResourceLocation spell = CastingItemUtil.deserializeFromSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"));
-                Component spellComponent = isSpellPresent(spell) ? SpellPropertyListener.getSpellProperties(spell).getDisplayName() : Component.nullToEmpty("No spell in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                Component spellComponent = isSpellPresent(spell) ? SpellListener.getDisplayName(spell) : Component.nullToEmpty("No spell in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 player.displayClientMessage(spellComponent, false);
             }
             return 0;
@@ -37,6 +36,6 @@ public class WhatSpellIsInSlotCommand {
         if (spell == null) {
             return false;
         }
-        return SpellPropertyListener.getSpellProperties(spell).isBlankSpell();
+        return SpellListener.getSpellProperties(spell).isBlankSpell();
     }
 }

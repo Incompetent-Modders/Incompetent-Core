@@ -2,8 +2,8 @@ package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.core.component.DataComponentMap;
@@ -50,7 +50,7 @@ public class SpellCastingItem extends Item {
             if (spell != null && !casting) {
                 casting = true;
                 if (entity instanceof Player player) {
-                    SpellPropertyListener.getSpellProperties(spell).executeCast(player);
+                    SpellListener.getSpellProperties(spell).executeCast(player);
                     casting = false;
                 }
             }
@@ -71,7 +71,7 @@ public class SpellCastingItem extends Item {
             return InteractionResultHolder.fail(castingStack);
         }
         player.startUsingItem(hand);
-        IncompCore.LOGGER.info("Player has begun casting spell: {}", CastingItemUtil.getSpellProperties(castingStack).getDisplayName().getString());
+        IncompCore.LOGGER.info("Player has begun casting spell: {}", SpellListener.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
         return InteractionResultHolder.consume(castingStack);
     }
     
@@ -117,7 +117,7 @@ public class SpellCastingItem extends Item {
     }
     
     public static String getSpellNameInSlot(ItemStack stack, int slot) {
-        return CastingItemUtil.getSpellProperties(stack, slot).getDisplayName().getString();
+        return SpellListener.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {

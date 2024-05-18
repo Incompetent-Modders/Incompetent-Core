@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.command;
 
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;
@@ -32,13 +32,13 @@ public class CastSpellCommand {
     private static int castSpell(CommandSourceStack source, ResourceLocation spell, Collection<ServerPlayer> targets, int count) {
         for (ServerPlayer serverplayer : targets) {
             for (int i = 0; i < count; ++i) {
-                SpellPropertyListener.getSpellProperties(spell).executeCastNoRequirements(serverplayer);
+                SpellListener.getSpellProperties(spell).executeCastNoRequirements(serverplayer);
             }
         }
         if (targets.size() == 1) {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellPropertyListener.getSpellProperties(spell).getDisplayName(), count, targets.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), count, targets.iterator().next().getDisplayName()), true);
         } else {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellPropertyListener.getSpellProperties(spell).getDisplayName(), count, targets.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), count, targets.size()), true);
         }
         return targets.size();
     }

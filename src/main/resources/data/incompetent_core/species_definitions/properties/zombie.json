@@ -4,5 +4,10 @@
     "type": "incompetent_core:undead",
     "burn_in_sun": true
   },
-  "diet_type": "carnivore"
+  "diet_type": "incompetent_core:carnivore",
+  "enchant_weaknesses": [
+    {
+      "enchantment": "minecraft:smite"
+    }
+  ]
 }

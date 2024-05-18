@@ -5,8 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +22,7 @@ public class SpeciesAttributesListener extends SimpleJsonResourceReloadListener 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     
     private static final Logger LOGGER = IncompCore.LOGGER;
-    public static Map<SpeciesType, SpeciesAttributes> attributes = new HashMap<>();
+    public static Map<ResourceLocation, SpeciesAttributes> attributes = new HashMap<>();
     
     public SpeciesAttributesListener() {
         super(GSON, "species_definitions/attributes");
@@ -42,7 +40,7 @@ public class SpeciesAttributesListener extends SimpleJsonResourceReloadListener 
             }
             
             try {
-                SpeciesType speciesType = getSpeciesType(resourceLocation);
+                ResourceLocation speciesType = getSpeciesId(resourceLocation);
                 SpeciesAttributes speciesAttributes = SpeciesAttributes.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
                 if (speciesAttributes != null) {
                     attributes.put(speciesType, speciesAttributes);
@@ -54,23 +52,23 @@ public class SpeciesAttributesListener extends SimpleJsonResourceReloadListener 
         IncompCore.LOGGER.info("Load Complete for {} species' attributes", attributes.size());
     }
     
-    protected static SpeciesType getSpeciesType(ResourceLocation resourceLocation) {
-        return ModRegistries.SPECIES_TYPE.get(new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", "")));
+    protected static ResourceLocation getSpeciesId(ResourceLocation resourceLocation) {
+        return new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", ""));
     }
     
-    public static SpeciesAttributes getSpeciesTypeAttributes(SpeciesType speciesType) {
+    public static SpeciesAttributes getSpeciesTypeAttributes(ResourceLocation speciesType) {
         return attributes.get(speciesType);
     }
     
     public static List<SpeciesAttributes> getAllSpeciesTypeAttributes() {
         List<SpeciesAttributes> attributes = new ArrayList<>();
-        for (Map.Entry<SpeciesType, SpeciesAttributes> entry : SpeciesAttributesListener.attributes.entrySet()) {
+        for (Map.Entry<ResourceLocation, SpeciesAttributes> entry : SpeciesAttributesListener.attributes.entrySet()) {
             attributes.add(entry.getValue());
         }
         return attributes;
     }
     
-    public static void setAttributes(Map<SpeciesType, SpeciesAttributes> attributes) {
+    public static void setAttributes(Map<ResourceLocation, SpeciesAttributes> attributes) {
         SpeciesAttributesListener.attributes = attributes;
     }
 }

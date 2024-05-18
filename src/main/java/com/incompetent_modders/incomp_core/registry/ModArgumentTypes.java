@@ -23,7 +23,7 @@ public class ModArgumentTypes {
     );
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, SingletonArgumentInfo<SpeciesArgument>> SPECIES_ARG = ARG_TYPE.register(
             "species", () -> ArgumentTypeInfos.registerByClass(
-                    SpeciesArgument.class, SingletonArgumentInfo.contextAware(SpeciesArgument::new)
+                    SpeciesArgument.class, SingletonArgumentInfo.contextAware(commandBuildContext -> new SpeciesArgument())
             )
     );
     

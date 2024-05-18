@@ -1,9 +1,8 @@
 package com.incompetent_modders.incomp_core.api.item;
 
-import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.api.player_data.species.SpeciesType;
-import com.incompetent_modders.incomp_core.registry.ModSpeciesTypes;
+import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,12 +25,11 @@ public class SpeciesAssigningItem extends Item {
         super(properties);
         this.speciesType = speciesType;
     }
-    public SpeciesType getSpeciesType() {
-        return ModRegistries.SPECIES_TYPE.get(speciesType);
+    public ResourceLocation getSpeciesType() {
+        return speciesType;
     }
-    public SpeciesType getSpeciesType(ItemStack stack) {
-        ResourceLocation storedClassType = stack.getOrDefault(ModDataComponents.STORED_SPECIES_TYPE.get(), ModSpeciesTypes.HUMAN.get().getSpeciesTypeIdentifier());
-        return ModRegistries.SPECIES_TYPE.get(storedClassType);
+    public ResourceLocation getSpeciesType(ItemStack stack) {
+        return stack.getOrDefault(ModDataComponents.STORED_SPECIES_TYPE.get(), CommonUtils.defaultSpecies);
     }
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -50,12 +48,12 @@ public class SpeciesAssigningItem extends Item {
     }
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(getSpeciesType(stack).getDisplayName());
+        tooltip.add(SpeciesListener.getDisplayName(getSpeciesType(stack)));
     }
     
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         if (!stack.has(ModDataComponents.STORED_SPECIES_TYPE.get())) {
-            stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), getSpeciesType().getSpeciesTypeIdentifier());
+            stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), getSpeciesType());
         }
     }
 }

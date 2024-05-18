@@ -20,9 +20,7 @@ public class IncompDatagen {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         IncompBlockTagsProvider blockTags = new IncompBlockTagsProvider(packOutput, lookupProvider, modId, fileHelper);
         IncompItemTagsProvider itemTags = new IncompItemTagsProvider(packOutput, lookupProvider, blockTags.contentsGetter());
-        IncompSpeciesTagsProvider speciesTags = new IncompSpeciesTagsProvider(packOutput, lookupProvider, modId, fileHelper);
         dataGenerator.addProvider(event.includeServer(), blockTags);
-        dataGenerator.addProvider(event.includeServer(), speciesTags);
         dataGenerator.addProvider(event.includeServer(), itemTags);
     }
     

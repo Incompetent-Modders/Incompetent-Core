@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.command;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.command.arguments.SpellArgument;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -26,7 +26,7 @@ public class SetSpellInSlotCommand {
                     if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                         CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spells"));
-                        Component outputComponent = Component.translatable("commands.set_spell", SpellPropertyListener.getSpellProperties(SpellArgument.getSpell(arguments, "spells")).getDisplayName(), IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                        Component outputComponent = Component.translatable("commands.set_spell", SpellListener.getDisplayName(SpellArgument.getSpell(arguments, "spells")), IntegerArgumentType.getInteger(arguments, "spellSlot"));
                         player.displayClientMessage(outputComponent, false);
                     }
                     return 0;

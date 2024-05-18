@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.command;
+package com.incompetent_modders.incomp_core.command.qol;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -13,8 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
-import static net.minecraft.world.item.BoneMealItem.applyBonemeal;
 
 public class ApplyBonemealCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {

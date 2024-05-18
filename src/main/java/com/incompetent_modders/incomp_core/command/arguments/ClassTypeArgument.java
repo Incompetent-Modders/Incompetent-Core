@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class SpeciesArgument implements ArgumentType<ResourceLocation> {
+public class ClassTypeArgument implements ArgumentType<ResourceLocation> {
     private static final Collection<String> EXAMPLES = Arrays.asList("human", "incompetent_core:human", "human{foo=bar}");
     
-    public SpeciesArgument() {
+    public ClassTypeArgument() {
     }
     
     @Override

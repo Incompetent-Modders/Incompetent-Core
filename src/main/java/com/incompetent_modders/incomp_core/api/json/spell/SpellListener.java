@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
+public class SpellListener extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = IncompCore.LOGGER;
     
@@ -24,7 +25,7 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
     public static List<ResourceLocation> spells = new ArrayList<>();
     public Map<ResourceLocation, SpellProperties> byName = ImmutableMap.of();
     
-    public SpellPropertyListener() {
+    public SpellListener() {
         super(GSON, "spells");
     }
     
@@ -51,7 +52,7 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
                 IncompCore.LOGGER.error("Parsing error loading spells {}", resourceLocation, jsonParseException);
             }
         }
-        IncompCore.LOGGER.info("Load Complete for {} spells", properties.size());
+        IncompCore.LOGGER.info("Load Complete for {} spells", spells.size());
     }
     protected static ResourceLocation getSpellId(ResourceLocation resourceLocation) {
         return new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", ""));
@@ -62,14 +63,14 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
     
     public static List<SpellProperties> getAllSpellProperties() {
         List<SpellProperties> properties = new ArrayList<>();
-        for (Map.Entry<ResourceLocation, SpellProperties> entry : SpellPropertyListener.properties.entrySet()) {
+        for (Map.Entry<ResourceLocation, SpellProperties> entry : SpellListener.properties.entrySet()) {
             properties.add(entry.getValue());
         }
         return properties;
     }
     
     public static void setProperties(Map<ResourceLocation, SpellProperties> properties) {
-        SpellPropertyListener.properties = properties;
+        SpellListener.properties = properties;
     }
     
     public static boolean spellHasProperties(ResourceLocation spell) {
@@ -86,10 +87,14 @@ public class SpellPropertyListener extends SimpleJsonResourceReloadListener {
     }
     
     public static void setSpells(List<ResourceLocation> spells) {
-        SpellPropertyListener.spells = spells;
+        SpellListener.spells = spells;
     }
     
     public static boolean spellExists(ResourceLocation spell) {
         return properties.containsKey(spell);
+    }
+    
+    public static Component getDisplayName(ResourceLocation spell) {
+        return Component.translatable("spells." + spell.getNamespace() + "." + spell.getPath());
     }
 }

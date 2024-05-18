@@ -1,13 +1,10 @@
 {
-  "translation_key": "spell.incompetent_core:empty",
   "draw_time": 0,
   "mana_cost": 0,
   "class_type": {
     "id": "incompetent_core:none"
   },
-  "species_type": {
-    "id": "incompetent_core:human"
-  },
+  "species_type": "incompetent_core:human",
   "results": {
     "spell_result": {
       "type": "incompetent_core:do_nothing"

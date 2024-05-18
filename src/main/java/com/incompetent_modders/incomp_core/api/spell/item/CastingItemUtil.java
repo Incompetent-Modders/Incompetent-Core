@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core.api.spell.item;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellPropertyListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -54,9 +54,9 @@ public class CastingItemUtil {
         return deserializeFromSlot(stack, getSelectedSpellSlot(stack));
     }
     public static SpellProperties getSpellProperties(ItemStack stack) {
-        return SpellPropertyListener.getSpellProperties(getSelectedSpell(stack));
+        return SpellListener.getSpellProperties(getSelectedSpell(stack));
     }
     public static SpellProperties getSpellProperties(ItemStack stack, int slot) {
-        return SpellPropertyListener.getSpellProperties(deserializeFromSlot(stack, slot));
+        return SpellListener.getSpellProperties(deserializeFromSlot(stack, slot));
     }
 }
