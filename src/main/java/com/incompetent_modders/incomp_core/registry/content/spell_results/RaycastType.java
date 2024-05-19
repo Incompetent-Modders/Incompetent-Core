@@ -1,9 +1,10 @@
-package com.incompetent_modders.incomp_core.devtest.spell_results;
+package com.incompetent_modders.incomp_core.registry.content.spell_results;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
+import net.minecraft.client.renderer.entity.GuardianRenderer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;

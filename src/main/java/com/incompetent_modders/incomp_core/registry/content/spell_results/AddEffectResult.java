@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.devtest.spell_results;
+package com.incompetent_modders.incomp_core.registry.content.spell_results;
 
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
@@ -8,7 +8,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;

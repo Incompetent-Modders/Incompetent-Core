@@ -2,12 +2,11 @@ package com.incompetent_modders.incomp_core.api.player;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.json.species.DietType;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.ClassAbilityType;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
-import com.incompetent_modders.incomp_core.registry.ModClassAbilities;
+import com.incompetent_modders.incomp_core.registry.ModAbilities;
 import com.incompetent_modders.incomp_core.registry.ModClassPassiveEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +29,7 @@ public class PlayerDataCore {
     public static CompoundTag getManaData(Player spe) {
         return spe.getPersistentData().getCompound(MANA_DATA_ID);
     }
+    
     public static class ClassData {
         public static ResourceLocation getPlayerClassType(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(CLASS_DATA_ID);
@@ -47,9 +47,9 @@ public class PlayerDataCore {
             CompoundTag nc = spe.getPersistentData().getCompound(CLASS_DATA_ID);
             return ModRegistries.CLASS_PASSIVE_EFFECT_TYPE.get(new ResourceLocation(nc.getString("passiveEffect")));
         }
-        public static ClassAbilityType<?> getAbility(Player spe) {
+        public static AbilityType<?> getAbility(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(CLASS_DATA_ID);
-            return ModRegistries.CLASS_ABILITY_TYPE.get(new ResourceLocation(nc.getString("ability")));
+            return ModRegistries.ABILITY_TYPE.get(new ResourceLocation(nc.getString("ability")));
         }
         public static void setPlayerClassType(Player spe, ResourceLocation ct) {
             CompoundTag nc = spe.getPersistentData().getCompound(CLASS_DATA_ID);
@@ -93,13 +93,13 @@ public class PlayerDataCore {
                 nc.remove("passiveEffect");
             nc.putString("passiveEffect", passiveEffect.getClassPassiveEffectTypeIdentifier().toString());
         }
-        public static void setAbility(Player spe, ClassAbilityType<?> ability) {
+        public static void setAbility(Player spe, AbilityType<?> ability) {
             CompoundTag nc = spe.getPersistentData().getCompound(CLASS_DATA_ID);
             if (ability == null)
-                ability = ModClassAbilities.DEFAULT.get();
+                ability = ModAbilities.DEFAULT.get();
             if (nc.contains("ability"))
                 nc.remove("ability");
-            nc.putString("ability", ability.getClassAbilityTypeIdentifier().toString());
+            nc.putString("ability", ability.getAbilityTypeIdentifier().toString());
         }
     }
     
@@ -184,6 +184,7 @@ public class PlayerDataCore {
             CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
             return ModRegistries.SPECIES_BEHAVIOUR_TYPE.get(new ResourceLocation(nc.getString("behaviour")));
         }
+        
         public static void setSpecies(Player spe, ResourceLocation st) {
             CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
             if (st == null)
@@ -277,6 +278,36 @@ public class PlayerDataCore {
             if (nc.contains("behaviour"))
                 nc.remove("behaviour");
             nc.putString("behaviour", behaviour.getBehaviourTypeIdentifier().toString());
+        }
+        public static AbilityType<?> getAbility(Player spe) {
+            CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
+            return ModRegistries.ABILITY_TYPE.get(new ResourceLocation(nc.getString("ability")));
+        }
+        public static int getAbilityCooldown(Player spe) {
+            CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
+            return nc.getInt("abilityCooldown");
+        }
+        
+        public static void setAbilityCooldown(Player spe, int cooldown) {
+            CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
+            nc.putInt("abilityCooldown", cooldown);
+        }
+        public static void decrementAbilityCooldown(Player spe) {
+            CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
+            int cooldown = nc.getInt("abilityCooldown");
+            if (cooldown > 0)
+                nc.putInt("abilityCooldown", cooldown - 1);
+        }
+        public static boolean canUseAbility(Player spe) {
+            return getAbilityCooldown(spe) <= 0;
+        }
+        public static void setAbility(Player spe, AbilityType<?> ability) {
+            CompoundTag nc = spe.getPersistentData().getCompound(SPECIES_DATA_ID);
+            if (ability == null)
+                ability = ModAbilities.DEFAULT.get();
+            if (nc.contains("ability"))
+                nc.remove("ability");
+            nc.putString("ability", ability.getAbilityTypeIdentifier().toString());
         }
     }
     public static class ManaData {

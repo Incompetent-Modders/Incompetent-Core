@@ -9,5 +9,12 @@
     {
       "enchantment": "minecraft:smite"
     }
-  ]
+  ],
+  "ability": {
+    "type": "incompetent_core:apply_effect",
+    "effect": "minecraft:speed",
+    "duration": 200,
+    "amplifier": 1
+  },
+  "ability_cooldown": 20
 }

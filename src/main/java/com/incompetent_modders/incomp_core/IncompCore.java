@@ -47,9 +47,11 @@ public class IncompCore
         ModSpeciesBehaviourTypes.register(modEventBus);
         ModManaRegenConditions.register(modEventBus);
         ModClassPassiveEffects.register(modEventBus);
-        ModClassAbilities.register(modEventBus);
+        ModAbilities.register(modEventBus);
         ModDataComponents.DATA_COMPONENTS.register(modEventBus);
         ModSpellResultTypes.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModCreativeTabs.register(modEventBus);
         
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         

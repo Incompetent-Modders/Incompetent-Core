@@ -1,10 +1,12 @@
 {
   "draw_time": 0,
-  "mana_cost": 0,
-  "class_type": {
-    "id": "incompetent_core:none"
+  "mana_cost": 0.0,
+  "class": {
+    "accept_all_classes": true
   },
-  "species_type": "incompetent_core:human",
+  "species": {
+    "accept_all_species": true
+  },
   "results": {
     "spell_result": {
       "type": "incompetent_core:do_nothing"

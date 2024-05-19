@@ -1,9 +1,11 @@
 package com.incompetent_modders.incomp_core.api.item;
 
+import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -16,9 +18,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+@HasOwnTab
 public class ClassAssigningItem extends Item {
     private final ResourceLocation classType;
     public ClassAssigningItem(Properties properties, ResourceLocation classType) {
@@ -55,5 +62,9 @@ public class ClassAssigningItem extends Item {
         if (!stack.has(ModDataComponents.STORED_CLASS_TYPE.get())) {
             stack.set(ModDataComponents.STORED_CLASS_TYPE.get(), getClassType());
         }
+    }
+    @Override
+    public String getDescriptionId(ItemStack stack) {
+        return "item.incompetent_core.assign_class." + getClassType(stack).getNamespace() + "." + getClassType(stack).getPath();
     }
 }

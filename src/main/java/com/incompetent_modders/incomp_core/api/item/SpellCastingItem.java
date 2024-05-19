@@ -22,10 +22,17 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class SpellCastingItem extends Item {
-    public SpellCastingItem(Properties properties) {
+    
+    private final int maxSpellSlots;
+    
+    public SpellCastingItem(Properties properties, int maxSpellSlots) {
         super(properties);
+        this.maxSpellSlots = maxSpellSlots;
     }
     
+    public int getMaxSpellSlots() {
+        return maxSpellSlots;
+    }
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return oldStack.getItem() != newStack.getItem();
     }
@@ -77,13 +84,15 @@ public class SpellCastingItem extends Item {
     
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         ClientUtil.createSelectedSpellTooltip(tooltip, stack);
-        ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
+        if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()) > 1) {
+            ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
+        }
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         if (CastingItemUtil.getCustomData(stack) == null) {
             return;
         }
-        for (int i = 0; i < stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 6); i++) {
+        for (int i = 0; i < stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()); i++) {
             String spellSlot_NBT = "spellSlot_";
             if (!CastingItemUtil.getCustomData(stack).contains(spellSlot_NBT + i) || CastingItemUtil.getCustomData(stack).copyTag().getString(spellSlot_NBT + i).isEmpty()) {
                 int finalI = i;
@@ -109,7 +118,7 @@ public class SpellCastingItem extends Item {
             stack.set(ModDataComponents.REMAINING_DRAW_TIME, getUseDuration(stack));
         }
         if (!stack.has(ModDataComponents.MAX_SPELL_SLOTS)) {
-            stack.set(ModDataComponents.MAX_SPELL_SLOTS, 6);
+            stack.set(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
         }
     }
     public static ResourceLocation getSelectedSpell(ItemStack stack) {

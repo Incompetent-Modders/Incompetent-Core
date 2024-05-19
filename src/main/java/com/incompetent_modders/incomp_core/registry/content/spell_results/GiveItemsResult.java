@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.devtest.spell_results;
+package com.incompetent_modders.incomp_core.registry.content.spell_results;
 
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;

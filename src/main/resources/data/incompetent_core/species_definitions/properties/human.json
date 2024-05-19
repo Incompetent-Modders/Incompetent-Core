@@ -2,5 +2,9 @@
   "behaviour": {
     "type": "incompetent_core:default",
     "debug": false
-  }
+  },
+  "ability": {
+    "type": "incompetent_core:default"
+  },
+  "ability_cooldown": 0
 }

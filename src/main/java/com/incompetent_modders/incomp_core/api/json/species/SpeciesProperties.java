@@ -1,7 +1,9 @@
 package com.incompetent_modders.incomp_core.api.json.species;
 
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
 import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.Codec;
@@ -16,14 +18,16 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.List;
 
-public record SpeciesProperties(SpeciesBehaviour behaviour, boolean invertHealAndHarm, ResourceLocation dietType, boolean keepOnDeath, List<EnchantmentWeaknessProperties> enchantWeaknesses) {
+public record SpeciesProperties(SpeciesBehaviour behaviour, boolean invertHealAndHarm, ResourceLocation dietType, boolean keepOnDeath, List<EnchantmentWeaknessProperties> enchantWeaknesses, Ability ability, int abilityCooldown) {
     public static final Codec<SpeciesProperties> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
                 SpeciesBehaviour.DIRECT_CODEC.fieldOf("behaviour").forGetter(SpeciesProperties::behaviour),
                 Codec.BOOL.optionalFieldOf("invert_heal_and_harm", false).forGetter(SpeciesProperties::invertHealAndHarm),
                 ResourceLocation.CODEC.optionalFieldOf("diet_type", CommonUtils.defaultDiet).forGetter(SpeciesProperties::dietType),
                 Codec.BOOL.optionalFieldOf("keep_on_death", true).forGetter(SpeciesProperties::keepOnDeath),
-                EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesProperties::enchantWeaknesses)
+                EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesProperties::enchantWeaknesses),
+                Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesProperties::ability),
+                Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesProperties::abilityCooldown)
         ).apply(instance, SpeciesProperties::new);
     });
     

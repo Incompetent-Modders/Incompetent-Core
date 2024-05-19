@@ -2,7 +2,12 @@
   "category": "ranged",
   "draw_time": 40,
   "mana_cost": 50,
-  "class_type": "incompetent_core:test_class",
+  "class": {
+    "id": "incompetent_core:test_class"
+  },
+  "species": {
+    "accept_all_species": true
+  },
   "results": {
     "spell_result": {
       "type": "incompetent_core:raycast",

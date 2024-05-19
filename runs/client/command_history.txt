@@ -1,37 +1,4 @@
 /i_c setSpecies incompetent_core:zombie
-/i_c setSpecies incompetent_core:human
-/i_c setSpecies incompetent_core:zombie
-/i_c setSpecies incompetent_core:human
-/execute in minecraft:overworld run tp @s ~ ~ ~
-/i_c cast_spell Dev "incompetent_core:test_ranged_spell"
-/i_c cast_spell Dev incompetent_core:test_spell
-/i_c refillMana
-/i_c refillMana true
-/time set day
-/i_c cast_spell Dev
-/reload
-/i_c cast_spell Dev incompetent_core:data_spell
-/reload
-/i_c cast_spell Dev incompetent_core:data_spell_yippee
-/reload
-/i_c apply_bonemeal
-/i_c apply_bonemeal -812.88 174.00 -1108.01
-/i_c apply_bonemeal -812.88 174.00 -1108.01 1
-/i_c apply_bonemeal -812.88 174.00 -1108.01 20
-/i_c apply_bonemeal -812.88 174.00 -1108.01 40
-/i_c apply_bonemeal -839.58 63.00 -1152.04 40
-/i_c apply_bonemeal -839.38 63.00 -1153.26
-/i_c apply_bonemeal -839.38 62.00 -1153.26
-/i_c apply_bonemeal -840.41 67.00 -1175.60
-/i_c apply_bonemeal -840.41 67.00 -1175.60 1
-/i_c apply_bonemeal -831.98 64.00 -1195.63
-/i_c list_features spells
-/i_c list_features class_types
-/i_c list_features diets
-/i_c list_features species
-/i_c setSpecies incompetent_core:zombie
-/i_c setSpecies incompetent_core:human
-/i_c setSpecies incompetent_core:zombie
 /i_c list_features diets
 /i_c list_features species
 /i_c setSpecies incompetent_core:human
@@ -48,3 +15,36 @@
 /data get entity Dev
 /i_c setSpecies incompetent_core:zombie
 /data get entity Dev
+/i_c setSpecies incompetent_core:zombie
+/give @s incompetent_core:assign_class_test_class
+/data get @s
+/data get entity @s
+/datapack list available
+/datapack list enabled
+/datapack list available
+/datapack enable "file/spell_properties"
+/reload
+/give @s incompetent_core:spell_tome
+/i_c setSpell 0 incompetent_core:test_ranged_spell
+/i_c setSpell 1 incompetent_core:test_ranged_spell
+/i_c setSpell 0 incompetent_core:test_ranged_spell
+/data get entity @s
+/give @s incompetent_core:test_casting_item
+/i_c setSpell 0 incompetent_core:test_ranged_spell
+/i_c setSpell 1 incompetent_core:test_ranged_spell
+/give @s incompetent_core:test_casting_item
+/data get entity @s
+/i_c setSpell 0 incompetent_core:test_ranged_spell
+/datapack list enabled
+/reload
+/i_c setSpell 0 incompetent_core:test_ranged_spell
+/give @s bundle
+/i_c list_features spells
+/reload
+/i_c refillMana
+/i_c refillMana true
+/reload
+/i_c refillMana true
+/reload
+/i_c refillMana true
+/reload

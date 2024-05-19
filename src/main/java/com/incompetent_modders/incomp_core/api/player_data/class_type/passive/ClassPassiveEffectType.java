@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.api.player_data.class_type.passive;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.ClassAbility;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 

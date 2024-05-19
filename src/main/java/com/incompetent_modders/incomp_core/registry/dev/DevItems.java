@@ -17,7 +17,7 @@ import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 public class DevItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
     
-    public static final DeferredHolder<Item, Item> TEST_CASTING_ITEM = ITEMS.register("test_casting_item", () -> new SpellCastingItem(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> TEST_CASTING_ITEM = ITEMS.register("test_casting_item", () -> new SpellCastingItem(new Item.Properties(), 6));
     public static final DeferredHolder<Item, Item> NONE = ITEMS.register("assign_class_none", () -> new ClassAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "none")));
     public static final DeferredHolder<Item, Item> TEST_CLASS = ITEMS.register("assign_class_test_class", () -> new ClassAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "test_class")));
     public static final DeferredHolder<Item, Item> HUMAN = ITEMS.register("assign_species_human", () -> new SpeciesAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "human")));

@@ -1,3 +1,7 @@
 {
-  "able_to_consume": "incompetent_core:vegan_friendly"
+  "able_to_consume": [
+    {
+      "tag": "incompetent_core:vegan_friendly"
+    }
+  ]
 }

@@ -6,8 +6,12 @@
     "count": 1,
     "id": "minecraft:blaze_powder"
   },
-  "class_type": "incompetent_core:test_class",
-  "species_type": "incompetent_core:zombie",
+  "class": {
+    "id": "incompetent_core:test_class"
+  },
+  "species": {
+    "id": "incompetent_core:zombie"
+  },
   "results": {
     "spell_result": {
       "type": "incompetent_core:add_effect",

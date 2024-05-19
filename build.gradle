@@ -54,11 +54,14 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    flatDir {
+        dirs 'libs'
+    }
 }
 dependencies {
     // NeoForge
     implementation "net.neoforged:neoforge:${neo_version}"
-
+    runtimeOnly "dev.emi:emi-1.1.6+1.20.6+neoforge"
     //compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
     //runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"

@@ -1,9 +1,11 @@
 package com.incompetent_modders.incomp_core.api.item;
 
+import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -17,8 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+@HasOwnTab
 public class SpeciesAssigningItem extends Item {
     private final ResourceLocation speciesType;
     public SpeciesAssigningItem(Properties properties, ResourceLocation speciesType) {
@@ -55,5 +61,9 @@ public class SpeciesAssigningItem extends Item {
         if (!stack.has(ModDataComponents.STORED_SPECIES_TYPE.get())) {
             stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), getSpeciesType());
         }
+    }
+    @Override
+    public String getDescriptionId(ItemStack stack) {
+        return "item.incompetent_core.assign_class." + getSpeciesType(stack).getNamespace() + "." + getSpeciesType(stack).getPath();
     }
 }

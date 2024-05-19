@@ -34,12 +34,12 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,10 +49,11 @@ import static com.incompetent_modders.incomp_core.util.CommonUtils.applyDamage;
 @EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class CommonForgeEvents {
     static float regenInterval = 0;
-    static float abilityCooldownInterval = 0;
+    static float classAbilityCooldownInterval = 0;
+    static float speciesAbilityCooldownInterval = 0;
     @SubscribeEvent
-    public static void playerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START && event.player instanceof ServerPlayer player) {
+    public static void playerTick(PlayerTickEvent.Pre event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             ResourceLocation classType = PlayerDataCore.ClassData.getPlayerClassType(player);
             ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
             ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
@@ -78,15 +79,22 @@ public class CommonForgeEvents {
                 }
             }
             AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
-            if (maxMana != null) {
+            if (maxMana != null && classTypeProperties != null) {
                 PlayerDataCore.ManaData.setMaxMana(player, classTypeProperties.maxMana());
             }
-            abilityCooldownInterval++;
-            if (abilityCooldownInterval >= 20) {
+            classAbilityCooldownInterval++;
+            if (classAbilityCooldownInterval >= 20) {
                 if (PlayerDataCore.ClassData.getAbilityCooldown(player) > 0) {
                     PlayerDataCore.ClassData.setAbilityCooldown(player, PlayerDataCore.ClassData.getAbilityCooldown(player) - 1);
                 }
-                abilityCooldownInterval = 0;
+                classAbilityCooldownInterval = 0;
+            }
+            speciesAbilityCooldownInterval++;
+            if (speciesAbilityCooldownInterval >= 20) {
+                if (PlayerDataCore.SpeciesData.getAbilityCooldown(player) > 0) {
+                    PlayerDataCore.SpeciesData.setAbilityCooldown(player, PlayerDataCore.SpeciesData.getAbilityCooldown(player) - 1);
+                }
+                speciesAbilityCooldownInterval = 0;
             }
             //Setting Data :3
             PlayerDataCore.setClassData(player, PlayerDataCore.getClassData(player));
@@ -110,7 +118,6 @@ public class CommonForgeEvents {
                 PlayerDataCore.ClassData.setPlayerClassType(player, classType);
                 PlayerDataCore.ClassData.setCanRegenMana(player, classTypeProperties.canRegenerateMana(player, player.level()));
                 PlayerDataCore.ClassData.setPacifist(player, classTypeProperties.pacifist());
-                PlayerDataCore.ClassData.setAbilityCooldown(player, classTypeProperties.abilityCooldown());
                 PlayerDataCore.ClassData.setAbility(player, classTypeProperties.ability().getType());
                 PlayerDataCore.ClassData.setPassiveEffect(player, classTypeProperties.passiveEffect().getType());
                 classTypeProperties.tickClassFeatures(event);
@@ -125,6 +132,7 @@ public class CommonForgeEvents {
                 PlayerDataCore.SpeciesData.setKeepOnDeath(player, speciesProperties.keepOnDeath());
                 PlayerDataCore.SpeciesData.setDiet(player, speciesProperties.dietType());
                 PlayerDataCore.SpeciesData.setBehaviour(player, speciesProperties.behaviour().getType());
+                PlayerDataCore.SpeciesData.setAbility(player, speciesProperties.ability().getType());
                 speciesProperties.tickSpeciesAttributes(player);
                 if (speciesAttributes != null) {
                     PlayerDataCore.SpeciesData.setMaxHealth(player, speciesAttributes.maxHealth());
@@ -198,9 +206,9 @@ public class CommonForgeEvents {
             ResourceLocation dietType = SpeciesListener.getSpeciesTypeProperties(speciesType).dietType();
             if (stack.getFoodProperties(entity) != null && dietType != CommonUtils.defaultDiet) {
                 if (DietListener.getDietProperties(dietType) != null) {
-                    TagKey<Item> ableToConsume = DietListener.getDietProperties(dietType).ableToConsume();
-                    if (ableToConsume != null) {
-                        if (!stack.is(ableToConsume)) {
+                    NonNullList<Ingredient> ableToConsume = DietListener.getDietProperties(dietType).ableToConsume();
+                    for (Ingredient ingredient : ableToConsume) {
+                        if (!ingredient.test(stack)) {
                             event.setCanceled(true);
                         }
                     }

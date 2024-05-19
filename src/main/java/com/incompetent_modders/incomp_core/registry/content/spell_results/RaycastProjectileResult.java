@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.devtest.spell_results;
+package com.incompetent_modders.incomp_core.registry.content.spell_results;
 
 import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
@@ -14,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
 import java.util.Optional;
+
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class RaycastProjectileResult extends SpellResult {
     
     public static final MapCodec<RaycastProjectileResult> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

@@ -21,24 +21,24 @@ import net.minecraft.world.level.Level;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public record SpellProperties(SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ResourceLocation classType, ResourceLocation speciesType, SpellResults results, SoundEvent castSound) {
+public record SpellProperties(SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ClassType classType, SpeciesType speciesType, SpellResults results, SoundEvent castSound) {
     public static final Codec<SpellProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             SpellCategory.CODEC.optionalFieldOf("category", SpellCategory.UTILITY).forGetter(SpellProperties::category),
             Codec.DOUBLE.optionalFieldOf("mana_cost", 0.0).forGetter(SpellProperties::manaCost),
             Codec.INT.optionalFieldOf("draw_time", 0).forGetter(SpellProperties::drawTime),
             ItemStack.CODEC.optionalFieldOf("catalyst", ItemStack.EMPTY).forGetter(SpellProperties::catalyst),
-            ResourceLocation.CODEC.optionalFieldOf("class_type", CommonUtils.defaultClass).forGetter(SpellProperties::classType),
-            ResourceLocation.CODEC.optionalFieldOf("species_type", CommonUtils.defaultSpecies).forGetter(SpellProperties::speciesType),
+            ClassType.CODEC.fieldOf("class").forGetter(SpellProperties::classType),
+            SpeciesType.CODEC.fieldOf("species").forGetter(SpellProperties::speciesType),
             SpellResults.CODEC.fieldOf("results").forGetter(SpellProperties::results),
             SoundEvent.DIRECT_CODEC.optionalFieldOf("cast_sound", SoundEvents.ALLAY_THROW).forGetter(SpellProperties::castSound)
     ).apply(instance, SpellProperties::new));
     
-    public SpellProperties(SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ResourceLocation classType, ResourceLocation speciesType, SpellResults results) {
+    public SpellProperties(SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ClassType classType, SpeciesType speciesType, SpellResults results) {
         this(category, manaCost, drawTime, catalyst, classType, speciesType, results, SoundEvents.ALLAY_THROW);
     }
     
     public boolean isBlankSpell() {
-        return manaCost == 0.0 && drawTime == 0 && catalyst.isEmpty() && Objects.equals(classType, CommonUtils.defaultClass) && Objects.equals(speciesType, CommonUtils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
+        return manaCost == 0.0 && drawTime == 0 && catalyst.isEmpty() && Objects.equals(classType, CommonUtils.defaultClass) && Objects.equals(speciesType.speciesID(), CommonUtils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
     }
     
     public void executeCast(Player player) {
@@ -46,7 +46,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         ResourceLocation playerClass = PlayerDataCore.ClassData.getPlayerClassType(player);
         ResourceLocation playerSpecies = PlayerDataCore.SpeciesData.getSpecies(player);
         if (!checkPlayerClass(classType, playerClass) ||  !checkPlayerSpecies(speciesType, playerSpecies)) {
-            IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classType, speciesType, playerClass, playerSpecies);
+            generateClassSpeciesLogger(player);
             return;
         }
         int playerMana = (int) PlayerDataCore.ManaData.getMana(player);
@@ -124,11 +124,25 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         return manaCost() * mod.get();
     }
     
-    public boolean checkPlayerClass(ResourceLocation requiredClass, ResourceLocation playerClass) {
-        return requiredClass.equals(playerClass);
+    public boolean checkPlayerClass(ClassType requiredClass, ResourceLocation playerClass) {
+        if (requiredClass.acceptAllClasses()) {
+            return true;
+        } else
+            return requiredClass.classID().equals(playerClass);
     }
     
-    public boolean checkPlayerSpecies(ResourceLocation requiredSpecies, ResourceLocation playerSpecies) {
-        return requiredSpecies.equals(playerSpecies);
+    public boolean checkPlayerSpecies(SpeciesType requiredSpecies, ResourceLocation playerSpecies) {
+        if (requiredSpecies.acceptAllSpecies()) {
+            return true;
+        } else
+            return requiredSpecies.speciesID().equals(playerSpecies);
+    }
+    
+    public void generateClassSpeciesLogger(Player player) {
+        ResourceLocation playerClass = PlayerDataCore.ClassData.getPlayerClassType(player);
+        ResourceLocation playerSpecies = PlayerDataCore.SpeciesData.getSpecies(player);
+        String classTypeText = classType.acceptAllClasses() ? "any class" : classType.classID().toString();
+        String speciesTypeText = speciesType.acceptAllSpecies() ? "any species" : speciesType.speciesID().toString();
+        IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);
     }
 }

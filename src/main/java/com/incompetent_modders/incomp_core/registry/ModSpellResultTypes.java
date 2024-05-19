@@ -2,10 +2,10 @@ package com.incompetent_modders.incomp_core.registry;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
-import com.incompetent_modders.incomp_core.devtest.spell_results.AddEffectResult;
-import com.incompetent_modders.incomp_core.devtest.spell_results.DoNothingResult;
-import com.incompetent_modders.incomp_core.devtest.spell_results.GiveItemsResult;
-import com.incompetent_modders.incomp_core.devtest.spell_results.RaycastProjectileResult;
+import com.incompetent_modders.incomp_core.registry.content.spell_results.AddEffectResult;
+import com.incompetent_modders.incomp_core.registry.content.spell_results.DoNothingResult;
+import com.incompetent_modders.incomp_core.registry.content.spell_results.GiveItemsResult;
+import com.incompetent_modders.incomp_core.registry.content.spell_results.RaycastProjectileResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;

@@ -1,16 +1,25 @@
 package com.incompetent_modders.incomp_core.api.json.species.diet;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.crafting.Ingredient;
 
-public record DietProperties(TagKey<Item> ableToConsume, boolean ignoreHungerFromFood) {
+public record DietProperties(NonNullList<Ingredient> ableToConsume, boolean ignoreHungerFromFood) {
     public static final MapCodec<DietProperties> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
         return instance.group(
-                TagKey.codec(Registries.ITEM).fieldOf("able_to_consume").forGetter(DietProperties::ableToConsume),
+                Ingredient.CODEC_NONEMPTY.listOf().fieldOf("able_to_consume").flatXmap((ingredientList) -> {
+                    Ingredient[] aingredient = ingredientList.toArray(Ingredient[]::new);
+                    if (aingredient.length == 0) {
+                        return DataResult.error(() -> {
+                            return "No items/tags for diet";
+                        });
+                    } else {
+                        return DataResult.success(NonNullList.of(Ingredient.EMPTY, aingredient));
+                    }
+                }, DataResult::success).forGetter(DietProperties::ableToConsume),
                 Codec.BOOL.optionalFieldOf("ignore_hunger_from_food", false).forGetter(DietProperties::ignoreHungerFromFood)
                 ).apply(instance, DietProperties::new);
     });

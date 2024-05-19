@@ -1,6 +1,5 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
-import com.incompetent_modders.incomp_core.devtest.spell_results.RaycastType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
