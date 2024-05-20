@@ -203,13 +203,16 @@ public class CommonForgeEvents {
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
             ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
-            ResourceLocation dietType = SpeciesListener.getSpeciesTypeProperties(speciesType).dietType();
-            if (stack.getFoodProperties(entity) != null && dietType != CommonUtils.defaultDiet) {
-                if (DietListener.getDietProperties(dietType) != null) {
-                    NonNullList<Ingredient> ableToConsume = DietListener.getDietProperties(dietType).ableToConsume();
-                    for (Ingredient ingredient : ableToConsume) {
-                        if (!ingredient.test(stack)) {
-                            event.setCanceled(true);
+            SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
+            if (speciesProperties != null) {
+                ResourceLocation dietType = speciesProperties.dietType();
+                if (stack.getFoodProperties(entity) != null && dietType != CommonUtils.defaultDiet) {
+                    if (DietListener.getDietProperties(dietType) != null) {
+                        NonNullList<Ingredient> ableToConsume = DietListener.getDietProperties(dietType).ableToConsume();
+                        for (Ingredient ingredient : ableToConsume) {
+                            if (!ingredient.test(stack)) {
+                                event.setCanceled(true);
+                            }
                         }
                     }
                 }
@@ -223,16 +226,18 @@ public class CommonForgeEvents {
         if (entity instanceof Player player) {
             ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-            ResourceLocation dietType = speciesProperties.dietType();
-            DietProperties dietProperties = DietListener.getDietProperties(dietType);
-            if (dietProperties != null && dietProperties.ignoreHungerFromFood()) {
-                FoodProperties foodProperties = stack.getFoodProperties(entity);
-                if (foodProperties != null) {
-                    List<FoodProperties.PossibleEffect> effects = foodProperties.effects();
-                    for (FoodProperties.PossibleEffect effect : effects) {
-                        if (effect.effect().is(MobEffects.HUNGER)) {
-                            if (player.hasEffect(MobEffects.HUNGER)) {
-                                player.removeEffect(MobEffects.HUNGER);
+            if (speciesProperties != null) {
+                ResourceLocation dietType = speciesProperties.dietType();
+                DietProperties dietProperties = DietListener.getDietProperties(dietType);
+                if (dietProperties != null && dietProperties.ignoreHungerFromFood()) {
+                    FoodProperties foodProperties = stack.getFoodProperties(entity);
+                    if (foodProperties != null) {
+                        List<FoodProperties.PossibleEffect> effects = foodProperties.effects();
+                        for (FoodProperties.PossibleEffect effect : effects) {
+                            if (effect.effect().is(MobEffects.HUNGER)) {
+                                if (player.hasEffect(MobEffects.HUNGER)) {
+                                    player.removeEffect(MobEffects.HUNGER);
+                                }
                             }
                         }
                     }

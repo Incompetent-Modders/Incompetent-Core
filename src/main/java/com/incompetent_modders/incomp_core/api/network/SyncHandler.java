@@ -27,20 +27,21 @@ public class SyncHandler {
         
         //TO CLIENT
         registrar.playToClient(MessageClassDataSync.TYPE, MessageClassDataSync.CODEC, MessageClassDataSync::handle);
-        registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
         registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
+        registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
         
         NeoForge.EVENT_BUS.register(new SyncHandler());
     }
     
     @SubscribeEvent
-    public void onLivingTickEvent(EntityTickEvent.Post event) {
+    public void onLivingTickEvent(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
         
         var msgCD = new MessageClassDataSync(PlayerDataCore.getClassData(player));
-        var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
         var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
+        var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
+        
         PacketDistributor.sendToPlayer(player, msgCD);
         PacketDistributor.sendToPlayer(player, msgMD);
         PacketDistributor.sendToPlayer(player, msgSD);

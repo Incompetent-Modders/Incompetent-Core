@@ -116,29 +116,31 @@ public class ClientUtil {
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
         ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
         SpellProperties spellProperties = SpellListener.getSpellProperties(spell);
-        Player player = Minecraft.getInstance().player;
-        tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(SpellListener.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
-        tooltip.add(CommonComponents.EMPTY);
-        tooltip.add(CommonComponents.EMPTY);
-        tooltip.add(SPELL_INFO_TITLE);
-        tooltip.add(CommonComponents.space().append(manaCost));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spellProperties.getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
-        tooltip.add(CommonComponents.space().append(castTime));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spellProperties.drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
-        if (spellProperties.hasSpellCatalyst()) {
-            tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().getCount() > 1 ? " x" + spellProperties.catalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
-            if (spellProperties.catalyst().has(DataComponents.BUNDLE_CONTENTS)) {
-                BundleContents bundleContents = spellProperties.catalyst().get(DataComponents.BUNDLE_CONTENTS);
-                if (bundleContents == null)
-                    return;
-                for (ItemStack content : bundleContents.itemCopyStream().toList()) {
-                    tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonComponents.space()).append("> " + content.getDisplayName().getString().replace("[", "").replace("]", "")).withStyle(BUNDLE_CONTENTS_FORMAT).append(content.getCount() > 1 ? " x" + content.getCount() : "").withStyle(BUNDLE_CONTENTS_FORMAT));
+        if (spellProperties != null) {
+            Player player = Minecraft.getInstance().player;
+            tooltip.add(SELECTED_SPELL_TITLE);
+            tooltip.add(CommonComponents.space().append(SpellListener.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.EMPTY);
+            tooltip.add(CommonComponents.EMPTY);
+            tooltip.add(SPELL_INFO_TITLE);
+            tooltip.add(CommonComponents.space().append(manaCost));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spellProperties.getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
+            tooltip.add(CommonComponents.space().append(castTime));
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spellProperties.drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
+            if (spellProperties.hasSpellCatalyst()) {
+                tooltip.add(CommonComponents.space().append(requiredCatalyst));
+                tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().getCount() > 1 ? " x" + spellProperties.catalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+                if (spellProperties.catalyst().has(DataComponents.BUNDLE_CONTENTS)) {
+                    BundleContents bundleContents = spellProperties.catalyst().get(DataComponents.BUNDLE_CONTENTS);
+                    if (bundleContents == null)
+                        return;
+                    for (ItemStack content : bundleContents.itemCopyStream().toList()) {
+                        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonComponents.space()).append("> " + content.getDisplayName().getString().replace("[", "").replace("]", "")).withStyle(BUNDLE_CONTENTS_FORMAT).append(content.getCount() > 1 ? " x" + content.getCount() : "").withStyle(BUNDLE_CONTENTS_FORMAT));
+                    }
                 }
             }
+            tooltip.add(CommonComponents.EMPTY);
         }
-        tooltip.add(CommonComponents.EMPTY);
     }
     public static void createAvailableSpellsTooltip(List<Component> tooltip, ItemStack castingStack, SpellCastingItem spellCastingItem) {
         tooltip.add(AVAILABLE_SPELLS_TITLE);

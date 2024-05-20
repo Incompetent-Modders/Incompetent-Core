@@ -78,7 +78,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         return !this.catalyst().isEmpty();
     }
     public boolean playerIsHoldingSpellCatalyst(Player player) {
-        if (!catalyst().isEmpty()) {
+        if (!catalyst().isEmpty() && player != null) {
             return ItemStack.isSameItemSameComponents(player.getOffhandItem(), catalyst());
         }
         return true;

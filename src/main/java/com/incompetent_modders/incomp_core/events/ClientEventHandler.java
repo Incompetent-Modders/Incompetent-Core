@@ -1,18 +1,25 @@
 package com.incompetent_modders.incomp_core.events;
 
+import com.incompetent_modders.incomp_core.api.item.EffectExtendingItem;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.network.MessageClassAbilitySync;
 import com.incompetent_modders.incomp_core.api.network.MessageSpeciesAbilitySync;
 import com.incompetent_modders.incomp_core.api.network.MessageSpellSlotScrollSync;
+import com.incompetent_modders.incomp_core.registry.ModItems;
 import com.incompetent_modders.incomp_core.util.ClientUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.function.BiConsumer;
 
 import static com.incompetent_modders.incomp_core.events.ClientModEvents.ACTIVATE_CLASS_ABILITY;
 import static com.incompetent_modders.incomp_core.events.ClientModEvents.ACTIVATE_SPECIES_ABILITY;
@@ -52,4 +59,6 @@ public class ClientEventHandler {
             PacketDistributor.sendToServer(new MessageSpeciesAbilitySync(true));
         }
     }
+    
+    
 }

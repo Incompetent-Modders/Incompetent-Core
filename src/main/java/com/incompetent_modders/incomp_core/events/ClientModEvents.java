@@ -1,24 +1,36 @@
 package com.incompetent_modders.incomp_core.events;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.item.EffectExtendingItem;
 import com.incompetent_modders.incomp_core.client.gui.ManaOverlay;
 import com.incompetent_modders.incomp_core.client.gui.SpellListOverlay;
+import com.incompetent_modders.incomp_core.registry.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.client.resources.language.LanguageManager;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.LanguageProviderLoader;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.server.LanguageHook;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.function.BiConsumer;
 
 import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 @EventBusSubscriber(value = Dist.CLIENT, modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -37,5 +49,16 @@ public class ClientModEvents {
     public static void registerBindings(RegisterKeyMappingsEvent event) {
         event.register(ACTIVATE_CLASS_ABILITY.get());
         event.register(ACTIVATE_SPECIES_ABILITY.get());
+    }
+    
+    @SubscribeEvent
+    public static void registerColorHandlers(RegisterColorHandlersEvent.Item event) {
+        registerItemColours(event::register);
+    }
+    
+    public static void registerItemColours(BiConsumer<ItemColor, ItemLike> register) {
+        register.accept((stack, layer) -> {
+            return layer > 0 ? -1 : FastColor.ARGB32.opaque(((EffectExtendingItem) stack.getItem()).getColour(stack));
+        }, ModItems.EFFECT_POSTPONE.get());
     }
 }

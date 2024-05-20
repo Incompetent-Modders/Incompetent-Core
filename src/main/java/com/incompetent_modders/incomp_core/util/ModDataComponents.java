@@ -21,6 +21,8 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> REMAINING_DRAW_TIME = register("remaining_draw_time", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> STORED_CLASS_TYPE = register("stored_class_type", builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> STORED_SPECIES_TYPE = register("stored_species_type", builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> STORED_EFFECT_POSTPONE = register("stored_effect_postpone", builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EFFECT_POSTPONE_DURATION = register("effect_postpone_duration", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MAX_SPELL_SLOTS = register("max_spell_slots", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding());
     
 }

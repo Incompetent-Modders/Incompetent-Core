@@ -27,7 +27,10 @@ public record MessageSpeciesDataSync(CompoundTag speciesData) implements CustomP
     {
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
-            PlayerDataCore.setSpeciesData(player, message.speciesData());
+            CompoundTag speciesData = message.speciesData();
+            synchronized(speciesData) {
+                PlayerDataCore.setSpeciesData(player, speciesData);
+            }
         });
     }
 }

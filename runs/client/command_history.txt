@@ -1,5 +1,3 @@
-/i_c setSpecies incompetent_core:zombie
-/i_c list_features diets
 /i_c list_features species
 /i_c setSpecies incompetent_core:human
 /gamemode survival
@@ -48,3 +46,5 @@
 /reload
 /i_c refillMana true
 /reload
+/data get entity @s
+/data get entity Dev

@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.registry;
 
 import com.incompetent_modders.incomp_core.api.item.ClassAssigningItem;
+import com.incompetent_modders.incomp_core.api.item.EffectExtendingItem;
 import com.incompetent_modders.incomp_core.api.item.SpeciesAssigningItem;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,6 +21,8 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> ASSIGN_CLASS = ITEMS.register("assign_class", () -> new ClassAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "none")));
     public static final DeferredHolder<Item, Item> ASSIGN_SPECIES = ITEMS.register("assign_species", () -> new SpeciesAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "human")));
     public static final DeferredHolder<Item, Item> SPELL_TOME = ITEMS.register("spell_tome", () -> new SpellCastingItem(new Item.Properties(), 1));
+    public static final DeferredHolder<Item, Item> EFFECT_POSTPONE = ITEMS.register("postpone_effect", () -> new EffectExtendingItem(new ResourceLocation("minecraft", "speed"), 600));
+    
     
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

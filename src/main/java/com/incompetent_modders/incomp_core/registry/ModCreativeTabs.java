@@ -4,16 +4,21 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ModCreativeTabs {
@@ -27,25 +32,34 @@ public class ModCreativeTabs {
                 }
             }, builder -> builder.withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
     
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CLASS_CREATIVE_TAB = registerTabSearchBar("classes",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CLASS_CREATIVE_TAB = registerTabSearchBar("utility",
             ModItems.ASSIGN_CLASS, output -> {
+                for (ResourceLocation mobEffectID : BuiltInRegistries.MOB_EFFECT.keySet()) {
+                    Item item = ModItems.EFFECT_POSTPONE.get();
+                    ItemStack stack = new ItemStack(item);
+                    if (BuiltInRegistries.MOB_EFFECT.get(mobEffectID).isInstantenous()) continue;
+                    stack.set(ModDataComponents.STORED_EFFECT_POSTPONE, mobEffectID);
+                    output.accept(stack);
+                }
                 for (ResourceLocation classID : ClassTypeListener.getAllClassTypes()) {
                     Item item = ModItems.ASSIGN_CLASS.get();
                     ItemStack stack = new ItemStack(item);
                     stack.set(ModDataComponents.STORED_CLASS_TYPE, classID);
                     output.accept(stack);
                 }
-            }, builder -> builder.withTabsBefore(BASE_CREATIVE_TAB.getId()));
-    
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECIES_CREATIVE_TAB = registerTabSearchBar("species",
-            ModItems.ASSIGN_SPECIES, output -> {
                 for (ResourceLocation speciesID : SpeciesListener.getAllSpecies()) {
                     Item item = ModItems.ASSIGN_SPECIES.get();
                     ItemStack stack = new ItemStack(item);
                     stack.set(ModDataComponents.STORED_SPECIES_TYPE, speciesID);
                     output.accept(stack);
                 }
-            }, builder -> builder.withTabsBefore(CLASS_CREATIVE_TAB.getId()));
+                for (ResourceLocation spellID : SpellListener.getAllSpells()) {
+                    Item item = ModItems.SPELL_TOME.get();
+                    ItemStack stack = new ItemStack(item);
+                    CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> tag.putString("spellSlot_0", spellID.toString()));
+                    output.accept(stack);
+                }
+            }, builder -> builder.withTabsBefore(BASE_CREATIVE_TAB.getId()));
     
     private static DeferredHolder<CreativeModeTab, CreativeModeTab> registerTab(String name, Holder<Item> icon, Consumer<CreativeModeTab.Output> displayItems, Consumer<CreativeModeTab.Builder> additionalProperties) {
         return REGISTER.register(name, id -> {
