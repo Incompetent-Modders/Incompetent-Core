@@ -54,52 +54,14 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            ResourceLocation classType = PlayerDataCore.ClassData.getPlayerClassType(player);
-            ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
-            ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
             
-            AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN);
-            if (PlayerDataCore.ManaData.getMana(player) < PlayerDataCore.ManaData.getMaxMana(player) && manaRegen != null && PlayerDataCore.ClassData.canRegenMana(player)) {
-                AtomicReference<Float> mod = new AtomicReference<>(1.0F);
-                if (!player.getActiveEffects().isEmpty()) {
-                    player.getActiveEffects().forEach(effect -> {
-                        PotionEffectProperties properties = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value());
-                        if (properties != null) {
-                            if (properties.manaRegenModifier() != 1.0F) {
-                                mod.set(properties.manaRegenModifier());
-                            }
-                        }
-                    });
-                }
-                 regenInterval++;
-                if (regenInterval >= (20 / mod.get())) {
-                    PlayerDataCore.ManaData.healMana(player, manaRegen.getValue());
-                    CommonUtils.onManaHeal(player, manaRegen.getValue());
-                    regenInterval = 0;
-                }
-            }
-            AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
-            if (maxMana != null && classTypeProperties != null) {
-                PlayerDataCore.ManaData.setMaxMana(player, classTypeProperties.maxMana());
-            }
-            classAbilityCooldownInterval++;
-            if (classAbilityCooldownInterval >= 20) {
-                if (PlayerDataCore.ClassData.getAbilityCooldown(player) > 0) {
-                    PlayerDataCore.ClassData.setAbilityCooldown(player, PlayerDataCore.ClassData.getAbilityCooldown(player) - 1);
-                }
-                classAbilityCooldownInterval = 0;
-            }
-            speciesAbilityCooldownInterval++;
-            if (speciesAbilityCooldownInterval >= 20) {
-                if (PlayerDataCore.SpeciesData.getAbilityCooldown(player) > 0) {
-                    PlayerDataCore.SpeciesData.setAbilityCooldown(player, PlayerDataCore.SpeciesData.getAbilityCooldown(player) - 1);
-                }
-                speciesAbilityCooldownInterval = 0;
-            }
+            
+            
+            
             //Setting Data :3
-            PlayerDataCore.setClassData(player, PlayerDataCore.getClassData(player));
-            PlayerDataCore.setManaData(player, PlayerDataCore.getManaData(player));
-            PlayerDataCore.setSpeciesData(player, PlayerDataCore.getSpeciesData(player));
+            PlayerDataCore.syncAllData(player);
+            PlayerDataCore.handleClassDataTick(player, event);
+            PlayerDataCore.handleSpeciesDataTick(player, event);
             
             PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMana(player));
             PlayerDataCore.ManaData.setMaxMana(player, PlayerDataCore.ManaData.getMaxMana(player));
@@ -108,50 +70,11 @@ public class CommonForgeEvents {
                 IncompCore.LOGGER.info("Player has old data format for ClassType & Mana Data, removing...");
                 player.getPersistentData().remove(IncompCore.MODID + ":data");
             }
-            PlayerDataCore.ClassData.getPlayerClassType(player);
-            if (PlayerDataCore.ClassData.getPlayerClassType(player).equals(new ResourceLocation(IncompCore.MODID, "simple_human"))) {
-                IncompCore.LOGGER.info("Player has old ID for default ClassType, setting to new default...");
-                PlayerDataCore.ClassData.setPlayerClassType(player, CommonUtils.defaultClass);
-            }
             
-            if (classTypeProperties != null) {
-                PlayerDataCore.ClassData.setPlayerClassType(player, classType);
-                PlayerDataCore.ClassData.setCanRegenMana(player, classTypeProperties.canRegenerateMana(player, player.level()));
-                PlayerDataCore.ClassData.setPacifist(player, classTypeProperties.pacifist());
-                PlayerDataCore.ClassData.setAbility(player, classTypeProperties.ability().getType());
-                PlayerDataCore.ClassData.setPassiveEffect(player, classTypeProperties.passiveEffect().getType());
-                classTypeProperties.tickClassFeatures(event);
-            }
             
-            SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-            SpeciesAttributes speciesAttributes = SpeciesAttributesListener.getSpeciesTypeAttributes(speciesType);
             
-            if (speciesProperties != null ) {
-                PlayerDataCore.SpeciesData.setSpecies(player, speciesType);
-                PlayerDataCore.SpeciesData.setInvertedHealAndHarm(player, speciesProperties.invertHealAndHarm());
-                PlayerDataCore.SpeciesData.setKeepOnDeath(player, speciesProperties.keepOnDeath());
-                PlayerDataCore.SpeciesData.setDiet(player, speciesProperties.dietType());
-                PlayerDataCore.SpeciesData.setBehaviour(player, speciesProperties.behaviour().getType());
-                PlayerDataCore.SpeciesData.setAbility(player, speciesProperties.ability().getType());
-                speciesProperties.tickSpeciesAttributes(player);
-                if (speciesAttributes != null) {
-                    PlayerDataCore.SpeciesData.setMaxHealth(player, speciesAttributes.maxHealth());
-                    PlayerDataCore.SpeciesData.setAttackDamage(player, speciesAttributes.attackDamage());
-                    PlayerDataCore.SpeciesData.setAttackKnockback(player, speciesAttributes.attackKnockback());
-                    PlayerDataCore.SpeciesData.setMovementSpeed(player, speciesAttributes.moveSpeed());
-                    PlayerDataCore.SpeciesData.setArmor(player, speciesAttributes.armour());
-                    PlayerDataCore.SpeciesData.setLuck(player, speciesAttributes.luck());
-                    PlayerDataCore.SpeciesData.setBlockInteractionRange(player, speciesAttributes.blockInteractionRange());
-                    PlayerDataCore.SpeciesData.setEntityInteractionRange(player, speciesAttributes.entityInteractionRange());
-                    PlayerDataCore.SpeciesData.setGravity(player, speciesAttributes.gravity());
-                    PlayerDataCore.SpeciesData.setJumpStrength(player, speciesAttributes.jumpStrength());
-                    PlayerDataCore.SpeciesData.setKnockbackResistance(player, speciesAttributes.knockbackResistance());
-                    PlayerDataCore.SpeciesData.setSafeFallDistance(player, speciesAttributes.safeFallDistance());
-                    PlayerDataCore.SpeciesData.setScale(player, speciesAttributes.scale());
-                    PlayerDataCore.SpeciesData.setStepHeight(player, speciesAttributes.stepHeight());
-                    PlayerDataCore.SpeciesData.setArmourToughness(player, speciesAttributes.armourToughness());
-                }
-            }
+            
+            
         }
     }
     

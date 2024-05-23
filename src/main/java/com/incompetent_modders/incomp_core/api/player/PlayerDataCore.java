@@ -2,18 +2,38 @@ package com.incompetent_modders.incomp_core.api.player;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesAttributes;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesAttributesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
+import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectProperties;
+import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyListener;
+import com.incompetent_modders.incomp_core.api.network.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
 import com.incompetent_modders.incomp_core.registry.ModAbilities;
+import com.incompetent_modders.incomp_core.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.registry.ModClassPassiveEffects;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.concurrent.atomic.AtomicReference;
+
 @SuppressWarnings("unused")
 public class PlayerDataCore {
+    static float regenInterval = 0;
+    static float classAbilityCooldownInterval = 0;
+    static float speciesAbilityCooldownInterval = 0;
+    
     public static final String CLASS_DATA_ID = IncompCore.MODID + ":ClassData";
     public static final String SPECIES_DATA_ID = IncompCore.MODID + ":SpeciesData";
     public static final String MANA_DATA_ID = IncompCore.MODID + ":ManaData";
@@ -29,6 +49,111 @@ public class PlayerDataCore {
     public static CompoundTag getManaData(Player spe) {
         return spe.getPersistentData().getCompound(MANA_DATA_ID);
     }
+    public static void syncClassData(ServerPlayer spe) {
+        var msgCD = new MessagePlayerDataSync(new MessagePlayerDataSync.DataAndID(PlayerDataCore.getClassData(spe), CLASS_DATA_ID));
+        PacketDistributor.sendToPlayer(spe, msgCD);
+    }
+    public static void syncSpeciesData(ServerPlayer spe) {
+        var msgSD = new MessagePlayerDataSync(new MessagePlayerDataSync.DataAndID(PlayerDataCore.getSpeciesData(spe), SPECIES_DATA_ID));
+        PacketDistributor.sendToPlayer(spe, msgSD);
+    }
+    public static void syncManaData(ServerPlayer spe) {
+        var msgMD = new MessagePlayerDataSync(new MessagePlayerDataSync.DataAndID(PlayerDataCore.getManaData(spe), MANA_DATA_ID));
+        PacketDistributor.sendToPlayer(spe, msgMD);
+    }
+    public static void syncAllData(ServerPlayer spe) {
+        syncClassData(spe);
+        syncSpeciesData(spe);
+        syncManaData(spe);
+    }
+    
+    public static void handleClassDataTick(ServerPlayer player, PlayerTickEvent event) {
+        ResourceLocation classType = PlayerDataCore.ClassData.getPlayerClassType(player);
+        ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
+        AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN);
+        if (PlayerDataCore.ManaData.getMana(player) < PlayerDataCore.ManaData.getMaxMana(player) && manaRegen != null && PlayerDataCore.ClassData.canRegenMana(player)) {
+            AtomicReference<Float> mod = new AtomicReference<>(1.0F);
+            if (!player.getActiveEffects().isEmpty()) {
+                player.getActiveEffects().forEach(effect -> {
+                    PotionEffectProperties properties = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value());
+                    if (properties != null) {
+                        if (properties.manaRegenModifier() != 1.0F) {
+                            mod.set(properties.manaRegenModifier());
+                        }
+                    }
+                });
+            }
+            regenInterval++;
+            if (regenInterval >= (20 / mod.get())) {
+                PlayerDataCore.ManaData.healMana(player, manaRegen.getValue());
+                CommonUtils.onManaHeal(player, manaRegen.getValue());
+                regenInterval = 0;
+            }
+        }
+        AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
+        if (maxMana != null && classTypeProperties != null) {
+            PlayerDataCore.ManaData.setMaxMana(player, classTypeProperties.maxMana());
+        }
+        classAbilityCooldownInterval++;
+        if (classAbilityCooldownInterval >= 20) {
+            if (PlayerDataCore.ClassData.getAbilityCooldown(player) > 0) {
+                PlayerDataCore.ClassData.setAbilityCooldown(player, PlayerDataCore.ClassData.getAbilityCooldown(player) - 1);
+            }
+            classAbilityCooldownInterval = 0;
+        }
+        if (classType.equals(new ResourceLocation(IncompCore.MODID, "simple_human"))) {
+            IncompCore.LOGGER.info("Player has old ID for default ClassType, setting to new default...");
+            PlayerDataCore.ClassData.setPlayerClassType(player, CommonUtils.defaultClass);
+        }
+        if (classTypeProperties != null) {
+            PlayerDataCore.ClassData.setPlayerClassType(player, classType);
+            PlayerDataCore.ClassData.setCanRegenMana(player, classTypeProperties.canRegenerateMana(player, player.level()));
+            PlayerDataCore.ClassData.setPacifist(player, classTypeProperties.pacifist());
+            PlayerDataCore.ClassData.setAbility(player, classTypeProperties.ability().getType());
+            PlayerDataCore.ClassData.setPassiveEffect(player, classTypeProperties.passiveEffect().getType());
+            classTypeProperties.tickClassFeatures(event);
+        }
+    }
+    public static void handleSpeciesDataTick(ServerPlayer player, PlayerTickEvent event) {
+        ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+        speciesAbilityCooldownInterval++;
+        if (speciesAbilityCooldownInterval >= 20) {
+            if (PlayerDataCore.SpeciesData.getAbilityCooldown(player) > 0) {
+                PlayerDataCore.SpeciesData.setAbilityCooldown(player, PlayerDataCore.SpeciesData.getAbilityCooldown(player) - 1);
+            }
+            speciesAbilityCooldownInterval = 0;
+        }
+        SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
+        SpeciesAttributes speciesAttributes = SpeciesAttributesListener.getSpeciesTypeAttributes(speciesType);
+        
+        if (speciesProperties != null ) {
+            PlayerDataCore.SpeciesData.setSpecies(player, speciesType);
+            PlayerDataCore.SpeciesData.setInvertedHealAndHarm(player, speciesProperties.invertHealAndHarm());
+            PlayerDataCore.SpeciesData.setKeepOnDeath(player, speciesProperties.keepOnDeath());
+            PlayerDataCore.SpeciesData.setDiet(player, speciesProperties.dietType());
+            PlayerDataCore.SpeciesData.setBehaviour(player, speciesProperties.behaviour().getType());
+            PlayerDataCore.SpeciesData.setAbility(player, speciesProperties.ability().getType());
+            speciesProperties.tickSpeciesAttributes(player);
+            if (speciesAttributes != null) {
+                PlayerDataCore.SpeciesData.setMaxHealth(player, speciesAttributes.maxHealth());
+                PlayerDataCore.SpeciesData.setAttackDamage(player, speciesAttributes.attackDamage());
+                PlayerDataCore.SpeciesData.setAttackKnockback(player, speciesAttributes.attackKnockback());
+                PlayerDataCore.SpeciesData.setMovementSpeed(player, speciesAttributes.moveSpeed());
+                PlayerDataCore.SpeciesData.setArmor(player, speciesAttributes.armour());
+                PlayerDataCore.SpeciesData.setLuck(player, speciesAttributes.luck());
+                PlayerDataCore.SpeciesData.setBlockInteractionRange(player, speciesAttributes.blockInteractionRange());
+                PlayerDataCore.SpeciesData.setEntityInteractionRange(player, speciesAttributes.entityInteractionRange());
+                PlayerDataCore.SpeciesData.setGravity(player, speciesAttributes.gravity());
+                PlayerDataCore.SpeciesData.setJumpStrength(player, speciesAttributes.jumpStrength());
+                PlayerDataCore.SpeciesData.setKnockbackResistance(player, speciesAttributes.knockbackResistance());
+                PlayerDataCore.SpeciesData.setSafeFallDistance(player, speciesAttributes.safeFallDistance());
+                PlayerDataCore.SpeciesData.setScale(player, speciesAttributes.scale());
+                PlayerDataCore.SpeciesData.setStepHeight(player, speciesAttributes.stepHeight());
+                PlayerDataCore.SpeciesData.setArmourToughness(player, speciesAttributes.armourToughness());
+            }
+        }
+    }
+    
     
     public static class ClassData {
         public static ResourceLocation getPlayerClassType(Player spe) {
@@ -350,6 +475,9 @@ public class PlayerDataCore {
     }
     public static void setManaData(Player spe, CompoundTag nc) {
         spe.getPersistentData().put(MANA_DATA_ID, nc);
+    }
+    public static void setData(Player spe, String id, CompoundTag nc) {
+        spe.getPersistentData().put(id, nc);
     }
     
 }
