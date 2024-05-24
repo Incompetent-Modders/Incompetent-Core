@@ -7,6 +7,7 @@ import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -127,7 +128,7 @@ public class CommonUtils {
     }
     
     public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
-        ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+        ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
         SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
         if (speciesProperties.hasEnchantWeaknesses()) {
             for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {

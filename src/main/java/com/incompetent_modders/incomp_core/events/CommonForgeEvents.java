@@ -7,17 +7,17 @@ import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperti
 import com.incompetent_modders.incomp_core.api.json.species.*;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietProperties;
-import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectProperties;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyListener;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
+import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -27,12 +27,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -42,39 +40,33 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.incompetent_modders.incomp_core.util.CommonUtils.applyDamage;
 
 @EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class CommonForgeEvents {
-    static float regenInterval = 0;
-    static float classAbilityCooldownInterval = 0;
-    static float speciesAbilityCooldownInterval = 0;
+    //private static boolean syncingData = false;
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            
-            
-            
-            
             //Setting Data :3
-            PlayerDataCore.syncAllData(player);
+            //if (!syncingData) {
+            //    syncingData = true;
+                PlayerDataCore.syncClassData(player);
+                PlayerDataCore.syncManaData(player);
+                PlayerDataCore.syncSpeciesData(player);
+            //    syncingData = false;
+            //}
             PlayerDataCore.handleClassDataTick(player, event);
             PlayerDataCore.handleSpeciesDataTick(player, event);
             
-            PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMana(player));
-            PlayerDataCore.ManaData.setMaxMana(player, PlayerDataCore.ManaData.getMaxMana(player));
+            ManaData.Set.mana(player, ManaData.Get.mana(player));
+            ManaData.Set.maxMana(player, ManaData.Get.maxMana(player));
             
             if (player.getPersistentData().contains(IncompCore.MODID + ":data")) {
-                IncompCore.LOGGER.info("Player has old data format for ClassType & Mana Data, removing...");
+                IncompCore.LOGGER.info("{} has old data format for ClassType & Mana Data, removing...", player.getName().getString());
                 player.getPersistentData().remove(IncompCore.MODID + ":data");
             }
-            
-            
-            
-            
-            
         }
     }
     
@@ -83,11 +75,11 @@ public class CommonForgeEvents {
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            ResourceLocation classType = PlayerDataCore.ClassData.getPlayerClassType(player);
+            ResourceLocation classType = ClassData.Get.playerClassType(player);
             ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
             AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
             if (maxMana != null) {
-                PlayerDataCore.ManaData.setMaxMana(player, maxMana.getValue());
+                ManaData.Set.maxMana(player, maxMana.getValue());
             }
             
             AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
@@ -125,7 +117,7 @@ public class CommonForgeEvents {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
-            ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+            ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
             if (speciesProperties != null) {
                 ResourceLocation dietType = speciesProperties.dietType();
@@ -147,7 +139,7 @@ public class CommonForgeEvents {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
-            ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+            ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
             if (speciesProperties != null) {
                 ResourceLocation dietType = speciesProperties.dietType();
@@ -174,11 +166,9 @@ public class CommonForgeEvents {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player player) {
             if (event.getEffectInstance().getEffect().value() instanceof SpeciesAlteringEffect speciesAlteringEffect) {
-                ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
-                if (speciesType != null) {
-                    if (speciesAlteringEffect.getConvertTo() != null) {
-                        PlayerDataCore.SpeciesData.setSpecies(player, speciesAlteringEffect.getConvertTo());
-                    }
+                ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
+                if (speciesAlteringEffect.getConvertTo() != null) {
+                    SpeciesData.Set.playerSpecies(player, speciesAlteringEffect.getConvertTo());
                 }
             }
         }

@@ -2,6 +2,8 @@ package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
+import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
 import net.minecraft.client.Minecraft;
@@ -30,8 +32,8 @@ public class ManaOverlay implements LayeredDraw.Layer {
         if (player == null)
             return;
         
-        double mana = PlayerDataCore.ManaData.getMana(player);
-        double maxMana = PlayerDataCore.ManaData.getMaxMana(player);
+        double mana = ManaData.Get.mana(player);
+        double maxMana = ManaData.Get.maxMana(player);
         DrawingUtils.blitSprite(guiGraphics, manaBar, guiGraphics.guiWidth() / 2 + 120, guiGraphics.guiHeight() - 53, (int) (50 * getManaPercentage(player)), 16);
         //DrawingUtils.blitSprite(guiGraphics, bubbles, screenWidth / 2 + 120, screenHeight - 53, (int) (50 * getManaPercentage(player)), 16);
         DrawingUtils.blitSprite(guiGraphics, manaFrame, guiGraphics.guiWidth() / 2 + 120, guiGraphics.guiHeight() - 53, 50, 16);
@@ -44,18 +46,18 @@ public class ManaOverlay implements LayeredDraw.Layer {
         DrawingUtils.blitSprite(graphics, bubbles, screenWidth / 2 + 120, screenHeight - 53, (int) (50 * getManaPercentage(player)), 16);
     }
     public float getMana(LocalPlayer player) {
-        return (float) PlayerDataCore.ManaData.getMana(player);
+        return (float) ManaData.Get.mana(player);
     }
     
     public float getMaxMana(LocalPlayer player) {
-        return (float) PlayerDataCore.ManaData.getMaxMana(player);
+        return (float) ManaData.Get.maxMana(player);
     }
     
     public float getManaPercentage(LocalPlayer player) {
         return getMana(player) / getMaxMana(player);
     }
     public ResourceLocation getPlayerClassType(LocalPlayer player) {
-        return PlayerDataCore.ClassData.getPlayerClassType(player);
+        return ClassData.Get.playerClassType(player);
     }
     
     public ResourceLocation getManaOverlayTexture(String spriteName, LocalPlayer player) {

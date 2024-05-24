@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.client.DrawingUtils;
 import net.minecraft.client.Minecraft;
@@ -115,7 +116,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     }
     
     public ResourceLocation getWielderClassType(LocalPlayer player) {
-        return PlayerDataCore.ClassData.getPlayerClassType(player);
+        return ClassData.Get.playerClassType(player);
     }
     
     public ResourceLocation getSpellOverlayTexture(String spriteName, LocalPlayer player) {

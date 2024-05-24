@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.command;
 
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.command.arguments.SpeciesArgument;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,7 +16,7 @@ public class SetSpeciesCommand {
             ResourceLocation species = SpeciesArgument.getSpecies(arguments, "species");
             if (player == null)
                 return 0;
-            PlayerDataCore.SpeciesData.setSpecies(player, species);
+            SpeciesData.Set.playerSpecies(player, species);
             return 0;
         }));
     }

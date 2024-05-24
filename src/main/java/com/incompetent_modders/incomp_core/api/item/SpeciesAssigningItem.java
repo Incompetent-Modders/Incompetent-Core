@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.item;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -40,10 +41,10 @@ public class SpeciesAssigningItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (player.isShiftKeyDown()) {
-            if (PlayerDataCore.SpeciesData.getSpecies(player) == getSpeciesType(itemstack)) {
+            if (SpeciesData.Get.playerSpecies(player) == getSpeciesType(itemstack)) {
                 return InteractionResultHolder.fail(itemstack);
             } else {
-                PlayerDataCore.SpeciesData.setSpecies(player, getSpeciesType(itemstack));
+                SpeciesData.Set.playerSpecies(player, getSpeciesType(itemstack));
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.TOTEM_OF_UNDYING, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.ENCHANT, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.SCULK_SOUL, 10);

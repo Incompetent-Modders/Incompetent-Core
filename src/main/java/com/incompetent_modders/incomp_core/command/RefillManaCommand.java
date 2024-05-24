@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.command;
 
+import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -18,10 +19,10 @@ public class RefillManaCommand {
             int amountToHeal = IntegerArgumentType.getInteger(arguments, "amount");
             if (player == null)
                 player = FakePlayerFactory.getMinecraft(world);
-            if (PlayerDataCore.ManaData.getMaxMana(player) < amountToHeal) {
-                PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMaxMana(player));
+            if (ManaData.Get.maxMana(player) < amountToHeal) {
+                ManaData.Set.mana(player, ManaData.Get.maxMana(player));
             } else {
-                PlayerDataCore.ManaData.healMana(player, amountToHeal);
+                ManaData.Util.healMana(player, amountToHeal);
             }
             return 0;
         })).then(Commands.argument("refillFull", BoolArgumentType.bool()).executes(arguments -> {
@@ -29,7 +30,7 @@ public class RefillManaCommand {
             Player player = (Player) arguments.getSource().getEntity();
             if (player == null)
                 player = FakePlayerFactory.getMinecraft(world);
-            PlayerDataCore.ManaData.setMana(player, PlayerDataCore.ManaData.getMaxMana(player));
+            ManaData.Set.mana(player, ManaData.Get.maxMana(player));
             return 0;
         }));
     }

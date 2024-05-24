@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.network;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -28,12 +29,12 @@ public record MessageClassAbilitySync(boolean applyCooldown) implements CustomPa
     {
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
-            ResourceLocation classType = PlayerDataCore.ClassData.getPlayerClassType(player);
+            ResourceLocation classType = ClassData.Get.playerClassType(player);
             ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
-            boolean canUseAbility = PlayerDataCore.ClassData.canUseAbility(player);
+            boolean canUseAbility = ClassData.Util.canUseAbility(player);
             if (canUseAbility) {
                 classTypeProperties.ability().apply(player.level(), player);
-                PlayerDataCore.ClassData.setAbilityCooldown(player, message.applyCooldown() ? classTypeProperties.abilityCooldown() : 0);
+                ClassData.Set.abilityCooldown(player, message.applyCooldown() ? classTypeProperties.abilityCooldown() : 0);
             }
         });
     }

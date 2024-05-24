@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.mixin;
 
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,9 +22,9 @@ public class HealOrHarmMobEffectMixin {
     @Inject(method = "applyEffectTick", at = @At("HEAD"))
     private void applyEffectTick(LivingEntity p_295255_, int p_295147_, CallbackInfoReturnable<Boolean> cir) {
         if (p_295255_ instanceof Player player) {
-            if (PlayerDataCore.SpeciesData.getSpecies(player) == null)
+            if (SpeciesData.Get.playerSpecies(player) == null)
                 cir.cancel();
-            if (isHarm == PlayerDataCore.SpeciesData.isInvertedHealAndHarm(player)) {
+            if (isHarm == SpeciesData.Get.isInvertedHealAndHarm(player)) {
                 p_295255_.heal((float)Math.max(4 << p_295147_, 0));
                 cir.cancel();
             } else {
@@ -37,9 +38,9 @@ public class HealOrHarmMobEffectMixin {
     private void applyInstantenousEffect(Entity p_294574_, Entity p_295692_, LivingEntity p_296483_, int p_296095_, double p_295178_, CallbackInfo ci) {
         if (p_296483_ instanceof Player player) {
             int j;
-            if (PlayerDataCore.SpeciesData.getSpecies(player) == null)
+            if (SpeciesData.Get.playerSpecies(player) == null)
                 ci.cancel();
-            if (isHarm == PlayerDataCore.SpeciesData.isInvertedHealAndHarm(player)) {
+            if (isHarm == SpeciesData.Get.isInvertedHealAndHarm(player)) {
                 j = (int)(p_295178_ * (double)(4 << p_296095_) + 0.5);
                 p_296483_.heal((float)j);
                 ci.cancel();

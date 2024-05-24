@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.json.species;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
 import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
@@ -39,7 +40,7 @@ public record SpeciesProperties(SpeciesBehaviour behaviour, boolean invertHealAn
     }
     
     public void tickSpeciesAttributes(Player player) {
-        ResourceLocation speciesType = PlayerDataCore.SpeciesData.getSpecies(player);
+        ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
         SpeciesAttributes speciesAttributes = SpeciesAttributesListener.getSpeciesTypeAttributes(speciesType);
         SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
         AttributeInstance maxHealthInst = player.getAttribute(Attributes.MAX_HEALTH);

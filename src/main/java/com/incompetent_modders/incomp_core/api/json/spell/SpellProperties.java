@@ -1,7 +1,10 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
+import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -43,13 +46,13 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     
     public void executeCast(Player player) {
         Level level = player.level();
-        ResourceLocation playerClass = PlayerDataCore.ClassData.getPlayerClassType(player);
-        ResourceLocation playerSpecies = PlayerDataCore.SpeciesData.getSpecies(player);
+        ResourceLocation playerClass = ClassData.Get.playerClassType(player);
+        ResourceLocation playerSpecies = SpeciesData.Get.playerSpecies(player);
         if (!checkPlayerClass(classType, playerClass) ||  !checkPlayerSpecies(speciesType, playerSpecies)) {
             generateClassSpeciesLogger(player);
             return;
         }
-        int playerMana = (int) PlayerDataCore.ManaData.getMana(player);
+        int playerMana = (int) ManaData.Get.mana(player);
         if (playerMana < getManaCost(player)) {
             IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
             return;
@@ -58,7 +61,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             IncompCore.LOGGER.info("{} is not holding the required catalyst to cast spell!", player.getName().getString());
             return;
         }
-        PlayerDataCore.ManaData.removeMana(player, getManaCost(player));
+        ManaData.Util.removeMana(player, getManaCost(player));
         handleCatalystConsumption(player);
         results.execute(player);
         level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
@@ -139,8 +142,8 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     }
     
     public void generateClassSpeciesLogger(Player player) {
-        ResourceLocation playerClass = PlayerDataCore.ClassData.getPlayerClassType(player);
-        ResourceLocation playerSpecies = PlayerDataCore.SpeciesData.getSpecies(player);
+        ResourceLocation playerClass = ClassData.Get.playerClassType(player);
+        ResourceLocation playerSpecies = SpeciesData.Get.playerSpecies(player);
         String classTypeText = classType.acceptAllClasses() ? "any class" : classType.classID().toString();
         String speciesTypeText = speciesType.acceptAllSpecies() ? "any species" : speciesType.speciesID().toString();
         IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);

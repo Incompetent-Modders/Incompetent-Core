@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
+import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,11 +31,11 @@ public class SpellUtils {
     }
     
     public static void removeMana(Player player, double amount) {
-        if (PlayerDataCore.ManaData.getMana(player) - amount < 0) {
-            PlayerDataCore.ManaData.setMana(player, 0);
+        if (ManaData.Get.mana(player) - amount < 0) {
+            ManaData.Set.mana(player, 0);
             return;
         }
-        PlayerDataCore.ManaData.removeMana(player, amount);
+        ManaData.Util.removeMana(player, amount);
     }
     public static HitResult genericSpellRayTrace(Player playerCaster) {
         return SpellUtils.rayTrace(playerCaster, 160 + playerCaster.getAttributes().getValue(Attributes.BLOCK_INTERACTION_RANGE), 0, true);

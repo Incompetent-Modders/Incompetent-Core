@@ -5,7 +5,6 @@ import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -26,25 +25,25 @@ public class SyncHandler {
         registrar.playToServer(MessageSpeciesAbilitySync.TYPE, MessageSpeciesAbilitySync.CODEC, MessageSpeciesAbilitySync::handle);
         
         //TO CLIENT
-        //registrar.playToClient(MessageClassDataSync.TYPE, MessageClassDataSync.CODEC, MessageClassDataSync::handle);
-        //registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
-        //registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
         registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
+        registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
+        registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
+        //registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
         
-        //NeoForge.EVENT_BUS.register(new SyncHandler());
+        NeoForge.EVENT_BUS.register(new SyncHandler());
     }
     
-    //@SubscribeEvent
-    //public void onLivingTickEvent(EntityTickEvent.Pre event) {
-    //    if (!(event.getEntity() instanceof ServerPlayer player))
-    //        return;
-    //
-    //    var msgCD = new MessageClassDataSync(PlayerDataCore.getClassData(player));
-    //    var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
-    //    var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
-    //
-    //    PacketDistributor.sendToPlayer(player, msgCD);
-    //    PacketDistributor.sendToPlayer(player, msgMD);
-    //    PacketDistributor.sendToPlayer(player, msgSD);
-    //}
+    @SubscribeEvent
+    public void onLivingTickEvent(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof ServerPlayer player))
+            return;
+    
+        var msgCD = new MessagePlayerDataSync(PlayerDataCore.getClassData(player));
+        var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
+        var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
+    
+        PacketDistributor.sendToPlayer(player, msgCD);
+        PacketDistributor.sendToPlayer(player, msgMD);
+        PacketDistributor.sendToPlayer(player, msgSD);
+    }
 }

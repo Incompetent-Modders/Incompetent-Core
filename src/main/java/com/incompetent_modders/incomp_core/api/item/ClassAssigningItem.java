@@ -2,6 +2,7 @@ package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.incompetent_modders.incomp_core.util.ModDataComponents;
@@ -41,10 +42,10 @@ public class ClassAssigningItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (player.isShiftKeyDown()) {
-            if (PlayerDataCore.ClassData.getPlayerClassType(player) == getClassType(itemstack)) {
+            if (ClassData.Get.playerClassType(player) == getClassType(itemstack)) {
                 return InteractionResultHolder.fail(itemstack);
             } else {
-                PlayerDataCore.ClassData.setPlayerClassType(player, getClassType(itemstack));
+                ClassData.Set.playerClassType(player, getClassType(itemstack));
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.TOTEM_OF_UNDYING, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.ENCHANT, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.SCULK_SOUL, 10);

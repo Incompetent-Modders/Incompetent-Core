@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,12 +29,12 @@ public record MessageSpeciesAbilitySync(boolean applyCooldown) implements Custom
     {
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
-            ResourceLocation species = PlayerDataCore.SpeciesData.getSpecies(player);
+            ResourceLocation species = SpeciesData.Get.playerSpecies(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(species);
-            boolean canUseAbility = PlayerDataCore.SpeciesData.canUseAbility(player);
+            boolean canUseAbility = SpeciesData.Util.canUseAbility(player);
             if (canUseAbility) {
                 speciesProperties.ability().apply(player.level(), player);
-                PlayerDataCore.SpeciesData.setAbilityCooldown(player, message.applyCooldown() ? speciesProperties.abilityCooldown() : 0);
+                SpeciesData.Set.abilityCooldown(player, message.applyCooldown() ? speciesProperties.abilityCooldown() : 0);
             }
         });
     }
