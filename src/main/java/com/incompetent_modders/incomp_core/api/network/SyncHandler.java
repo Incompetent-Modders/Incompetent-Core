@@ -26,9 +26,8 @@ public class SyncHandler {
         
         //TO CLIENT
         registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
-        registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
-        registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
-        //registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
+        //registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
+        //registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
         
         NeoForge.EVENT_BUS.register(new SyncHandler());
     }
@@ -38,12 +37,12 @@ public class SyncHandler {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
     
-        var msgCD = new MessagePlayerDataSync(PlayerDataCore.getClassData(player));
-        var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
-        var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
+        var msgCD = new MessagePlayerDataSync(PlayerDataCore.getPlayerData(player));
+        //var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
+        //var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
     
         PacketDistributor.sendToPlayer(player, msgCD);
-        PacketDistributor.sendToPlayer(player, msgMD);
-        PacketDistributor.sendToPlayer(player, msgSD);
+        //PacketDistributor.sendToPlayer(player, msgMD);
+        //PacketDistributor.sendToPlayer(player, msgSD);
     }
 }

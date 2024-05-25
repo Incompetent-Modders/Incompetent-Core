@@ -3,8 +3,10 @@
   "draw_time": 10,
   "mana_cost": 50,
   "catalyst": {
-    "count": 1,
-    "id": "minecraft:blaze_powder"
+    "item": {
+      "count": 1,
+      "id": "minecraft:blaze_powder"
+    }
   },
   "class": {
     "id": "incompetent_core:test_class"

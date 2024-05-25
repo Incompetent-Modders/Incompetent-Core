@@ -16,6 +16,7 @@ import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,9 +53,10 @@ public class CommonForgeEvents {
             //Setting Data :3
             //if (!syncingData) {
             //    syncingData = true;
-                PlayerDataCore.syncClassData(player);
-                PlayerDataCore.syncManaData(player);
-                PlayerDataCore.syncSpeciesData(player);
+            CompoundTag playerData = PlayerDataCore.getPlayerData(player);
+            synchronized (playerData) {
+                PlayerDataCore.setPlayerData(player, PlayerDataCore.getPlayerData(player));
+            }
             //    syncingData = false;
             //}
             PlayerDataCore.handleClassDataTick(player, event);
@@ -63,9 +65,17 @@ public class CommonForgeEvents {
             ManaData.Set.mana(player, ManaData.Get.mana(player));
             ManaData.Set.maxMana(player, ManaData.Get.maxMana(player));
             
-            if (player.getPersistentData().contains(IncompCore.MODID + ":data")) {
-                IncompCore.LOGGER.info("{} has old data format for ClassType & Mana Data, removing...", player.getName().getString());
-                player.getPersistentData().remove(IncompCore.MODID + ":data");
+            if (player.getPersistentData().contains(IncompCore.MODID + ":ClassData")) {
+                IncompCore.LOGGER.info("{} has old data format for Class Data, removing...", player.getName().getString());
+                player.getPersistentData().remove(IncompCore.MODID + ":ClassData");
+            }
+            if (player.getPersistentData().contains(IncompCore.MODID + ":SpeciesData")) {
+                IncompCore.LOGGER.info("{} has old data format for Species Data, removing...", player.getName().getString());
+                player.getPersistentData().remove(IncompCore.MODID + ":SpeciesData");
+            }
+            if (player.getPersistentData().contains(IncompCore.MODID + ":ManaData")) {
+                IncompCore.LOGGER.info("{} has old data format for Mana Data, removing...", player.getName().getString());
+                player.getPersistentData().remove(IncompCore.MODID + ":ManaData");
             }
         }
     }

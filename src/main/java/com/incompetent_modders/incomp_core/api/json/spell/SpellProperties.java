@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
+import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -24,24 +25,24 @@ import net.minecraft.world.level.Level;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public record SpellProperties(SpellCategory category, double manaCost, int drawTime, ItemStack catalyst, ClassType classType, SpeciesType speciesType, SpellResults results, SoundEvent castSound) {
+public record SpellProperties(SpellCategory category, double manaCost, int drawTime, Catalyst catalyst, ClassType classType, SpeciesType speciesType, SpellResults results, SoundEvent castSound) {
     public static final Codec<SpellProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             SpellCategory.CODEC.optionalFieldOf("category", SpellCategory.UTILITY).forGetter(SpellProperties::category),
             Codec.DOUBLE.optionalFieldOf("mana_cost", 0.0).forGetter(SpellProperties::manaCost),
             Codec.INT.optionalFieldOf("draw_time", 0).forGetter(SpellProperties::drawTime),
-            ItemStack.CODEC.optionalFieldOf("catalyst", ItemStack.EMPTY).forGetter(SpellProperties::catalyst),
+            Catalyst.CODEC.optionalFieldOf("catalyst", Catalyst.EMPTY).forGetter(SpellProperties::catalyst),
             ClassType.CODEC.fieldOf("class").forGetter(SpellProperties::classType),
             SpeciesType.CODEC.fieldOf("species").forGetter(SpellProperties::speciesType),
             SpellResults.CODEC.fieldOf("results").forGetter(SpellProperties::results),
             SoundEvent.DIRECT_CODEC.optionalFieldOf("cast_sound", SoundEvents.ALLAY_THROW).forGetter(SpellProperties::castSound)
     ).apply(instance, SpellProperties::new));
     
-    public SpellProperties(SpellCategory category, int manaCost, int drawTime, ItemStack catalyst, ClassType classType, SpeciesType speciesType, SpellResults results) {
+    public SpellProperties(SpellCategory category, int manaCost, int drawTime, Catalyst catalyst, ClassType classType, SpeciesType speciesType, SpellResults results) {
         this(category, manaCost, drawTime, catalyst, classType, speciesType, results, SoundEvents.ALLAY_THROW);
     }
     
     public boolean isBlankSpell() {
-        return manaCost == 0.0 && drawTime == 0 && catalyst.isEmpty() && Objects.equals(classType, CommonUtils.defaultClass) && Objects.equals(speciesType.speciesID(), CommonUtils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
+        return manaCost == 0.0 && drawTime == 0 && catalyst.item().isEmpty() && Objects.equals(classType, CommonUtils.defaultClass) && Objects.equals(speciesType.speciesID(), CommonUtils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
     }
     
     public void executeCast(Player player) {
@@ -78,38 +79,43 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
     }
     public boolean hasSpellCatalyst() {
-        return !this.catalyst().isEmpty();
+        return !this.catalyst().item().isEmpty();
     }
     public boolean playerIsHoldingSpellCatalyst(Player player) {
-        if (!catalyst().isEmpty() && player != null) {
-            return ItemStack.isSameItemSameComponents(player.getOffhandItem(), catalyst());
+        if (!catalyst().item().isEmpty() && player != null) {
+            return ItemStack.isSameItemSameComponents(player.getOffhandItem(), catalyst().item());
         }
         return true;
     }
     public void handleCatalystConsumption(Player player) {
-        if (!catalyst().isEmpty()) {
+        if (catalyst().item().isEmpty()) {
             return;
         }
-        boolean catalystHasDurability = catalyst().isDamageableItem();
-        boolean catalystIsUnbreakable = catalyst().has(DataComponents.UNBREAKABLE) || catalyst().getItem() instanceof BundleItem;
+        boolean catalystHasDurability = catalyst().item().isDamageableItem();
+        boolean catalystIsUnbreakable = catalyst().item().has(DataComponents.UNBREAKABLE) || catalyst().item().getItem() instanceof BundleItem || catalyst().keepCatalyst();
+        boolean catalystDropsLeftoverItems = catalyst().dropLeftoverItems();
         if (playerIsHoldingSpellCatalyst(player)) {
             if (!player.isCreative()) {
                 if (catalystHasDurability) {
-                    catalyst().hurtAndBreak(1, player, EquipmentSlot.OFFHAND);
+                    catalyst().item().hurtAndBreak(1, player, EquipmentSlot.OFFHAND);
                 } else {
-                    if (!catalystIsUnbreakable) {
+                    if (catalystIsUnbreakable) {
+                        if (catalyst().item().getItem() instanceof BundleItem) {
+                            SpellUtils.removeFromBundle(player.getOffhandItem(), catalyst().item().get(DataComponents.BUNDLE_CONTENTS));
+                        }
+                    } else {
                         player.getOffhandItem().shrink(1);
-                    }
-                    if (catalyst().getItem() instanceof BundleItem) {
-                        player.getOffhandItem().set(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+                        if (catalystDropsLeftoverItems) {
+                            player.drop(player.getOffhandItem(), true, true);
+                        }
                     }
                 }
-                player.awardStat(Stats.ITEM_USED.get(catalyst().getItem()));
+                player.awardStat(Stats.ITEM_USED.get(catalyst().item().getItem()));
             } else
-                player.awardStat(Stats.ITEM_USED.get(catalyst().getItem()));
+                player.awardStat(Stats.ITEM_USED.get(catalyst().item().getItem()));
         } else {
-            Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", catalyst().getDisplayName());
-            player.displayClientMessage(message, true);
+            Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", catalyst().item().getDisplayName());
+            player.displayClientMessage(message, false);
         }
     }
     

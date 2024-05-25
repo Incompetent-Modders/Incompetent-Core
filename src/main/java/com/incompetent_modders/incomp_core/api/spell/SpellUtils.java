@@ -1,12 +1,14 @@
 package com.incompetent_modders.incomp_core.api.spell;
 
 import com.incompetent_modders.incomp_core.api.player.ManaData;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -16,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class SpellUtils {
     
@@ -93,5 +96,23 @@ public class SpellUtils {
         HitResult result = entity.pick(length, lookOffset, hitLiquids);
         EntityHitResult entityLookedAt = getLookedAtEntity(entity, 25);
         return entityLookedAt == null ? result : entityLookedAt;
+    }
+    
+    public static void removeFromBundle(ItemStack bundle, BundleContents removedContents) {
+        if (bundle.getItem() instanceof BundleItem) {
+            BundleContents contents = bundle.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+            Stream<ItemStack> items = contents.itemCopyStream();
+            for (ItemStack item : contents.items()) {
+                if (item.isEmpty()) {
+                    continue;
+                }
+                for (ItemStack removedItem : removedContents.items()) {
+                    if (ItemStack.isSameItemSameComponents(item, removedItem)) {
+                        items = items.filter(i -> !ItemStack.isSameItemSameComponents(i, removedItem));
+                    }
+                }
+                
+            }
+        }
     }
 }

@@ -226,5 +226,8 @@ public class SpeciesData {
         public static boolean canUseAbility(Player spe) {
             return Get.abilityCooldown(spe) <= 0;
         }
+        public static boolean isSpeciesPresent(Player spe) {
+            return spe.getPersistentData().getCompound(PLAYER_DATA_ID).contains("species");
+        }
     }
 }

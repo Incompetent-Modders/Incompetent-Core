@@ -129,9 +129,9 @@ public class ClientUtil {
             tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(CommonUtils.timeFromTicks(spellProperties.drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
             if (spellProperties.hasSpellCatalyst()) {
                 tooltip.add(CommonComponents.space().append(requiredCatalyst));
-                tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().getCount() > 1 ? " x" + spellProperties.catalyst().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
-                if (spellProperties.catalyst().has(DataComponents.BUNDLE_CONTENTS)) {
-                    BundleContents bundleContents = spellProperties.catalyst().get(DataComponents.BUNDLE_CONTENTS);
+                tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().item().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().item().getCount() > 1 ? " x" + spellProperties.catalyst().item().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+                if (spellProperties.catalyst().item().has(DataComponents.BUNDLE_CONTENTS)) {
+                    BundleContents bundleContents = spellProperties.catalyst().item().get(DataComponents.BUNDLE_CONTENTS);
                     if (bundleContents == null)
                         return;
                     for (ItemStack content : bundleContents.itemCopyStream().toList()) {

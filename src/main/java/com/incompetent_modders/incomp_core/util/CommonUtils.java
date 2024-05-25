@@ -130,12 +130,14 @@ public class CommonUtils {
     public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
         ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
         SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-        if (speciesProperties.hasEnchantWeaknesses()) {
-            for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {
-                if (isEnchantedWith(properties.getEnchantment(), weapon)) {
-                    float damage = event.getAmount();
-                    float damageMultiplier = properties.multiplier();
-                    event.setAmount(damage + getDamageBonus(getEnchantmentLevel(properties.getEnchantment(), weapon), damageMultiplier));
+        if (speciesProperties != null) {
+            if (speciesProperties.hasEnchantWeaknesses()) {
+                for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {
+                    if (isEnchantedWith(properties.getEnchantment(), weapon)) {
+                        float damage = event.getAmount();
+                        float damageMultiplier = properties.multiplier();
+                        event.setAmount(damage + getDamageBonus(getEnchantmentLevel(properties.getEnchantment(), weapon), damageMultiplier));
+                    }
                 }
             }
         }

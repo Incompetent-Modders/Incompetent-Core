@@ -90,5 +90,8 @@ public class ClassData {
             if (cooldown > 0)
                 nc.putInt("classAbilityCooldown", cooldown - 1);
         }
+        public static boolean isClassPresent(Player spe) {
+            return spe.getPersistentData().getCompound(PLAYER_DATA_ID).contains("classType");
+        }
     }
 }

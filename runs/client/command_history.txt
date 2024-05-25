@@ -1,17 +1,3 @@
-/i_c setSpecies incompetent_core:human
-/gamemode survival
-/i_c setSpecies incompetent_core:zombie
-/i_c setSpecies incompetent_core:human
-/i_c setSpecies incompetent_core:zombie
-/i_c setSpecies incompetent_core:human
-/i_c setSpecies incompetent_core:zombie
-/data get entity Dev
-/i_c list_features diets
-/data get entity Dev
-/i_c setSpecies incompetent_core:human
-/data get entity Dev
-/i_c setSpecies incompetent_core:zombie
-/data get entity Dev
 /i_c setSpecies incompetent_core:zombie
 /give @s incompetent_core:assign_class_test_class
 /data get @s
@@ -48,3 +34,17 @@
 /data get entity @s
 /data get entity Dev
 /data get entity @s
+/kill @e
+/data get entity @s
+/data get entity @s incompetent_core:PlayerData
+/data get entity @s NeoForgeData:{incompetent_core:PlayerData}
+/data get entity @s {NeoForgeData:{incompetent_core:PlayerData}}
+/data get entity @s species
+/datapack list available
+/datapack enable "file/spell_properties"
+/give @s bundle
+/gamemode survival
+/reload
+/give @s minecraft:blaze_powder 64
+/give @s minecraft:gunpowder 64
+/give @s minecraft:hopper

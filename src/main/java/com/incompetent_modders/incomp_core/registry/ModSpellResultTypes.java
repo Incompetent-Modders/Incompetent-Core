@@ -2,10 +2,7 @@ package com.incompetent_modders.incomp_core.registry;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
-import com.incompetent_modders.incomp_core.registry.content.spell_results.AddEffectResult;
-import com.incompetent_modders.incomp_core.registry.content.spell_results.DoNothingResult;
-import com.incompetent_modders.incomp_core.registry.content.spell_results.GiveItemsResult;
-import com.incompetent_modders.incomp_core.registry.content.spell_results.RaycastProjectileResult;
+import com.incompetent_modders.incomp_core.registry.content.spell_results.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,6 +16,8 @@ public class ModSpellResultTypes {
     public static final DeferredHolder<SpellResultType<?>, SpellResultType<AddEffectResult>> ADD_EFFECT = SPELL_RESULT_TYPES.register("add_effect", () -> new SpellResultType<>(AddEffectResult.CODEC));
     public static final DeferredHolder<SpellResultType<?>, SpellResultType<RaycastProjectileResult>> RAYCAST_PROJECTILE = SPELL_RESULT_TYPES.register("raycast", () -> new SpellResultType<>(RaycastProjectileResult.CODEC));
     public static final DeferredHolder<SpellResultType<?>, SpellResultType<GiveItemsResult>> GIVE_ITEMS = SPELL_RESULT_TYPES.register("give_item", () -> new SpellResultType<>(GiveItemsResult.CODEC));
+    public static final DeferredHolder<SpellResultType<?>, SpellResultType<ReplaceCatalystResult>> REPLACE_CATALYST = SPELL_RESULT_TYPES.register("replace_catalyst", () -> new SpellResultType<>(ReplaceCatalystResult.CODEC));
+    public static final DeferredHolder<SpellResultType<?>, SpellResultType<DamageCatalystResult>> DAMAGE_CATALYST = SPELL_RESULT_TYPES.register("damage_catalyst", () -> new SpellResultType<>(DamageCatalystResult.CODEC));
     public static void register(IEventBus eventBus) {
         SPELL_RESULT_TYPES.register(eventBus);
     }

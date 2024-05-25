@@ -29,7 +29,7 @@ public record MessagePlayerDataSync(CompoundTag playerData) implements CustomPac
             Player player = ctx.player();
             CompoundTag playerData = message.playerData();
             synchronized(playerData) {
-                PlayerDataCore.setClassData(player, playerData);
+                PlayerDataCore.setPlayerData(player, playerData);
             }
         });
     }
