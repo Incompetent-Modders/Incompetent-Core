@@ -1,50 +1,50 @@
-/i_c setSpecies incompetent_core:zombie
-/give @s incompetent_core:assign_class_test_class
-/data get @s
-/data get entity @s
-/datapack list available
-/datapack list enabled
-/datapack list available
-/datapack enable "file/spell_properties"
+/i_c refillMana true
 /reload
-/give @s incompetent_core:spell_tome
-/i_c setSpell 0 incompetent_core:test_ranged_spell
-/i_c setSpell 1 incompetent_core:test_ranged_spell
-/i_c setSpell 0 incompetent_core:test_ranged_spell
-/data get entity @s
-/give @s incompetent_core:test_casting_item
-/i_c setSpell 0 incompetent_core:test_ranged_spell
-/i_c setSpell 1 incompetent_core:test_ranged_spell
-/give @s incompetent_core:test_casting_item
-/data get entity @s
-/i_c setSpell 0 incompetent_core:test_ranged_spell
-/datapack list enabled
+/kill @e[type=minecraft:armor_stand]
+/i_c refillMana true
+/scoreboard players add @e[type=armor_stand,tag=meteor] skillduration 18
+/scoreboard objectives add skillduration dummy
+/scoreboard players add @e[type=armor_stand,tag=meteor] skillduration 18
+/i_c refillMana true
+/execute as @s[scores={skillduration=17..18}] unless block ~ ~1 ~ minecraft:air run scoreboard players set @s skillduration 18
 /reload
-/i_c setSpell 0 incompetent_core:test_ranged_spell
-/give @s bundle
-/i_c list_features spells
-/reload
-/i_c refillMana
 /i_c refillMana true
 /reload
 /i_c refillMana true
 /reload
 /i_c refillMana true
+/kill @e[type=minecraft:armor_stand]
+/i_c refillMana true
 /reload
-/data get entity @s
-/data get entity Dev
-/data get entity @s
-/kill @e
-/data get entity @s
-/data get entity @s incompetent_core:PlayerData
-/data get entity @s NeoForgeData:{incompetent_core:PlayerData}
-/data get entity @s {NeoForgeData:{incompetent_core:PlayerData}}
-/data get entity @s species
-/datapack list available
-/datapack enable "file/spell_properties"
-/give @s bundle
+/i_c refillMana true
+/reload
+/tag @e[type=arrow,tag=arrowstorm] remove arrowstorm
+/summon arrow ^ ^1 ^2 {Tags:["arrowstorm","age","flame"],Motion:[0.0,0.0,0.0]}
+/tag @e[type=arrow,tag=arrowstorm] remove arrowstorm
+/i_c refillMana true
+/reload
+/i_c refillMana true
+/reload
+/time set day
 /gamemode survival
-/reload
-/give @s minecraft:blaze_powder 64
+/give @s minecraft:gunpowder[minecraft:max_stack_size=99] 99
 /give @s minecraft:gunpowder 64
-/give @s minecraft:hopper
+/gamemode creative
+/tick freeze
+/tick step 1t
+/reload
+/tick unfreeze
+/i_c shoot_from_rotation 1 1 minecraft:firework_rocket
+/i_c shoot_from_rotation 1 1 minecraft:arrow
+/i_c shoot_from_rotation 1 1 minecraft:firework_rocket
+/i_c shoot_from_rotation 3 1 minecraft:firework_rocket
+/i_c shoot_from_rotation 3 1 minecraft:arrow
+/i_c shoot_from_rotation 3 1 minecraft:fire_charge
+/i_c shoot_from_rotation 3 1 minecraft:snowball
+/i_c shoot_from_rotation 3 4 minecraft:snowball
+/reload
+/i_c shoot_from_rotation 3 2 firework_rocket[fireworks={flight_duration:2,explosions:[{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;11743532],fade_colors:[I;15435844]},{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;14602026,15435844]}]}]
+/reload
+/time set night
+/reload
+/give @p firework_rocket[fireworks={flight_duration:3,explosions:[{shape:"small_ball",has_twinkle:0,has_trail:0,colors:[I;11743532,4408131,14602026,15435844],fade_colors:[I;11743532,4408131,14602026,15435844]}]}] 1

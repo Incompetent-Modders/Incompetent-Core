@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.data;
 
+import com.incompetent_modders.incomp_core.registry.ModItems;
 import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -95,7 +96,7 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
                 Items.PUFFERFISH
         );
         tag(IncompItemTags.effectPostpones).add(
-                DevItems.ZOMBIE_VIRUS_POSTPONE.get()
+                ModItems.EFFECT_POSTPONE.get()
         );
     }
 }

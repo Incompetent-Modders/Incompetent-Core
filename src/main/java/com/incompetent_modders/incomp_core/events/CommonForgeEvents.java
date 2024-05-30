@@ -15,13 +15,18 @@ import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.registry.*;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
+import net.minecraft.commands.CacheableFunction;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -33,7 +38,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
@@ -183,6 +190,5 @@ public class CommonForgeEvents {
             }
         }
     }
-    
     
 }

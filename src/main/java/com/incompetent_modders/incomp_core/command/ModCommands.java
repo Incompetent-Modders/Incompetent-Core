@@ -2,6 +2,7 @@ package com.incompetent_modders.incomp_core.command;
 
 import com.incompetent_modders.incomp_core.command.qol.ApplyBonemealCommand;
 import com.incompetent_modders.incomp_core.command.qol.ExplodeCommand;
+import com.incompetent_modders.incomp_core.command.qol.ShootFromRotationCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
@@ -27,6 +28,7 @@ public class ModCommands {
                 .then(ExplodeCommand.register(context))
                 .then(ApplyBonemealCommand.register(context))
                 .then(ListFeaturesCommand.register())
+                .then(ShootFromRotationCommand.register(context))
                 ;
         
         LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);

@@ -1,22 +1,15 @@
 package com.incompetent_modders.incomp_core.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.RenderTypeHelper;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
@@ -28,6 +21,9 @@ public final class DrawingUtils {
     }
     public static void blitSprite(GuiGraphics graphics, ResourceLocation sprite, int x, int y, int width, int height, int u, int v, int uWidth, int vHeight) {
         graphics.blitSprite(sprite, x, y, width, height, u, v, uWidth, vHeight);
+    }
+    public static void blitSpellIcon(GuiGraphics graphics, ResourceLocation sprite, int x, int y) {
+        graphics.blit(sprite, x, y, 0, 0, 26, 26, 26, 26);
     }
     public static void renderCooldown(GuiGraphics graphics, RenderType renderType, int x, int y, float cooldownPercent, int imageSize) {
         int i1 = y + Mth.floor(imageSize * (1.0F - cooldownPercent));

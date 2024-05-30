@@ -39,43 +39,38 @@ public class ExplodeCommand {
                     return explode(arguments.getSource(), Vec3Argument.getCoordinates(arguments, "location"), FloatArgumentType.getFloat(arguments, "power"), BoolArgumentType.getBool(arguments, "fire"), ParticleArgument.getParticle(arguments, "smallExplosionParticles"), ParticleArgument.getParticle(arguments, "largeExplosionParticles"), ResourceLocationArgument.getId(arguments, "explosionSound"));
                 }
         )))))));
-        
     }
     
     private static int explode(CommandSourceStack source, Coordinates coordinates, float power) {
-        Player player = (Player) source.getEntity();
-        if (player != null) {
-            Level level = player.level();
+        if (source.getEntity() != null) {
+            Level level = source.getEntity().level();
             Vec3 vec3 = coordinates.getPosition(source);
-            level.explode(player, vec3.x, vec3.y, vec3.z, power, Level.ExplosionInteraction.BLOCK);
+            level.explode(source.getEntity(), vec3.x, vec3.y, vec3.z, power, Level.ExplosionInteraction.BLOCK);
         }
         return 0;
     }
     private static int explode(CommandSourceStack source, Coordinates coordinates, float power, boolean fire) {
-        Player player = (Player) source.getEntity();
-        if (player != null) {
-            Level level = player.level();
+        if (source.getEntity() != null) {
+            Level level = source.getEntity().level();
             Vec3 vec3 = coordinates.getPosition(source);
-            level.explode(player, vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK);
+            level.explode(source.getEntity(), vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK);
         }
         return 0;
     }
     private static int explode(CommandSourceStack source, Coordinates coordinates, float power, boolean fire, ParticleOptions smallExplosionParticles, ParticleOptions largeExplosionParticles) {
-        Player player = (Player) source.getEntity();
-        if (player != null) {
-            Level level = player.level();
+        if (source.getEntity() != null) {
+            Level level = source.getEntity().level();
             Vec3 vec3 = coordinates.getPosition(source);
-            level.explode(player, Explosion.getDefaultDamageSource(level, player), null, vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK, smallExplosionParticles, largeExplosionParticles, SoundEvents.GENERIC_EXPLODE);
+            level.explode(source.getEntity(), Explosion.getDefaultDamageSource(level, source.getEntity()), null, vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK, smallExplosionParticles, largeExplosionParticles, SoundEvents.GENERIC_EXPLODE);
         }
         return 0;
     }
     private static int explode(CommandSourceStack source, Coordinates coordinates, float power, boolean fire, ParticleOptions smallExplosionParticles, ParticleOptions largeExplosionParticles, ResourceLocation soundLoc) {
-        Player player = (Player) source.getEntity();
         Holder<SoundEvent> holder = Holder.direct(SoundEvent.createVariableRangeEvent(soundLoc));
-        if (player != null) {
-            Level level = player.level();
+        if (source.getEntity() != null) {
+            Level level = source.getEntity().level();
             Vec3 vec3 = coordinates.getPosition(source);
-            level.explode(player, Explosion.getDefaultDamageSource(level, player), null, vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK, smallExplosionParticles, largeExplosionParticles, holder);
+            level.explode(source.getEntity(), Explosion.getDefaultDamageSource(level, source.getEntity()), null, vec3.x, vec3.y, vec3.z, power, fire, Level.ExplosionInteraction.BLOCK, smallExplosionParticles, largeExplosionParticles, holder);
         }
         return 0;
     }

@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.data;
 
 import com.incompetent_modders.incomp_core.util.CommonUtils;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -20,10 +21,6 @@ public abstract class IncompBlockStateProvider extends BlockStateProvider {
     public ResourceLocation location(String path) {
         return CommonUtils.location(MODID, path);
     }
-    
-    
-    
-    
     
     
     

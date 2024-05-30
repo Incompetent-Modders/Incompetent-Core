@@ -1,6 +1,6 @@
-// 1.20.5	2024-05-06T20:45:03.2090057	Tags for minecraft:item mod id vanilla
+// 1.20.6	2024-05-30T20:41:15.8422383	Tags for minecraft:item mod id vanilla
 afb1bf981dd14a19d7f448bebb2dc7286bea4d37 data/incompetent_core/tags/items/carnivore_friendly.json
-f622f24cc2eca2738b5681ad2b3f7f25edf901b5 data/incompetent_core/tags/items/effect_postpones.json
+4439137bdd79a44dd3e3e91083ff70cb2640a8ce data/incompetent_core/tags/items/effect_postpones.json
 fb9a94abb795c8f6447895fced79f6e711aa43e9 data/incompetent_core/tags/items/gives_hunger.json
 4c123e7d1a93873e666b1d345c0156870f051a6d data/incompetent_core/tags/items/omnivore_friendly.json
 d35686546ba052b88b655a1d4cfcc2b23b10663b data/incompetent_core/tags/items/vegan_friendly.json

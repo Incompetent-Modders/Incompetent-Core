@@ -53,7 +53,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame", player);
         ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame", player);
         
-        ResourceLocation spellIcon = new ResourceLocation(this.getSelectedSpell(player).getNamespace(), "spells/" + this.getSelectedSpell(player).getPath());
+        ResourceLocation spellIcon = new ResourceLocation(this.getSelectedSpell(player).getNamespace(), "textures/incompetent_spells/" + this.getSelectedSpell(player).getPath() + ".png");
         Component spellName = SpellListener.getDisplayName(getSelectedSpell(player));
         
         //PoseStack poseStack = graphics.pose();
@@ -63,9 +63,9 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         
         //DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
         //DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
-        DrawingUtils.drawString(graphics, mc.font, spellName, 16, 10, 0x00FF00);
+        //DrawingUtils.drawString(graphics, mc.font, spellName, 16, 10, 0x00FF00);
         DrawingUtils.blitSprite(graphics, spellFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
-        DrawingUtils.blitSprite(graphics, spellIcon, graphics.guiWidth() - (graphics.guiWidth() - 17), graphics.guiHeight() - 37, 26, 26);
+        DrawingUtils.blitSpellIcon(graphics, spellIcon, graphics.guiWidth() - (graphics.guiWidth() - 17), graphics.guiHeight() - 37);
         DrawingUtils.blitSprite(graphics, spellSlotFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
         //if (getSelectedSpell(player).hasSpellCatalyst()) {
         //    graphics.renderItem(getSelectedSpell(player).getSpellCatalyst(), screenWidth - (screenWidth - 10), screenHeight - 52);

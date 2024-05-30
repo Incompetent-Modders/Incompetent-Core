@@ -32,7 +32,7 @@ public class CastSpellCommand {
     private static int castSpell(CommandSourceStack source, ResourceLocation spell, Collection<ServerPlayer> targets, int count) {
         for (ServerPlayer serverplayer : targets) {
             for (int i = 0; i < count; ++i) {
-                SpellListener.getSpellProperties(spell).executeCastNoRequirements(serverplayer);
+                SpellListener.getSpellProperties(spell).executeCast(serverplayer.level(), serverplayer);
             }
         }
         if (targets.size() == 1) {

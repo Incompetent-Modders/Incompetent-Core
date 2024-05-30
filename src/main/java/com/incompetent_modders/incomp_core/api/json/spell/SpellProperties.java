@@ -64,16 +64,13 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         }
         ManaData.Util.removeMana(player, getManaCost(player));
         handleCatalystConsumption(player);
-        results.execute(player);
-        level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
-        CommonUtils.onCastEvent(level, player, player.getUsedItemHand());
-        player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
-        IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
+        executeCast(level, player);
     }
-    public void executeCastNoRequirements(Player player) {
-        Level level = player.level();
+    public void executeCast(Level level, Player player) {
         results.execute(player);
-        level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
+        if (level.isClientSide()) {
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
+        }
         CommonUtils.onCastEvent(level, player, player.getUsedItemHand());
         player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
         IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
@@ -101,7 +98,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
                 } else {
                     if (catalystIsUnbreakable) {
                         if (catalyst().item().getItem() instanceof BundleItem) {
-                            SpellUtils.removeFromBundle(player.getOffhandItem(), catalyst().item().get(DataComponents.BUNDLE_CONTENTS));
+                            catalyst().item().set(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
                         }
                     } else {
                         player.getOffhandItem().shrink(1);
