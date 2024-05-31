@@ -4,6 +4,8 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.effect.SpeciesAlteringEffect;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
+import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
+import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.json.species.*;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietProperties;
@@ -181,12 +183,16 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onPotionEffectFinish(MobEffectEvent.Expired event) {
         LivingEntity entity = event.getEntity();
+        PotionEffectProperties properties = PotionEffectPropertyListener.getEffectProperties(event.getEffectInstance().getEffect().value());
         if (entity instanceof Player player) {
             if (event.getEffectInstance().getEffect().value() instanceof SpeciesAlteringEffect speciesAlteringEffect) {
-                ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
                 if (speciesAlteringEffect.getConvertTo() != null) {
                     SpeciesData.Set.playerSpecies(player, speciesAlteringEffect.getConvertTo());
                 }
+            }
+            if (properties != null) {
+                properties.applySpeciesConvert(player);
+                properties.applyClassConvert(player);
             }
         }
     }

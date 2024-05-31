@@ -1,14 +1,11 @@
 package com.incompetent_modders.incomp_core.data;
 
 import com.incompetent_modders.incomp_core.registry.ModItems;
-import com.incompetent_modders.incomp_core.registry.dev.DevItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -72,10 +69,11 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
         );
         
         tag(IncompItemTags.veganFriendly).addTags(
-                IncompItemTags.effectPostpones
+                IncompItemTags.neutralFood
         );
-        tag(IncompItemTags.vegetarianFriendly).addTag(
-                IncompItemTags.veganFriendly
+        tag(IncompItemTags.vegetarianFriendly).addTags(
+                IncompItemTags.veganFriendly,
+                IncompItemTags.neutralFood
         );
         tag(IncompItemTags.vegetarianFriendly).add(
                 Items.HONEY_BOTTLE,
@@ -85,18 +83,21 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
         tag(IncompItemTags.omnivoreFriendly).addTags(
                 IncompItemTags.carnivoreFriendly,
                 IncompItemTags.vegetarianFriendly,
-                IncompItemTags.effectPostpones
+                IncompItemTags.neutralFood
         );
         tag(IncompItemTags.carnivoreFriendly).addTags(
-                IncompItemTags.effectPostpones
+                IncompItemTags.neutralFood
         );
         tag(IncompItemTags.givesHunger).add(
                 Items.ROTTEN_FLESH,
                 Items.CHICKEN,
                 Items.PUFFERFISH
         );
-        tag(IncompItemTags.effectPostpones).add(
-                ModItems.EFFECT_POSTPONE.get()
+        tag(IncompItemTags.neutralFood).add(
+                ModItems.EFFECT_POSTPONE.get(),
+                Items.POTION,
+                Items.ENCHANTED_GOLDEN_APPLE,
+                Items.GOLDEN_APPLE
         );
     }
 }

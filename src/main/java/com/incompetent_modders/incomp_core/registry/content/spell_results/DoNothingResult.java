@@ -22,7 +22,7 @@ public class DoNothingResult extends SpellResult {
     }
     @Override
     public void execute(Player player) {
-        player.displayClientMessage(Component.translatable("incompetent_core.do_nothing"), hotbar);
+        player.displayClientMessage(Component.translatable("item.incompetent_core.spellcasting.do_nothing"), hotbar);
     }
     
     @Override

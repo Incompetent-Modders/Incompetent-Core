@@ -1,4 +1,3 @@
-/i_c refillMana true
 /reload
 /kill @e[type=minecraft:armor_stand]
 /i_c refillMana true
@@ -48,3 +47,4 @@
 /time set night
 /reload
 /give @p firework_rocket[fireworks={flight_duration:3,explosions:[{shape:"small_ball",has_twinkle:0,has_trail:0,colors:[I;11743532,4408131,14602026,15435844],fade_colors:[I;11743532,4408131,14602026,15435844]}]}] 1
+/i_c cast_spell Dev incompetent_core:data_spell_yippee

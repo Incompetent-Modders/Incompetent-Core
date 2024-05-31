@@ -4,7 +4,7 @@ import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesAttributesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
-import com.incompetent_modders.incomp_core.api.json.spell.PotionEffectPropertyListener;
+import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;

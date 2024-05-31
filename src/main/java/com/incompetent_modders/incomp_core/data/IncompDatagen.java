@@ -22,6 +22,7 @@ public class IncompDatagen {
         IncompItemTagsProvider itemTags = new IncompItemTagsProvider(packOutput, lookupProvider, blockTags.contentsGetter());
         dataGenerator.addProvider(event.includeServer(), blockTags);
         dataGenerator.addProvider(event.includeServer(), itemTags);
+        dataGenerator.addProvider(event.includeClient(), new IncompLangProvider(packOutput, modId, "en_us"));
     }
     
 }

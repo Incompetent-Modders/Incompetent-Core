@@ -1,9 +1,13 @@
 package com.incompetent_modders.incomp_core.data;
 
+import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
+import com.incompetent_modders.incomp_core.registry.ModCreativeTabs;
+import com.incompetent_modders.incomp_core.registry.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -13,9 +17,53 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.NoSuchElementException;
 
-public abstract class IncompLangProvider extends LanguageProvider {
+public class IncompLangProvider extends LanguageProvider {
     public IncompLangProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
+    }
+    
+    @Override
+    protected void addTranslations() {
+        this.item(ModItems.SPELL_TOME);
+        this.item(ModItems.EFFECT_POSTPONE);
+        this.item(ModItems.ASSIGN_CLASS);
+        this.item(ModItems.ASSIGN_SPECIES);
+        this.tab(ModCreativeTabs.BASE_CREATIVE_TAB);
+        this.tab(ModCreativeTabs.UTIL_CREATIVE_TAB);
+        
+        this.castingTooltip("selected_spell", "Selected Spell:");
+        this.castingTooltip("available_spells", "Available Spells:");
+        this.castingTooltip("spell_info", "Spell Info:");
+        this.castingTooltip("mana_cost", "Mana Cost:");
+        this.castingTooltip("required_catalyst", "Required Catalyst:");
+        this.castingTooltip("cast_time", "Cast Time:");
+        this.castingTooltip("catalyst_required", "Catalyst Required");
+        this.castingTooltip("do_nothing", "Nothing Happens");
+        
+        this.argumentInvalid("spell", "Invalid Spell ID: %s");
+        this.argumentInvalid("species_type", "Invalid Species ID: %s");
+        
+        this.commandSuccessSingleAndAll("cast_spell", "Cast Spell %s from 1 Player [%s]", "Cast Spell %s from %s Player(s) [%s]");
+        this.commandSuccessSingleAndAll("clear_spell", "Cleared Spell from Slot %s", "Cleared Spells from All Slots");
+        
+        this.command("list_features.spells", "There Are Currently %s Spells Loaded:");
+        this.command("list_features.species", "There Are Currently %s Species Loaded:");
+        this.command("list_features.class_types", "There Are Currently %s Class Types Loaded:");
+        this.command("list_features.diets", "There Are Currently %s Diets Loaded:");
+        
+        this.key("activate_class_ability", "Activate Class Ability");
+        this.key("activate_species_ability", "Activate Species Ability");
+        this.keyCategory("incompetent_core", "Incompetent Core");
+        
+        this.tag(IncompItemTags.carnivoreFriendly, "Carnivore Friendly");
+        this.tag(IncompItemTags.veganFriendly, "Vegan Friendly");
+        this.tag(IncompItemTags.omnivoreFriendly, "Omnivore Friendly");
+        this.tag(IncompItemTags.vegetarianFriendly, "Vegetarian Friendly");
+        this.tag(IncompItemTags.neutralFood, "Neutral Food");
+        this.tag(IncompItemTags.givesHunger, "Gives Hunger");
+        
+        this.spell(CastingItemUtil.emptySpell, "Empty Spell Slot");
+        
     }
     
     private void tab(Holder<CreativeModeTab> tabHolder) {
@@ -29,7 +77,39 @@ public abstract class IncompLangProvider extends LanguageProvider {
     private void item(Holder<Item> itemHolder) {
         this.add(itemHolder, "item");
     }
-    
+    private void argumentInvalid(String key, String value) {
+        string("argument.%s.id.invalid".formatted(key), value);
+    }
+    private void command(String key, String value) {
+        string("commands.incompetent_core.%s".formatted(key), value);
+    }
+    private void commandSuccessSingle(String key, String value) {
+        string("commands.%s.success.single".formatted(key), value);
+    }
+    private void commandSuccessAll(String key, String value) {
+        string("commands.%s.success.all".formatted(key), value);
+    }
+    private void commandSuccessSingleAndAll(String key, String single, String all) {
+        commandSuccessSingle(key, single);
+        commandSuccessAll(key, all);
+    }
+    private void castingTooltip(String key, String value) {
+        string("item.incompetent_core.spellcasting.%s".formatted(key), value);
+    }
+    private void key(String key, String value) {
+        string("key.incompetent_core.%s".formatted(key), value);
+    }
+    private void keyCategory(String key, String value) {
+        string("key.categories.%s".formatted(key), value);
+    }
+    private void tag(TagKey<Item> tag, String value) {
+        ResourceLocation tagId = tag.location();
+        String tagNamespace = tagId.getNamespace().equals("forge") ? "c" : tagId.getNamespace();
+        string("tag.item.%s.%s".formatted(tagNamespace, tagId.getPath().replace('/', '.')), value);
+    }
+    private void spell(ResourceLocation spell, String value) {
+        string("spells." + spell.getNamespace() + "." + spell.getPath().replace("/", "."), value);
+    }
     private void string(String key, String value) {
         super.add(key, value);
     }

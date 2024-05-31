@@ -95,6 +95,6 @@ public class SpellListener extends SimpleJsonResourceReloadListener {
     }
     
     public static Component getDisplayName(ResourceLocation spell) {
-        return Component.translatable("spells." + spell.getNamespace() + "." + spell.getPath());
+        return Component.translatable("spells." + spell.getNamespace() + "." + spell.getPath().replace("/", "."));
     }
 }

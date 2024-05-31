@@ -1,11 +1,10 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
-import com.incompetent_modders.incomp_core.api.spell.SpellUtils;
 import com.incompetent_modders.incomp_core.util.CommonUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

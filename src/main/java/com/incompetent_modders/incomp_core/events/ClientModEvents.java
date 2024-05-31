@@ -33,8 +33,8 @@ public class ClientModEvents {
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, mana, ManaOverlay.INSTANCE);
         event.registerAbove(VanillaGuiLayers.CHAT, selected_spell, SpellListOverlay.INSTANCE);
     }
-    public static final Lazy<KeyMapping> ACTIVATE_CLASS_ABILITY = Lazy.of(() -> new KeyMapping("key.incomp_core.activate_class_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.categories.incomp_core"));
-    public static final Lazy<KeyMapping> ACTIVATE_SPECIES_ABILITY = Lazy.of(() -> new KeyMapping("key.incomp_core.activate_species_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.categories.incomp_core"));
+    public static final Lazy<KeyMapping> ACTIVATE_CLASS_ABILITY = Lazy.of(() -> new KeyMapping("key.incompetent_core.activate_class_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.categories.incompetent_core"));
+    public static final Lazy<KeyMapping> ACTIVATE_SPECIES_ABILITY = Lazy.of(() -> new KeyMapping("key.incompetent_core.activate_species_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.categories.incompetent_core"));
     
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {

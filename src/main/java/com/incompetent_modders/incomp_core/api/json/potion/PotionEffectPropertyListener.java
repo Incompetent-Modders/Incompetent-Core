@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.api.json.spell;
+package com.incompetent_modders.incomp_core.api.json.potion;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -23,24 +23,33 @@ public class CastSpellCommand {
                                                 Commands.argument("spells", new SpellArgument())
                                                         .executes(
                                                                 exec -> castSpell(
-                                                                        exec.getSource(), SpellArgument.getSpell(exec, "spells"), EntityArgument.getPlayers(exec, "targets"), 1
+                                                                        exec.getSource(), SpellArgument.getSpell(exec, "spells"), EntityArgument.getPlayers(exec, "targets")
                                                                 )
                                                         )
                                         )
                         );
     }
-    private static int castSpell(CommandSourceStack source, ResourceLocation spell, Collection<ServerPlayer> targets, int count) {
+    private static int castSpell(CommandSourceStack source, ResourceLocation spell, Collection<ServerPlayer> targets) {
         for (ServerPlayer serverplayer : targets) {
-            for (int i = 0; i < count; ++i) {
+            for (int i = 0; i < targets.size(); ++i) {
                 SpellListener.getSpellProperties(spell).executeCast(serverplayer.level(), serverplayer);
             }
         }
         if (targets.size() == 1) {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), count, targets.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), targets.iterator().next().getDisplayName()), true);
         } else {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), count, targets.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.all", SpellListener.getDisplayName(spell), targets.size(), playerNameList(targets)), true);
         }
         return targets.size();
+    }
+    
+    private static String playerNameList(Collection<ServerPlayer> players) {
+        StringBuilder builder = new StringBuilder();
+        for (ServerPlayer player : players) {
+            builder.append(player.getDisplayName());
+            builder.append(", ");
+        }
+        return builder.substring(0, builder.length() - 2);
     }
     
 }

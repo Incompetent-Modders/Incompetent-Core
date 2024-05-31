@@ -1,7 +1,7 @@
-// 1.20.6	2024-05-30T20:41:15.8422383	Tags for minecraft:item mod id vanilla
-afb1bf981dd14a19d7f448bebb2dc7286bea4d37 data/incompetent_core/tags/items/carnivore_friendly.json
-4439137bdd79a44dd3e3e91083ff70cb2640a8ce data/incompetent_core/tags/items/effect_postpones.json
+// 1.20.6	2024-05-31T20:52:01.5520626	Tags for minecraft:item mod id vanilla
+42ea15061f8d0a2e22541ccc1864bb698b3b4cfd data/incompetent_core/tags/items/carnivore_friendly.json
 fb9a94abb795c8f6447895fced79f6e711aa43e9 data/incompetent_core/tags/items/gives_hunger.json
-4c123e7d1a93873e666b1d345c0156870f051a6d data/incompetent_core/tags/items/omnivore_friendly.json
-d35686546ba052b88b655a1d4cfcc2b23b10663b data/incompetent_core/tags/items/vegan_friendly.json
-33628863d1608a1da5b56120aa38e43266bbc851 data/incompetent_core/tags/items/vegetarian_friendly.json
+3a3b3544df6d26d2986f87e6e313ec1a65c628f6 data/incompetent_core/tags/items/neutral_food.json
+5d74a52f80d24552f0422b77a8fa10cba3e75073 data/incompetent_core/tags/items/omnivore_friendly.json
+9de9b275ab888e43af5fcfff080ca6a954d86284 data/incompetent_core/tags/items/vegan_friendly.json
+859a6d63e6b1660035d7cd47ba8b549397f8d267 data/incompetent_core/tags/items/vegetarian_friendly.json

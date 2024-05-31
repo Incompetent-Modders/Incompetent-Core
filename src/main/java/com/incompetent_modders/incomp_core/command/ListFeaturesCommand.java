@@ -27,7 +27,7 @@ public class ListFeaturesCommand {
     }
     
     private static int listSpells(CommandSourceStack source) {
-        Component result = Component.translatable("commands.incomp_core.list_features.spells", SpellListener.getAllSpells().size());
+        Component result = Component.translatable("commands.incompetent_core.list_features.spells", SpellListener.getAllSpells().size());
         source.sendSuccess(() -> result, true);
         for (ResourceLocation spellID : SpellListener.getAllSpells()) {
             Component message = Component.literal(spellID.toString()).withStyle(IncompCore.DESCRIPTION_FORMAT);
@@ -37,7 +37,7 @@ public class ListFeaturesCommand {
     }
     
     private static int listClassTypes(CommandSourceStack source) {
-        Component result = Component.translatable("commands.incomp_core.list_features.class_types", ClassTypeListener.getAllClassTypes().size());
+        Component result = Component.translatable("commands.incompetent_core.list_features.class_types", ClassTypeListener.getAllClassTypes().size());
         source.sendSuccess(() -> result, true);
         for (ResourceLocation classTypeID : ClassTypeListener.classTypes) {
             Component message = Component.literal(classTypeID.toString()).withStyle(IncompCore.DESCRIPTION_FORMAT);
@@ -47,7 +47,7 @@ public class ListFeaturesCommand {
     }
     
     private static int listSpecies(CommandSourceStack source) {
-        Component result = Component.translatable("commands.incomp_core.list_features.species", SpeciesListener.getAllSpecies().size());
+        Component result = Component.translatable("commands.incompetent_core.list_features.species", SpeciesListener.getAllSpecies().size());
         source.sendSuccess(() -> result, true);
         for (ResourceLocation speciesID : SpeciesListener.getAllSpecies()) {
             Component message = Component.literal(speciesID.toString()).withStyle(IncompCore.DESCRIPTION_FORMAT);
@@ -57,7 +57,7 @@ public class ListFeaturesCommand {
     }
     
     private static int listDiets(CommandSourceStack source) {
-        Component result = Component.translatable("commands.incomp_core.list_features.diets", DietListener.getAllDiets().size());
+        Component result = Component.translatable("commands.incompetent_core.list_features.diets", DietListener.getAllDiets().size());
         source.sendSuccess(() -> result, true);
         for (ResourceLocation dietID : DietListener.getAllDiets()) {
             Component message = Component.literal(dietID.toString()).withStyle(IncompCore.DESCRIPTION_FORMAT);

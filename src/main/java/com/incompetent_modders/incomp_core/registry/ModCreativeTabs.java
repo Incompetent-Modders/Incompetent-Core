@@ -18,7 +18,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ModCreativeTabs {
@@ -32,7 +31,7 @@ public class ModCreativeTabs {
                 }
             }, builder -> builder.withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
     
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CLASS_CREATIVE_TAB = registerTabSearchBar("utility",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> UTIL_CREATIVE_TAB = registerTabSearchBar("utility",
             ModItems.ASSIGN_CLASS, output -> {
                 for (ResourceLocation mobEffectID : BuiltInRegistries.MOB_EFFECT.keySet()) {
                     Item item = ModItems.EFFECT_POSTPONE.get();

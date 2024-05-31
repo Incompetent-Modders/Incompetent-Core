@@ -27,7 +27,7 @@ public class ClearSpellSlotsCommand {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                 ResourceLocation spell = CastingItemUtil.emptySpell;
                 CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), spell);
-                Component spellComponent = Component.translatable("commands.clear_spell.single", IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                Component spellComponent = Component.translatable("commands.clear_spell.success.single", IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 player.displayClientMessage(spellComponent, false);
             }
             return 0;
@@ -43,7 +43,7 @@ public class ClearSpellSlotsCommand {
                     ResourceLocation spell = CastingItemUtil.emptySpell;
                     CastingItemUtil.serializeToSlot(staff, i, spell);
                 }
-                Component spellComponent = Component.translatable("commands.clear_spell.all");
+                Component spellComponent = Component.translatable("commands.clear_spell.success.all");
                 player.displayClientMessage(spellComponent, false);
             }
             return 0;
