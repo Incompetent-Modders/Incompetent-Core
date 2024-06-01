@@ -3,9 +3,8 @@ package com.incompetent_modders.incomp_core.api.item;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
-import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.util.Utils;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,7 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -37,7 +35,7 @@ public class ClassAssigningItem extends Item {
         return classType;
     }
     public ResourceLocation getClassType(ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.STORED_CLASS_TYPE.get(), CommonUtils.defaultClass);
+        return stack.getOrDefault(ModDataComponents.STORED_CLASS_TYPE.get(), Utils.defaultClass);
     }
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);

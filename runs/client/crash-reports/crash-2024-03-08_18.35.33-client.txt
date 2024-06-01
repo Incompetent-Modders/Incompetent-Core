@@ -5,7 +5,7 @@ Time: 2024-03-08 18:35:33
 Description: Ticking entity
 
 java.lang.ClassCastException: class net.minecraft.client.player.LocalPlayer cannot be cast to class net.minecraft.server.level.ServerPlayer (net.minecraft.client.player.LocalPlayer and net.minecraft.server.level.ServerPlayer are in module minecraft@1.20.2 of loader 'TRANSFORMER' @47311277)
-	at com.incompetent_modders.incomp_core.events.CommonEvents.playerTick(CommonEvents.java:13) ~[main/:?] {re:classloading}
+	at com.incompetent_modders.incomp_core.common.CommonEvents.playerTick(CommonEvents.java:13) ~[main/:?] {re:classloading}
 	at net.neoforged.bus.EventBus.post(EventBus.java:386) ~[bus-7.2.0.jar:?] {}
 	at net.neoforged.bus.EventBus.post(EventBus.java:351) ~[bus-7.2.0.jar:?] {}
 	at net.neoforged.neoforge.event.EventHooks.onPlayerPreTick(EventHooks.java:824) ~[neoforge-20.2.86.jar:?] {re:classloading}
@@ -45,7 +45,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Head --
 Thread: Render thread
 Stacktrace:
-	at com.incompetent_modders.incomp_core.events.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
+	at com.incompetent_modders.incomp_core.common.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
 	at net.neoforged.bus.EventBus.post(EventBus.java:386) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.bus.EventBus.post(EventBus.java:351) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.neoforge.event.EventHooks.onPlayerPreTick(EventHooks.java:824) ~[neoforge-20.2.86.jar%23191%23198!/:?] {re:classloading}

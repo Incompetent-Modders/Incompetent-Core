@@ -1,8 +1,6 @@
 package com.incompetent_modders.incomp_core.api.item;
 
-import com.incompetent_modders.incomp_core.ClientUtil;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
-import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 

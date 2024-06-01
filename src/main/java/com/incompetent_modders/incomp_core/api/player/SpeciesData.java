@@ -5,8 +5,8 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
-import com.incompetent_modders.incomp_core.registry.ModAbilities;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -173,7 +173,7 @@ public class SpeciesData {
         public static void playerSpecies(Player spe, ResourceLocation st) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
             if (st == null)
-                st = CommonUtils.defaultSpecies;
+                st = Utils.defaultSpecies;
             if (nc.contains("species"))
                 nc.remove("species");
             nc.putString("species", st.toString());
@@ -189,7 +189,7 @@ public class SpeciesData {
         public static void diet(Player spe, ResourceLocation diet) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
             if (diet == null)
-                diet = CommonUtils.defaultDiet;
+                diet = Utils.defaultDiet;
             if (nc.contains("speciesDiet"))
                 nc.remove("speciesDiet");
             nc.putString("speciesDiet", diet.toString());
@@ -197,7 +197,7 @@ public class SpeciesData {
         public static void behaviour(Player spe, SpeciesBehaviourType<?> behaviour) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
             if (behaviour == null)
-                behaviour = SpeciesListener.getSpeciesTypeProperties(CommonUtils.defaultSpecies).behaviour().getType();
+                behaviour = SpeciesListener.getSpeciesTypeProperties(Utils.defaultSpecies).behaviour().getType();
             if (nc.contains("speciesBehaviour"))
                 nc.remove("speciesBehaviour");
             nc.putString("speciesBehaviour", behaviour.getBehaviourTypeIdentifier().toString());

@@ -6,7 +6,7 @@ Description: Ticking player
 
 java.lang.NullPointerException: Cannot invoke "net.neoforged.neoforge.network.simple.SimpleChannel.send(net.neoforged.neoforge.network.PacketDistributor$PacketTarget, Object)" because "com.incompetent_modders.incomp_core.api.network.IncompNetwork.INSTANCE" is null
 	at com.incompetent_modders.incomp_core.api.network.IncompNetwork.sendToPlayer(IncompNetwork.java:43) ~[%23197!/:?] {re:classloading}
-	at com.incompetent_modders.incomp_core.events.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
+	at com.incompetent_modders.incomp_core.common.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
 	at net.neoforged.bus.EventBus.post(EventBus.java:386) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.bus.EventBus.post(EventBus.java:351) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.neoforge.event.EventHooks.onPlayerPreTick(EventHooks.java:824) ~[neoforge-20.2.86.jar%23191%23198!/:?] {re:classloading}
@@ -30,7 +30,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 Thread: Server thread
 Stacktrace:
 	at com.incompetent_modders.incomp_core.api.network.IncompNetwork.sendToPlayer(IncompNetwork.java:43) ~[%23197!/:?] {re:classloading}
-	at com.incompetent_modders.incomp_core.events.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
+	at com.incompetent_modders.incomp_core.common.CommonEvents.playerTick(CommonEvents.java:13) ~[%23197!/:?] {re:classloading}
 	at net.neoforged.bus.EventBus.post(EventBus.java:386) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.bus.EventBus.post(EventBus.java:351) ~[bus-7.2.0.jar%23184!/:?] {}
 	at net.neoforged.neoforge.event.EventHooks.onPlayerPreTick(EventHooks.java:824) ~[neoforge-20.2.86.jar%23191%23198!/:?] {re:classloading}

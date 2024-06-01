@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,7 @@ public class PotionEffectPropertyListener extends SimpleJsonResourceReloadListen
     }
     
     protected static MobEffect getEffect(ResourceLocation resourceLocation) {
-        return BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", "")));
+        return BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", "")));
     }
     
     public static PotionEffectProperties getEffectProperties(MobEffect effect) {

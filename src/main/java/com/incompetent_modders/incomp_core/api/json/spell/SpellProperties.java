@@ -5,7 +5,7 @@ import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyL
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
@@ -41,7 +41,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
     }
     
     public boolean isBlankSpell() {
-        return manaCost == 0.0 && drawTime == 0 && catalyst.item().isEmpty() && Objects.equals(classType, CommonUtils.defaultClass) && Objects.equals(speciesType.speciesID(), CommonUtils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
+        return manaCost == 0.0 && drawTime == 0 && catalyst.item().isEmpty() && Objects.equals(classType, Utils.defaultClass) && Objects.equals(speciesType.speciesID(), Utils.defaultSpecies) && results.spellResult().isEmpty() && results.function().isEmpty();
     }
     
     public void executeCast(Player player) {
@@ -70,7 +70,7 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         if (level.isClientSide()) {
             level.playSound(player, player.getX(), player.getY(), player.getZ(), castSound, player.getSoundSource(), 1.0F, 1.0F);
         }
-        CommonUtils.onCastEvent(level, player, player.getUsedItemHand());
+        Utils.onCastEvent(level, player, player.getUsedItemHand());
         player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
         IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
     }

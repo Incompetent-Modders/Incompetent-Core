@@ -3,7 +3,7 @@ package com.incompetent_modders.incomp_core.api.json.spell;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,7 @@ public class SpellListener extends SimpleJsonResourceReloadListener {
         IncompCore.LOGGER.info("Load Complete for {} spells", spells.size());
     }
     protected static ResourceLocation getSpellId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", ""));
+        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     public static SpellProperties getSpellProperties(ResourceLocation spell) {
         return properties.get(spell);

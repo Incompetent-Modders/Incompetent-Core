@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen_condition;
 
-import com.incompetent_modders.incomp_core.registry.ModManaRegenConditions;
+import com.incompetent_modders.incomp_core.common.registry.ModManaRegenConditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.api.player;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 
@@ -38,7 +38,7 @@ public class ManaData {
             return Get.mana(spe);
         }
         public static void healMana(Player spe, double amount) {
-            amount = CommonUtils.onManaHeal(spe, amount);
+            amount = Utils.onManaHeal(spe, amount);
             if (amount <= 0) return;
             double f = Get.mana(spe);
             if (f < Get.maxMana(spe)) {

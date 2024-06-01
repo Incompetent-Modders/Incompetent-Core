@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.api.json.species;
 
-import com.incompetent_modders.incomp_core.data.IncompItemTags;
-import com.mojang.datafixers.util.Pair;
+import com.incompetent_modders.incomp_core.common.data.IncompItemTags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;

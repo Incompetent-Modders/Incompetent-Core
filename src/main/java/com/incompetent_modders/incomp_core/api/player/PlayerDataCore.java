@@ -10,8 +10,8 @@ import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.network.MessagePlayerDataSync;
-import com.incompetent_modders.incomp_core.registry.ModAttributes;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.registry.ModAttributes;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,7 +63,7 @@ public class PlayerDataCore {
                 regenInterval++;
                 if (regenInterval >= (20 / mod.get())) {
                     ManaData.Util.healMana(player, manaRegen.getValue());
-                    CommonUtils.onManaHeal(player, manaRegen.getValue());
+                    Utils.onManaHeal(player, manaRegen.getValue());
                     regenInterval = 0;
                 }
             }
@@ -80,7 +80,7 @@ public class PlayerDataCore {
             }
             if (classType.equals(new ResourceLocation(IncompCore.MODID, "simple_human"))) {
                 IncompCore.LOGGER.info("Player has old ID for default ClassType, setting to new default...");
-                ClassData.Set.playerClassType(player, CommonUtils.defaultClass);
+                ClassData.Set.playerClassType(player, Utils.defaultClass);
             }
             if (classTypeProperties != null) {
                 ClassData.Set.playerClassType(player, classType);

@@ -4,9 +4,9 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
-import com.incompetent_modders.incomp_core.registry.ModAbilities;
-import com.incompetent_modders.incomp_core.registry.ModClassPassiveEffects;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
+import com.incompetent_modders.incomp_core.common.registry.ModClassPassiveEffects;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public class ClassData {
         public static void playerClassType(Player spe, ResourceLocation ct) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
             if (ct == null)
-                ct = CommonUtils.defaultClass;
+                ct = Utils.defaultClass;
             if (nc.contains("class_type"))
                 nc.remove("class_type");
             nc.putString("classType", ct.toString());

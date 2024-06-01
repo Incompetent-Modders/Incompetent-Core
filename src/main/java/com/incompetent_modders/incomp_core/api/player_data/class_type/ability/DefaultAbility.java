@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.api.player_data.class_type.ability;
 
-import com.incompetent_modders.incomp_core.registry.ModAbilities;
+import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

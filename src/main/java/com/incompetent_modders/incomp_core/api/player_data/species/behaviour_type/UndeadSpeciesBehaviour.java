@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type;
 
-import com.incompetent_modders.incomp_core.registry.ModSpeciesBehaviourTypes;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesBehaviourTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -2,10 +2,9 @@ package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
-import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.util.Utils;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,7 +35,7 @@ public class SpeciesAssigningItem extends Item {
         return speciesType;
     }
     public ResourceLocation getSpeciesType(ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.STORED_SPECIES_TYPE.get(), CommonUtils.defaultSpecies);
+        return stack.getOrDefault(ModDataComponents.STORED_SPECIES_TYPE.get(), Utils.defaultSpecies);
     }
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);

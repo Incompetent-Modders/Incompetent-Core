@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -53,7 +53,7 @@ public class SpeciesAttributesListener extends SimpleJsonResourceReloadListener 
     }
     
     protected static ResourceLocation getSpeciesId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), CommonUtils.removeExtension(resourceLocation).replace(".json", ""));
+        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     
     public static SpeciesAttributes getSpeciesTypeAttributes(ResourceLocation speciesType) {

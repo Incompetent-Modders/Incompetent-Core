@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.api.player_data.class_type.passive;
 
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.DefaultSpeciesBehaviour;
-import com.incompetent_modders.incomp_core.registry.ModClassPassiveEffects;
+import com.incompetent_modders.incomp_core.common.registry.ModClassPassiveEffects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

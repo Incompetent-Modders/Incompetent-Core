@@ -1,21 +1,17 @@
 package com.incompetent_modders.incomp_core.api.json.species;
 
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
 import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ public record SpeciesProperties(SpeciesBehaviour behaviour, boolean invertHealAn
         return instance.group(
                 SpeciesBehaviour.DIRECT_CODEC.fieldOf("behaviour").forGetter(SpeciesProperties::behaviour),
                 Codec.BOOL.optionalFieldOf("invert_heal_and_harm", false).forGetter(SpeciesProperties::invertHealAndHarm),
-                ResourceLocation.CODEC.optionalFieldOf("diet_type", CommonUtils.defaultDiet).forGetter(SpeciesProperties::dietType),
+                ResourceLocation.CODEC.optionalFieldOf("diet_type", Utils.defaultDiet).forGetter(SpeciesProperties::dietType),
                 Codec.BOOL.optionalFieldOf("keep_on_death", true).forGetter(SpeciesProperties::keepOnDeath),
                 EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesProperties::enchantWeaknesses),
                 Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesProperties::ability),

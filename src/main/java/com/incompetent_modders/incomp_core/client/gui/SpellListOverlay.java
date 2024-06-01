@@ -5,8 +5,7 @@ import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.client.DrawingUtils;
+import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;

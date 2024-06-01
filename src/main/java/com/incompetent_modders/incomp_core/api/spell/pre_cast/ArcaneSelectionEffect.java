@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.api.spell.pre_cast;
 
 import com.incompetent_modders.incomp_core.api.effect.MagicallyAppliedEffect;
-import com.incompetent_modders.incomp_core.util.CommonUtils;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -26,7 +26,7 @@ public class ArcaneSelectionEffect extends MagicallyAppliedEffect {
                 int i = effect.getDuration();
                 if (!entity.getCommandSenderWorld().isClientSide()) {
                     Scoreboard scoreboard = entity.level().getScoreboard();
-                    PlayerTeam selectedTeam = CommonUtils.createTeam(scoreboard, "ArcaneSelection", ChatFormatting.GOLD);
+                    PlayerTeam selectedTeam = Utils.createTeam(scoreboard, "ArcaneSelection", ChatFormatting.GOLD);
                     scoreboard.addPlayerToTeam(entity.getScoreboardName(), selectedTeam);
                     MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.GLOWING, 5, 1, false, false);
                     entity.addEffect(mobEffectInstance);
@@ -34,7 +34,7 @@ public class ArcaneSelectionEffect extends MagicallyAppliedEffect {
                     tag.putBoolean("Glowing", true);
                     
                     if (i <= 5) {
-                        CommonUtils.removeTeam(scoreboard, selectedTeam);
+                        Utils.removeTeam(scoreboard, selectedTeam);
                     }
                     apply.set(true);
                 }

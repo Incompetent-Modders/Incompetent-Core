@@ -1,11 +1,11 @@
 package com.incompetent_modders.incomp_core.api.item;
 
-import com.incompetent_modders.incomp_core.ClientUtil;
+import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.util.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
