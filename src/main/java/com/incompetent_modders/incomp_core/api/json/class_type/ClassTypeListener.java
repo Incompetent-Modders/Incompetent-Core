@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +21,6 @@ import java.util.Map;
 public class ClassTypeListener extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     
-    private static final Logger LOGGER = IncompCore.LOGGER;
     public static Map<ResourceLocation, ClassTypeProperties> properties = new HashMap<>();
     public static List<ResourceLocation> classTypes = new ArrayList<>();
     public ClassTypeListener() {

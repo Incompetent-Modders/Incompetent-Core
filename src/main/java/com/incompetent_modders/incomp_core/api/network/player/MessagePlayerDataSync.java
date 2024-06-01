@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.api.network;
+package com.incompetent_modders.incomp_core.api.network.player;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
@@ -28,8 +28,11 @@ public record MessagePlayerDataSync(CompoundTag playerData) implements CustomPac
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
             CompoundTag playerData = message.playerData();
-            synchronized(playerData) {
-                PlayerDataCore.setPlayerData(player, playerData);
+            try {
+                synchronized(playerData) {
+                    PlayerDataCore.setPlayerData(player, playerData);
+                }
+            } catch (Exception ignored) {
             }
         });
     }

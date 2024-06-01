@@ -12,6 +12,7 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -58,7 +59,6 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         //PoseStack poseStack = graphics.pose();
         //poseStack.pushPose();
         //poseStack.scale(1.25F, 1.25F, 1.25F);
-        float totalDrawTime = SpellListener.getSpellProperties(getSelectedSpell(player)).drawTime();
         
         //DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
         //DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);

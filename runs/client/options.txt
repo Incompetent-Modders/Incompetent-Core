@@ -48,8 +48,8 @@ mouseSensitivity:0.5
 damageTiltStrength:1.0
 highContrast:false
 narratorHotkey:true
-resourcePacks:["vanilla","mod_resources"]
-incompatibleResourcePacks:[]
+resourcePacks:["vanilla","mod_resources","file/spell_properties"]
+incompatibleResourcePacks:["file/spell_properties"]
 lastServer:
 lang:en_us
 chatVisibility:0
@@ -121,8 +121,8 @@ key_key.hotbar.6:key.keyboard.6
 key_key.hotbar.7:key.keyboard.7
 key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
-key_key.incomp_core.activate_class_ability:key.mouse.5
-key_key.incomp_core.activate_species_ability:key.mouse.4
+key_key.incompetent_core.activate_class_ability:key.keyboard.v
+key_key.incompetent_core.activate_species_ability:key.keyboard.b
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0

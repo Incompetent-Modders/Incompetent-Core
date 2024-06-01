@@ -1,37 +1,3 @@
-/tag @e[type=arrow,tag=arrowstorm] remove arrowstorm
-/summon arrow ^ ^1 ^2 {Tags:["arrowstorm","age","flame"],Motion:[0.0,0.0,0.0]}
-/tag @e[type=arrow,tag=arrowstorm] remove arrowstorm
-/i_c refillMana true
-/reload
-/i_c refillMana true
-/reload
-/time set day
-/gamemode survival
-/give @s minecraft:gunpowder[minecraft:max_stack_size=99] 99
-/give @s minecraft:gunpowder 64
-/gamemode creative
-/tick freeze
-/tick step 1t
-/reload
-/tick unfreeze
-/i_c shoot_from_rotation 1 1 minecraft:firework_rocket
-/i_c shoot_from_rotation 1 1 minecraft:arrow
-/i_c shoot_from_rotation 1 1 minecraft:firework_rocket
-/i_c shoot_from_rotation 3 1 minecraft:firework_rocket
-/i_c shoot_from_rotation 3 1 minecraft:arrow
-/i_c shoot_from_rotation 3 1 minecraft:fire_charge
-/i_c shoot_from_rotation 3 1 minecraft:snowball
-/i_c shoot_from_rotation 3 4 minecraft:snowball
-/reload
-/i_c shoot_from_rotation 3 2 firework_rocket[fireworks={flight_duration:2,explosions:[{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;11743532],fade_colors:[I;15435844]},{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;14602026,15435844]}]}]
-/reload
-/time set night
-/reload
-/give @p firework_rocket[fireworks={flight_duration:3,explosions:[{shape:"small_ball",has_twinkle:0,has_trail:0,colors:[I;11743532,4408131,14602026,15435844],fade_colors:[I;11743532,4408131,14602026,15435844]}]}] 1
-/i_c cast_spell Dev incompetent_core:data_spell_yippee
-/effect give @s minecraft:hunger 1200
-/i_c setSpecies incompetent_core:human
-/effect give @s minecraft:hunger 1
 /i_c setSpecies incompetent_core:human
 /effect give @s minecraft:hunger 1
 /data remove entity Dev incompetent_core_FirstJoin
@@ -48,3 +14,37 @@
 /tellraw Dev {"text":"Hover me!","hoverEvent":{"action":"show_text","value":"Hi!"}}
 /tellraw Dev ["",{"text":"Security breach! ","color":"gold"},{"text":"Click to activate alarm.","underlined":true,"color":"red","clickEvent":{"action":"run_command","value":"/i_c cast_spell @s incompetent_core:data_spell_yippee"}}]
 /i_c toggleWelcomeMessage
+/neoforge tps minecraft:overworld
+/give @s incompetent_core:spell_tome
+/i_c cast_spell Dev data_spell_yippee
+/i_c setSpell 0 incompetent_core:test_spell
+/gamemode creative
+/i_c setSpecies incompetent_core:zombie
+/reload
+/i_c setSpell 0 incompetent_core:data_spell_yippee
+/i_c refillMana true
+/reload
+/i_c refillMana true
+/give @s incompetent_core:assign_class[incompetent_core:stored_class_type="incompetent_core:mage"]
+/i_c list_features class_types
+/give @s minecraft:bundle
+/reload
+/tick freeze
+/tick step 1t
+/tick step 1s
+/tick step 1t
+/tick step 1s
+/tick step 1t
+/weather clear
+/tick step 1t
+/tick step 1s
+/tick sprint 1d
+/tick rate 500
+/tick rate 20
+/i_c list_features spells
+/i_c list_features class_types species diets show_id
+/i_c list_features spells
+/reload
+/gamerule randomTickSpeed 200
+/gamerule randomTickSpeed 3
+/tick unfreeze

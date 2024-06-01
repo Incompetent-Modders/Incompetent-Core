@@ -1,6 +1,9 @@
 package com.incompetent_modders.incomp_core.api.network;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
+import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
