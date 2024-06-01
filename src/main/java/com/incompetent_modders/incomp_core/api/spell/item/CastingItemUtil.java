@@ -59,4 +59,18 @@ public class CastingItemUtil {
     public static SpellProperties getSpellProperties(ItemStack stack, int slot) {
         return SpellListener.getSpellProperties(deserializeFromSlot(stack, slot));
     }
+    public static int getSpellDrawTime(ItemStack stack) {
+        SpellProperties properties = getSpellProperties(stack);
+        if (properties == null) {
+            return 0;
+        }
+        return properties.drawTime();
+    }
+    public static boolean isBlankSpell(ItemStack stack) {
+        SpellProperties properties = getSpellProperties(stack);
+        if (properties == null) {
+            return true;
+        }
+        return properties.isBlankSpell();
+    }
 }

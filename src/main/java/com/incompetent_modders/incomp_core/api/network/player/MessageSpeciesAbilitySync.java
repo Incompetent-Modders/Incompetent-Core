@@ -1,9 +1,8 @@
-package com.incompetent_modders.incomp_core.api.network;
+package com.incompetent_modders.incomp_core.api.network.player;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
