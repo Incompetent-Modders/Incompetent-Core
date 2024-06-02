@@ -28,11 +28,9 @@ public record MessagePlayerDataSync(CompoundTag playerData) implements CustomPac
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
             CompoundTag playerData = message.playerData();
-            try {
-                synchronized(playerData) {
-                    PlayerDataCore.setPlayerData(player, playerData);
-                }
-            } catch (Exception ignored) {
+            CompoundTag oldData = PlayerDataCore.getPlayerData(player);
+            if (oldData != playerData) {
+                PlayerDataCore.setPlayerData(player, playerData);
             }
         });
     }

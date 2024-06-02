@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.common.command.arguments;
 
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,7 +31,7 @@ public class SpellArgument implements ArgumentType<ResourceLocation> {
     
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-        return SharedSuggestionProvider.suggestResource(SpellListener.getAllSpells(), suggestionsBuilder);
+        return SharedSuggestionProvider.suggestResource(ClientSpellManager.getInstance().getSpellList(), suggestionsBuilder);
     }
     private Stream<ResourceLocation> getSpells()
     {

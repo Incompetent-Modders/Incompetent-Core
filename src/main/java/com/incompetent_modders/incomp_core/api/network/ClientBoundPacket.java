@@ -7,11 +7,11 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public interface ClientBoundPacket extends CustomIncompetentPayload {
     default void handleOnClient(IPayloadContext context) {
         context.enqueueWork(() -> {
-            handleOnClient(context.player());
+            handleOnClient(context.player(), context);
         });
     }
     
-    default void handleOnClient(Player player) {
+    default void handleOnClient(Player player, IPayloadContext context) {
         throw new AbstractMethodError("Unimplemented method on " + getClass());
     }
 }

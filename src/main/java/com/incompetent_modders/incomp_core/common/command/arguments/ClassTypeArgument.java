@@ -1,6 +1,8 @@
 package com.incompetent_modders.incomp_core.common.command.arguments;
 
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,7 +32,7 @@ public class ClassTypeArgument implements ArgumentType<ResourceLocation> {
     }
     
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-        return SharedSuggestionProvider.suggestResource(SpeciesListener.getAllSpecies(), suggestionsBuilder);
+        return SharedSuggestionProvider.suggestResource(ClientClassTypeManager.getInstance().getClassTypeList(), suggestionsBuilder);
     }
     
     public Collection<String> getExamples() {

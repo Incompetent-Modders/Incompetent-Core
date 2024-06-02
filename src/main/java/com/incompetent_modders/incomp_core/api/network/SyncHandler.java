@@ -1,6 +1,14 @@
 package com.incompetent_modders.incomp_core.api.network;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
+import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.api.network.features.MessageClassTypesSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageDietsSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageSpeciesSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageSpellsSync;
 import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
 import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
@@ -29,7 +37,12 @@ public class SyncHandler {
         
         //TO CLIENT
         registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
-        //registrar.playToClient(MessageManaDataSync.TYPE, MessageManaDataSync.CODEC, MessageManaDataSync::handle);
+        
+        registrar.playToClient(MessageSpellsSync.TYPE, MessageSpellsSync.CODEC, MessageSpellsSync::handle);
+        registrar.playToClient(MessageSpeciesSync.TYPE, MessageSpeciesSync.CODEC, MessageSpeciesSync::handle);
+        registrar.playToClient(MessageClassTypesSync.TYPE, MessageClassTypesSync.CODEC, MessageClassTypesSync::handle);
+        registrar.playToClient(MessageDietsSync.TYPE, MessageDietsSync.CODEC, MessageDietsSync::handle);
+        
         //registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
         
         NeoForge.EVENT_BUS.register(new SyncHandler());
@@ -41,11 +54,17 @@ public class SyncHandler {
             return;
     
         var msgCD = new MessagePlayerDataSync(PlayerDataCore.getPlayerData(player));
-        //var msgMD = new MessageManaDataSync(PlayerDataCore.getManaData(player));
+        var msgSpellList = new MessageSpellsSync(SpellListener.getAllSpells());
+        var msgSpeciesList = new MessageSpeciesSync(SpeciesListener.getAllSpecies());
+        var msgClassTypeList = new MessageClassTypesSync(ClassTypeListener.getAllClassTypes());
+        var msgDietList = new MessageDietsSync(DietListener.getAllDiets());
+        
         //var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
     
         PacketDistributor.sendToPlayer(player, msgCD);
-        //PacketDistributor.sendToPlayer(player, msgMD);
-        //PacketDistributor.sendToPlayer(player, msgSD);
+        PacketDistributor.sendToPlayer(player, msgSpellList);
+        PacketDistributor.sendToPlayer(player, msgSpeciesList);
+        PacketDistributor.sendToPlayer(player, msgClassTypeList);
+        PacketDistributor.sendToPlayer(player, msgDietList);
     }
 }

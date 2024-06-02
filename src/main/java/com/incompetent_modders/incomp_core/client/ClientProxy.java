@@ -18,6 +18,10 @@ public class ClientProxy extends CommonProxy {
     
     public static void initWithMC()
     {
+        ClientSpellManager.getInstance();
+        ClientSpeciesManager.getInstance();
+        ClientClassTypeManager.getInstance();
+        ClientDietManager.getInstance();
         ClientEventHandler handler = new ClientEventHandler();
         NeoForge.EVENT_BUS.register(handler);
     }

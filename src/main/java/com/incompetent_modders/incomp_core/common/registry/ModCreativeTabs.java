@@ -5,6 +5,9 @@ import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,19 +42,19 @@ public class ModCreativeTabs {
                     stack.set(ModDataComponents.STORED_EFFECT_POSTPONE, mobEffectID);
                     output.accept(stack);
                 }
-                for (ResourceLocation classID : ClassTypeListener.getAllClassTypes()) {
+                for (ResourceLocation classID : ClientClassTypeManager.getInstance().getClassTypeList()) {
                     Item item = ModItems.ASSIGN_CLASS.get();
                     ItemStack stack = new ItemStack(item);
                     stack.set(ModDataComponents.STORED_CLASS_TYPE, classID);
                     output.accept(stack);
                 }
-                for (ResourceLocation speciesID : SpeciesListener.getAllSpecies()) {
+                for (ResourceLocation speciesID : ClientSpeciesManager.getInstance().getSpeciesList()) {
                     Item item = ModItems.ASSIGN_SPECIES.get();
                     ItemStack stack = new ItemStack(item);
                     stack.set(ModDataComponents.STORED_SPECIES_TYPE, speciesID);
                     output.accept(stack);
                 }
-                for (ResourceLocation spellID : SpellListener.getAllSpells()) {
+                for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList()) {
                     Item item = ModItems.SPELL_TOME.get();
                     ItemStack stack = new ItemStack(item);
                     CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> tag.putString("spellSlot_0", spellID.toString()));
