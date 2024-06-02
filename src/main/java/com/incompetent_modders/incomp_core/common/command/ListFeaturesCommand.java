@@ -1,6 +1,5 @@
 package com.incompetent_modders.incomp_core.common.command;
 
-import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
@@ -19,33 +18,19 @@ import net.minecraft.resources.ResourceLocation;
 public class ListFeaturesCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("list_features").requires(s -> s.hasPermission(2))
-           .then(Commands.literal("spells").executes(arguments -> {
-            return listSpells(arguments.getSource(), false);
-        })).then(Commands.literal("show_id").executes(arguments -> {
-            return listSpells(arguments.getSource(), true);
-        })).then(Commands.literal("class_types").executes(arguments -> {
-            return listClassTypes(arguments.getSource(), false);
-        })).then(Commands.literal("show_id").executes(arguments -> {
-            return listClassTypes(arguments.getSource(), true);
-        })).then(Commands.literal("species").executes(arguments -> {
-            return listSpecies(arguments.getSource(), false);
-        })).then(Commands.literal("show_id").executes(arguments -> {
-            return listSpecies(arguments.getSource(), true);
-        })).then(Commands.literal("diets").executes(arguments -> {
-            return listDiets(arguments.getSource(), false);
-        })).then(Commands.literal("show_id").executes(arguments -> {
-            return listDiets(arguments.getSource(), true);
-        })).then(Commands.literal("all").executes(arguments -> {
-            return listAll(arguments.getSource(), false);
-        })).then(Commands.literal("show_id").executes(arguments -> {
-            return listAll(arguments.getSource(), true);
-        }));
+           .then(Commands.literal("spells").executes(arguments -> listSpells(arguments.getSource(), false))
+                   .then(Commands.literal("show_id").executes(arguments -> listSpells(arguments.getSource(), true))))
+                .then(Commands.literal("class_types").executes(arguments -> listClassTypes(arguments.getSource(), false))
+                        .then(Commands.literal("show_id").executes(arguments -> listClassTypes(arguments.getSource(), true))))
+                .then(Commands.literal("species").executes(arguments -> listSpecies(arguments.getSource(), false))
+                        .then(Commands.literal("show_id").executes(arguments -> listSpecies(arguments.getSource(), true))))
+                .then(Commands.literal("diets").executes(arguments -> listDiets(arguments.getSource(), false))
+                        .then(Commands.literal("show_id").executes(arguments -> listDiets(arguments.getSource(), true))))
+                .then(Commands.literal("all").executes(arguments -> list(arguments.getSource(), false))
+                        .then(Commands.literal("show_id").executes(arguments -> list(arguments.getSource(), true))));
     }
     
     private static int listSpells(CommandSourceStack source, boolean showID) {
-        if (!source.getLevel().isClientSide()) {
-            return 1;
-        } else {
             Component result = Component.translatable("commands.incompetent_core.list_features.spells", ClientSpellManager.getInstance().getSpellList().size()).withStyle(ClientUtil.styleFromColor(0x624a95));
             source.sendSuccess(() -> result, false);
             for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList()) {
@@ -58,14 +43,10 @@ public class ListFeaturesCommand {
                     source.sendSuccess(() -> spellNameMessage, false);
                 }
             }
-        }
         return 0;
     }
     
     private static int listClassTypes(CommandSourceStack source, boolean showID) {
-        if (!source.getLevel().isClientSide()) {
-            return 1;
-        } else {
             Component result = Component.translatable("commands.incompetent_core.list_features.class_types", ClientClassTypeManager.getInstance().getClassTypeList().size()).withStyle(ClientUtil.styleFromColor(0xe19635));
             source.sendSuccess(() -> result, false);
             for (ResourceLocation classTypeID : ClientClassTypeManager.getInstance().getClassTypeList()) {
@@ -78,14 +59,10 @@ public class ListFeaturesCommand {
                     source.sendSuccess(() -> classTypeMessage, false);
                 }
             }
-        }
         return 0;
     }
     
     private static int listSpecies(CommandSourceStack source, boolean showID) {
-        if (!source.getLevel().isClientSide()) {
-            return 1;
-        } else {
             Component result = Component.translatable("commands.incompetent_core.list_features.species", ClientSpeciesManager.getInstance().getSpeciesList().size()).withStyle(ClientUtil.styleFromColor(0x4998e5));
             source.sendSuccess(() -> result, false);
             for (ResourceLocation speciesID : ClientSpeciesManager.getInstance().getSpeciesList()) {
@@ -98,14 +75,10 @@ public class ListFeaturesCommand {
                     source.sendSuccess(() -> speciesMessage, false);
                 }
             }
-        }
         return 0;
     }
     
     private static int listDiets(CommandSourceStack source, boolean showID) {
-        if (!source.getLevel().isClientSide()) {
-            return 1;
-        } else {
             Component result = Component.translatable("commands.incompetent_core.list_features.diets", ClientDietManager.getInstance().getDietList().size()).withStyle(ClientUtil.styleFromColor(0x478e47));
             source.sendSuccess(() -> result, false);
             for (ResourceLocation dietID : ClientDietManager.getInstance().getDietList()) {
@@ -118,11 +91,10 @@ public class ListFeaturesCommand {
                     source.sendSuccess(() -> dietMessage, false);
                 }
             }
-        }
         return 0;
     }
     
-    private static int listAll(CommandSourceStack source, boolean showID) {
+    private static int list(CommandSourceStack source, boolean showID) {
         listSpells(source, showID);
         listClassTypes(source, showID);
         listSpecies(source, showID);

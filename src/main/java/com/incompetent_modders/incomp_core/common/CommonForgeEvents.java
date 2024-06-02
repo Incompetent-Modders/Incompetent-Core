@@ -2,6 +2,7 @@ package com.incompetent_modders.incomp_core.common;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.effect.SpeciesAlteringEffect;
+import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
@@ -31,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.TellRawCommand;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.jfr.event.WorldLoadFinishedEvent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -40,6 +42,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.EventPriority;
@@ -55,6 +58,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
 
+import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.PLAYER_DATA_ID;
 import static com.incompetent_modders.incomp_core.common.util.Utils.applyDamage;
 
 @EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -67,8 +71,8 @@ public class CommonForgeEvents {
             //if (!syncingData) {
             //    syncingData = true;
             CompoundTag playerData = PlayerDataCore.getPlayerData(player);
-            synchronized (playerData) {
-                PlayerDataCore.setPlayerData(player, PlayerDataCore.getPlayerData(player));
+            if (player.getPersistentData().getCompound(PLAYER_DATA_ID) != playerData) {
+                PlayerDataCore.setPlayerData(player, playerData);
             }
             //    syncingData = false;
             //}
@@ -119,7 +123,7 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void serverStarting(ServerStartingEvent event) {
         SpellListener.getAllSpells().forEach(entry -> {
-            if (!SpellListener.getSpellProperties(entry).isBlankSpell() && entry != CastingItemUtil.emptySpell) {
+            if (SpellListener.getSpellProperties(entry).isBlankSpell() && entry != CastingItemUtil.emptySpell) {
                 IncompCore.LOGGER.warn("Spell {} does not have properties! This may cause issues!", entry);
             }
         });
@@ -140,6 +144,17 @@ public class CommonForgeEvents {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
+            if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem && !(stack.getItem() instanceof SpellCastingItem)) {
+                ResourceLocation selectedSpell = CastingItemUtil.getSelectedSpell(player.getItemInHand(InteractionHand.MAIN_HAND));
+                if (selectedSpell != null) {
+                    ItemStack catalyst = SpellListener.getSpellProperties(selectedSpell).catalyst().item();
+                    if (catalyst != null && !catalyst.isEmpty()) {
+                        if (player.getItemInHand(InteractionHand.OFF_HAND).equals(catalyst) && catalyst.getItem() instanceof BundleItem) {
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+            }
             ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
             if (speciesProperties != null) {

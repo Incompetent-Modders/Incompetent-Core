@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientDietManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,6 +38,7 @@ public record MessageDietsSync(List<ResourceLocation> dietsIDList) implements Cu
     
     public static void handle(final MessageDietsSync message, final IPayloadContext ctx)
     {
+        IncompCore.LOGGER.info("Received diet list sync packet");
         ClientDietManager.getInstance().updateDietList(message.getDietIDList());
     }
 }

@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.client;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class ClientSpeciesManager {
     
     private ClientSpeciesManager() {
         speciesList = new ArrayList<>();
+        IncompCore.LOGGER.info("[CLIENT ONLY] Initialized client species list");
     }
     
     public static ClientSpeciesManager getInstance() {
@@ -27,5 +29,6 @@ public class ClientSpeciesManager {
     public void updateSpeciesList(List<ResourceLocation> updatedSpecies) {
         speciesList.clear();
         speciesList.addAll(updatedSpecies);
+        IncompCore.LOGGER.info("[CLIENT ONLY] Updated species list with {} species", speciesList.size());
     }
 }

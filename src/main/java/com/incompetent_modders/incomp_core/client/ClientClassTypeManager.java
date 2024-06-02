@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.client;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class ClientClassTypeManager {
     
     private ClientClassTypeManager() {
         classTypeList = new ArrayList<>();
+        IncompCore.LOGGER.info("[CLIENT ONLY] Initialized client class type list");
     }
     
     public static ClientClassTypeManager getInstance() {
@@ -27,5 +29,7 @@ public class ClientClassTypeManager {
     public void updateClassTypeList(List<ResourceLocation> updatedClassTypes) {
         classTypeList.clear();
         classTypeList.addAll(updatedClassTypes);
+        IncompCore.LOGGER.info("[CLIENT ONLY] Updated class type list with {} class types", updatedClassTypes.size());
+        
     }
 }

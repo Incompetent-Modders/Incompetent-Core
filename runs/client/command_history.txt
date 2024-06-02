@@ -1,7 +1,3 @@
-/data modify entity Dev incompetent_core_FirstJoin set value false
-/data get entity @s
-/data remove entity Dev NeoForgeData:incompetent_core_FirstJoin
-/i_c list_features class_types
 /i_c list_features diets
 /i_c list_features species
 /i_c list_features spells
@@ -48,3 +44,7 @@
 /give @s minecraft:bundle
 /i_c list_features spells
 /i_c list_features class_types
+/i_c list_features spells show_id
+/i_c list_features all
+/i_c cast_spell Dev incompetent_core:test_ranged_spell
+/i_c toggleWelcomeMessage

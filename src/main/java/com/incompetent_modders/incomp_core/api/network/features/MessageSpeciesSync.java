@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,6 +38,7 @@ public record MessageSpeciesSync(List<ResourceLocation> speciesIDList) implement
     
     public static void handle(final MessageSpeciesSync message, final IPayloadContext ctx)
     {
+        IncompCore.LOGGER.info("Received species list sync packet");
         ClientSpeciesManager.getInstance().updateSpeciesList(message.getSpeciesIDList());
     }
 }

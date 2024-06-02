@@ -13,10 +13,15 @@ import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilit
 import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
+import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.ClientDietManager;
+import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -49,10 +54,9 @@ public class SyncHandler {
     }
     
     @SubscribeEvent
-    public void onLivingTickEvent(EntityTickEvent.Pre event) {
+    public void onLivingTickEvent(PlayerTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
-    
         var msgCD = new MessagePlayerDataSync(PlayerDataCore.getPlayerData(player));
         var msgSpellList = new MessageSpellsSync(SpellListener.getAllSpells());
         var msgSpeciesList = new MessageSpeciesSync(SpeciesListener.getAllSpecies());
@@ -62,9 +66,13 @@ public class SyncHandler {
         //var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
     
         PacketDistributor.sendToPlayer(player, msgCD);
-        PacketDistributor.sendToPlayer(player, msgSpellList);
-        PacketDistributor.sendToPlayer(player, msgSpeciesList);
-        PacketDistributor.sendToPlayer(player, msgClassTypeList);
-        PacketDistributor.sendToPlayer(player, msgDietList);
+        if (ClientSpellManager.getInstance().getSpellList() != SpellListener.getAllSpells())
+            PacketDistributor.sendToPlayer(player, msgSpellList);
+        if (ClientSpeciesManager.getInstance().getSpeciesList() != SpeciesListener.getAllSpecies())
+            PacketDistributor.sendToPlayer(player, msgSpeciesList);
+        if (ClientClassTypeManager.getInstance().getClassTypeList() != ClassTypeListener.getAllClassTypes())
+            PacketDistributor.sendToPlayer(player, msgClassTypeList);
+        if (ClientDietManager.getInstance().getDietList() != DietListener.getAllDiets())
+            PacketDistributor.sendToPlayer(player, msgDietList);
     }
 }

@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
 import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
@@ -26,7 +27,6 @@ public record MessageClassTypesSync(List<ResourceLocation> classTypesIDList) imp
         return new MessageClassTypesSync(spells);
     }
     
-    
     public List<ResourceLocation> getClassTypeIDList() {
         return classTypesIDList;
     }
@@ -38,6 +38,7 @@ public record MessageClassTypesSync(List<ResourceLocation> classTypesIDList) imp
     
     public static void handle(final MessageClassTypesSync message, final IPayloadContext ctx)
     {
+        IncompCore.LOGGER.info("Received class type list sync packet");
         ClientClassTypeManager.getInstance().updateClassTypeList(message.getClassTypeIDList());
     }
 }

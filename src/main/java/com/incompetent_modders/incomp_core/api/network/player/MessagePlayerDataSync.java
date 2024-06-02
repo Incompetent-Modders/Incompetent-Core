@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.PLAYER_DATA_ID;
+
 public record MessagePlayerDataSync(CompoundTag playerData) implements CustomPacketPayload {
     public static final Type<MessagePlayerDataSync> TYPE = new Type<>(new ResourceLocation(IncompCore.MODID, "player_data_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessagePlayerDataSync> CODEC = StreamCodec.composite(
@@ -28,9 +30,11 @@ public record MessagePlayerDataSync(CompoundTag playerData) implements CustomPac
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
             CompoundTag playerData = message.playerData();
-            CompoundTag oldData = PlayerDataCore.getPlayerData(player);
+            CompoundTag oldData = player.getPersistentData().getCompound(PLAYER_DATA_ID);
             if (oldData != playerData) {
                 PlayerDataCore.setPlayerData(player, playerData);
+            } else {
+                IncompCore.LOGGER.warn("Received player data sync packet with the same data as the current data");
             }
         });
     }

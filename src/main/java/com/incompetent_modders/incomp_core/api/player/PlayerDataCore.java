@@ -37,11 +37,6 @@ public class PlayerDataCore {
         return spe.getPersistentData().getCompound(PLAYER_DATA_ID);
     }
     
-    public static void syncPlayerData(ServerPlayer spe) {
-        var msgCD = new MessagePlayerDataSync(getPlayerData(spe));
-        PacketDistributor.sendToPlayer(spe, msgCD);
-    }
-    
     public static void handleClassDataTick(ServerPlayer player, PlayerTickEvent event) {
         ResourceLocation classType = ClassData.Get.playerClassType(player);
         if (ClassData.Util.isClassPresent(player)) {

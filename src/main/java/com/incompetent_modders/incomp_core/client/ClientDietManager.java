@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.client;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class ClientDietManager {
     
     private ClientDietManager() {
         dietList = new ArrayList<>();
+        IncompCore.LOGGER.info("[CLIENT ONLY] Initialized client diet list");
     }
     
     public static ClientDietManager getInstance() {
@@ -27,5 +29,6 @@ public class ClientDietManager {
     public void updateDietList(List<ResourceLocation> updatedDiets) {
         dietList.clear();
         dietList.addAll(updatedDiets);
+        IncompCore.LOGGER.info("[CLIENT ONLY] Updated diet list with {} diets", updatedDiets.size());
     }
 }

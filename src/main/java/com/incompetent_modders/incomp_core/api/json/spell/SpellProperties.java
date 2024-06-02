@@ -150,4 +150,6 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         String speciesTypeText = speciesType.acceptAllSpecies() ? "any species" : speciesType.speciesID().toString();
         IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);
     }
+    
+    
 }

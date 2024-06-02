@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,6 +38,7 @@ public record MessageSpellsSync(List<ResourceLocation> spellIDList) implements C
     
     public static void handle(final MessageSpellsSync message, final IPayloadContext ctx)
     {
+        IncompCore.LOGGER.info("Received spell list sync packet");
         ClientSpellManager.getInstance().updateSpellList(message.getSpellIDList());
     }
 }
