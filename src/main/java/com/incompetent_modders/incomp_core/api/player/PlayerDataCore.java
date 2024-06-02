@@ -9,7 +9,7 @@ import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
-import com.incompetent_modders.incomp_core.api.network.MessagePlayerDataSync;
+import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.common.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;

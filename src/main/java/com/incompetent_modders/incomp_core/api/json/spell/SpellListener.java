@@ -1,6 +1,5 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.common.util.Utils;
@@ -10,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +17,9 @@ import java.util.Map;
 
 public class SpellListener extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    private static final Logger LOGGER = IncompCore.LOGGER;
     
     public static Map<ResourceLocation, SpellProperties> properties = new HashMap<>();
     public static List<ResourceLocation> spells = new ArrayList<>();
-    public Map<ResourceLocation, SpellProperties> byName = ImmutableMap.of();
     
     public SpellListener() {
         super(GSON, "spells");

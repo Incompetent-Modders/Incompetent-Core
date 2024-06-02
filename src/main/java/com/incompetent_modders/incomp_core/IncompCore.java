@@ -11,6 +11,7 @@ import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -62,9 +63,7 @@ public class IncompCore
         
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         
-        ClientEventHandler handler = new ClientEventHandler();
         EventHandler commonHandler = new EventHandler();
-        NeoForge.EVENT_BUS.register(handler);
         NeoForge.EVENT_BUS.register(commonHandler);
         if(dist.isClient())
             ClientProxy.modConstruction();
@@ -95,5 +94,9 @@ public class IncompCore
     
     public static IEventBus getEventBus() {
         return INSTANCE.modEventBus;
+    }
+    
+    public static ResourceLocation makeId(String path) {
+        return new ResourceLocation(MODID, path);
     }
 }

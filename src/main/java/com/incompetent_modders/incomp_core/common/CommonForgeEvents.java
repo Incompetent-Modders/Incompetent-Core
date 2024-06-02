@@ -204,6 +204,9 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
+        if (player instanceof ServerPlayer) {
+            return;
+        }
         CompoundTag playerNBT = player.getPersistentData();
         if (!playerNBT.contains(IncompCore.MODID + ":welcome_message")) {
             IncompCore.LOGGER.info("First join for player {}", player.getName().getString());
@@ -215,9 +218,6 @@ public class CommonForgeEvents {
             }
         }
     }
-    
-    
-    
     
     public static void sendWelcomeMessage(Player player, boolean isToggledOn) {
         int allFeaturesCount = SpellListener.getAllSpells().size() + ClassTypeListener.getAllClassTypes().size() + SpeciesListener.getAllSpecies().size() + DietListener.getAllDiets().size();

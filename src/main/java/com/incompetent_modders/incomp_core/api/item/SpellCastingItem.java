@@ -3,7 +3,6 @@ package com.incompetent_modders.incomp_core.api.item;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.core.component.DataComponentMap;
@@ -38,7 +37,7 @@ public class SpellCastingItem extends Item {
     }
     
     public int getUseDuration(ItemStack stack) {
-        return CastingItemUtil.getSpellProperties(stack).drawTime();
+        return CastingItemUtil.getSpellDrawTime(stack);
     }
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BOW;
@@ -67,13 +66,13 @@ public class SpellCastingItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack castingStack = player.getItemInHand(hand);
         if (SpellCastingItem.getCastProgress(castingStack) == 0) {
-            SpellCastingItem.setCastProgress(CastingItemUtil.getSpellProperties(castingStack), castingStack);
+            SpellCastingItem.setCastProgress(castingStack);
         }
         if (player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND) {
             IncompCore.LOGGER.info("Offhand casting is not allowed.");
             return InteractionResultHolder.fail(castingStack);
         }
-        if (CastingItemUtil.getSpellProperties(castingStack).isBlankSpell()) {
+        if (CastingItemUtil.isBlankSpell(castingStack)) {
             IncompCore.LOGGER.info("No spell selected.");
             return InteractionResultHolder.fail(castingStack);
         }
@@ -137,8 +136,8 @@ public class SpellCastingItem extends Item {
         return stack.getOrDefault(ModDataComponents.REMAINING_DRAW_TIME, 0);
     }
     
-    public static void setCastProgress(SpellProperties properties, ItemStack stack) {
-        int ticks = properties.drawTime();
+    public static void setCastProgress(ItemStack stack) {
+        int ticks = CastingItemUtil.getSpellDrawTime(stack);
         stack.set(ModDataComponents.REMAINING_DRAW_TIME, ticks);
     }
     

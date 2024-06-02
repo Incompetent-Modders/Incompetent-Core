@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.network.MessageClassAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.MessageSpeciesAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
 import com.incompetent_modders.incomp_core.api.network.MessageSpellSlotScrollSync;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import net.minecraft.client.Minecraft;
