@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -54,7 +55,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame", player);
         
         ResourceLocation spellIcon = new ResourceLocation(this.getSelectedSpell(player).getNamespace(), "textures/incompetent_spells/" + this.getSelectedSpell(player).getPath() + ".png");
-        Component spellName = SpellListener.getDisplayName(getSelectedSpell(player));
+        Component spellName = ClientSpellManager.getDisplayName(getSelectedSpell(player));
         
         //PoseStack poseStack = graphics.pose();
         //poseStack.pushPose();

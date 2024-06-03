@@ -1,9 +1,11 @@
 package com.incompetent_modders.incomp_core.api.json.spell;
 
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +17,8 @@ public record SpellResults(Optional<SpellResult> spellResult, Optional<Cacheable
             SpellResult.DIRECT_CODEC.optionalFieldOf("spell_result").forGetter(SpellResults::spellResult),
             CacheableFunction.CODEC.optionalFieldOf("function").forGetter(SpellResults::function)
     ).apply(instance, SpellResults::new));
+    
+    public static SpellResults EMPTY = new SpellResults(Optional.empty(), Optional.empty());
     
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public SpellResults(Optional<SpellResult> spellResult, Optional<CacheableFunction> function) {
@@ -43,5 +47,4 @@ public record SpellResults(Optional<SpellResult> spellResult, Optional<Cacheable
             });
         }
     }
-    
 }

@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -32,4 +33,9 @@ public class ClientSpellManager {
         spellList.addAll(updatedSpells);
         IncompCore.LOGGER.info("[CLIENT ONLY] Updated spell list with {} spells", spellList.size());
     }
+    
+    public static Component getDisplayName(ResourceLocation spell) {
+        return Component.translatable("spells." + spell.getNamespace() + "." + spell.getPath().replace("/", "."));
+    }
+    
 }

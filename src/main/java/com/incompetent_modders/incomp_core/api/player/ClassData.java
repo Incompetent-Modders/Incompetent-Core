@@ -94,4 +94,11 @@ public class ClassData {
             return spe.getPersistentData().getCompound(PLAYER_DATA_ID).contains("classType");
         }
     }
+    
+    public static void initialize(Player spe) {
+        CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
+        if (!nc.contains("classType") || Get.playerClassType(spe).equals(new ResourceLocation("minecraft:"))) {
+            Set.playerClassType(spe, Utils.defaultClass);
+        }
+    }
 }

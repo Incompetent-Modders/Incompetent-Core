@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.command.arguments.SpellArgument;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;
@@ -36,9 +37,9 @@ public class CastSpellCommand {
             }
         }
         if (targets.size() == 1) {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", SpellListener.getDisplayName(spell), targets.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.single", ClientSpellManager.getDisplayName(spell), targets.iterator().next().getDisplayName()), true);
         } else {
-            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.all", SpellListener.getDisplayName(spell), targets.size(), playerNameList(targets)), true);
+            source.sendSuccess(() -> Component.translatable("commands.cast_spell.success.all", ClientSpellManager.getDisplayName(spell), targets.size(), playerNameList(targets)), true);
         }
         return targets.size();
     }

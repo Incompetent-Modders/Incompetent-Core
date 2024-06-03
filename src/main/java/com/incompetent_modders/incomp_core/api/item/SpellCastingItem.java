@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.api.item;
 
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
@@ -77,7 +78,7 @@ public class SpellCastingItem extends Item {
             return InteractionResultHolder.fail(castingStack);
         }
         player.startUsingItem(hand);
-        IncompCore.LOGGER.info("Player has begun casting spell: {}", SpellListener.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
+        IncompCore.LOGGER.info("Player has begun casting spell: {}", ClientSpellManager.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
         return InteractionResultHolder.consume(castingStack);
     }
     
@@ -125,7 +126,7 @@ public class SpellCastingItem extends Item {
     }
     
     public static String getSpellNameInSlot(ItemStack stack, int slot) {
-        return SpellListener.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
+        return ClientSpellManager.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {

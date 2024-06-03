@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.common.command;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
@@ -25,7 +26,7 @@ public class WhatSpellIsInSlotCommand {
             if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                 ResourceLocation spell = CastingItemUtil.deserializeFromSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"));
-                Component spellComponent = isSpellPresent(spell) ? SpellListener.getDisplayName(spell) : Component.nullToEmpty("No spell in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
+                Component spellComponent = isSpellPresent(spell) ? ClientSpellManager.getDisplayName(spell) : Component.nullToEmpty("No spell in slot " + IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 player.displayClientMessage(spellComponent, false);
             }
             return 0;

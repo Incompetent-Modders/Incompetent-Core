@@ -35,7 +35,7 @@ public class ListFeaturesCommand {
             source.sendSuccess(() -> result, false);
             for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList()) {
                 Component spellIDMessage = Component.literal("> (" + spellID.toString() + ")").withStyle(ClientUtil.styleFromColor(0x624a95));
-                Component spellNameMessage = SpellListener.getDisplayName(spellID).copy().withStyle(ClientUtil.styleFromColor(0xa05baf));
+                Component spellNameMessage = ClientSpellManager.getDisplayName(spellID).copy().withStyle(ClientUtil.styleFromColor(0xa05baf));
                 if (showID) {
                     source.sendSuccess(() -> spellNameMessage, false);
                     source.sendSuccess(() -> spellIDMessage, false);

@@ -11,11 +11,19 @@ import com.incompetent_modders.incomp_core.api.json.species.*;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietProperties;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.api.network.features.MessageClassTypesSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageDietsSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageSpeciesSync;
+import com.incompetent_modders.incomp_core.api.network.features.MessageSpellsSync;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
+import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.ClientDietManager;
+import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.util.Utils;
@@ -48,6 +56,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
@@ -55,8 +64,10 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.PLAYER_DATA_ID;
 import static com.incompetent_modders.incomp_core.common.util.Utils.applyDamage;
@@ -94,6 +105,26 @@ public class CommonForgeEvents {
                 IncompCore.LOGGER.info("{} has old data format for Mana Data, removing...", player.getName().getString());
                 player.getPersistentData().remove(IncompCore.MODID + ":ManaData");
             }
+            
+            
+        }
+    }
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onDatapackSync(OnDatapackSyncEvent event) {
+        Stream<ServerPlayer> relevantPlayers = event.getRelevantPlayers();
+        var msgSpellList = new MessageSpellsSync(SpellListener.getAllSpells());
+        var msgSpeciesList = new MessageSpeciesSync(SpeciesListener.getAllSpecies());
+        var msgClassTypeList = new MessageClassTypesSync(ClassTypeListener.getAllClassTypes());
+        var msgDietList = new MessageDietsSync(DietListener.getAllDiets());
+        for (ServerPlayer player : relevantPlayers.toList()) {
+            if (!new HashSet<>(ClientSpellManager.getInstance().getSpellList()).containsAll(SpellListener.getAllSpells()))
+                PacketDistributor.sendToPlayer(player, msgSpellList);
+            if (!new HashSet<>(ClientSpeciesManager.getInstance().getSpeciesList()).containsAll(SpeciesListener.getAllSpecies()))
+                PacketDistributor.sendToPlayer(player, msgSpeciesList);
+            if (!new HashSet<>(ClientClassTypeManager.getInstance().getClassTypeList()).containsAll(ClassTypeListener.getAllClassTypes()))
+                PacketDistributor.sendToPlayer(player, msgClassTypeList);
+            if (!new HashSet<>(ClientDietManager.getInstance().getDietList()).containsAll(DietListener.getAllDiets()))
+                PacketDistributor.sendToPlayer(player, msgDietList);
         }
     }
     
@@ -118,6 +149,8 @@ public class CommonForgeEvents {
                     damage.removeModifier(PACIFIST);
                 }
             }
+            ClassData.initialize(player);
+            SpeciesData.initialize(player);
         }
     }
     @SubscribeEvent
@@ -219,32 +252,31 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        if (player instanceof ServerPlayer) {
-            return;
-        }
         CompoundTag playerNBT = player.getPersistentData();
         if (!playerNBT.contains(IncompCore.MODID + ":welcome_message")) {
             IncompCore.LOGGER.info("First join for player {}", player.getName().getString());
-            sendWelcomeMessage(player, false);
+            if (player.isLocalPlayer())
+                sendWelcomeMessage(player, false);
             playerNBT.putBoolean(IncompCore.MODID + ":welcome_message", false);
         } else {
             if (playerNBT.getBoolean(IncompCore.MODID + ":welcome_message")) {
-                sendWelcomeMessage(player, true);
+                if (player.isLocalPlayer())
+                    sendWelcomeMessage(player, true);
             }
         }
     }
     
     public static void sendWelcomeMessage(Player player, boolean isToggledOn) {
-        int allFeaturesCount = SpellListener.getAllSpells().size() + ClassTypeListener.getAllClassTypes().size() + SpeciesListener.getAllSpecies().size() + DietListener.getAllDiets().size();
-        int spellsCount = SpellListener.getAllSpells().size();
-        int classTypesCount = ClassTypeListener.getAllClassTypes().size();
-        int speciesCount = SpeciesListener.getAllSpecies().size();
-        int dietsCount = DietListener.getAllDiets().size();
+        int spellsCount = ClientSpellManager.getInstance().getSpellList().size();
+        int classTypesCount = ClientClassTypeManager.getInstance().getClassTypeList().size();
+        int speciesCount = ClientSpeciesManager.getInstance().getSpeciesList().size();
+        int dietsCount = ClientDietManager.getInstance().getDietList().size();
+        int allFeaturesCount = spellsCount + classTypesCount + speciesCount + dietsCount;
         Component firstJoinNotification = Component.translatable(welcomeMessage_thanks(allFeaturesCount), allFeaturesCount).withStyle(ClientUtil.styleFromColor(0x418d7e));
-        Component spellsNotification = Component.translatable(welcomeMessage_spells(spellsCount), SpellListener.getAllSpells().size()).withStyle(ClientUtil.styleFromColor(0x624a95));
-        Component classTypesNotification = Component.translatable(welcomeMessage_classTypes(classTypesCount), ClassTypeListener.getAllClassTypes().size()).withStyle(ClientUtil.styleFromColor(0xe19635));
-        Component speciesNotification = Component.translatable(welcomeMessage_species(speciesCount), SpeciesListener.getAllSpecies().size()).withStyle(ClientUtil.styleFromColor(0x4998e5));
-        Component dietsNotification = Component.translatable(welcomeMessage_diets(dietsCount), DietListener.getAllDiets().size()).withStyle(ClientUtil.styleFromColor(0x478e47));
+        Component spellsNotification = Component.translatable(welcomeMessage_spells(spellsCount), spellsCount).withStyle(ClientUtil.styleFromColor(0x624a95));
+        Component classTypesNotification = Component.translatable(welcomeMessage_classTypes(classTypesCount), classTypesCount).withStyle(ClientUtil.styleFromColor(0xe19635));
+        Component speciesNotification = Component.translatable(welcomeMessage_species(speciesCount), speciesCount).withStyle(ClientUtil.styleFromColor(0x4998e5));
+        Component dietsNotification = Component.translatable(welcomeMessage_diets(dietsCount), dietsCount).withStyle(ClientUtil.styleFromColor(0x478e47));
         player.sendSystemMessage(firstJoinNotification);
         player.sendSystemMessage(spellsNotification);
         player.sendSystemMessage(classTypesNotification);

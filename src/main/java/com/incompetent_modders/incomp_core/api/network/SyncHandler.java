@@ -58,21 +58,7 @@ public class SyncHandler {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
         var msgCD = new MessagePlayerDataSync(PlayerDataCore.getPlayerData(player));
-        var msgSpellList = new MessageSpellsSync(SpellListener.getAllSpells());
-        var msgSpeciesList = new MessageSpeciesSync(SpeciesListener.getAllSpecies());
-        var msgClassTypeList = new MessageClassTypesSync(ClassTypeListener.getAllClassTypes());
-        var msgDietList = new MessageDietsSync(DietListener.getAllDiets());
-        
-        //var msgSD = new MessageSpeciesDataSync(PlayerDataCore.getSpeciesData(player));
-    
         PacketDistributor.sendToPlayer(player, msgCD);
-        if (ClientSpellManager.getInstance().getSpellList() != SpellListener.getAllSpells())
-            PacketDistributor.sendToPlayer(player, msgSpellList);
-        if (ClientSpeciesManager.getInstance().getSpeciesList() != SpeciesListener.getAllSpecies())
-            PacketDistributor.sendToPlayer(player, msgSpeciesList);
-        if (ClientClassTypeManager.getInstance().getClassTypeList() != ClassTypeListener.getAllClassTypes())
-            PacketDistributor.sendToPlayer(player, msgClassTypeList);
-        if (ClientDietManager.getInstance().getDietList() != DietListener.getAllDiets())
-            PacketDistributor.sendToPlayer(player, msgDietList);
+        
     }
 }

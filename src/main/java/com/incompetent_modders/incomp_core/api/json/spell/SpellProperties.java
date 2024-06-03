@@ -9,7 +9,9 @@ import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -30,9 +32,9 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
             Codec.DOUBLE.optionalFieldOf("mana_cost", 0.0).forGetter(SpellProperties::manaCost),
             Codec.INT.optionalFieldOf("draw_time", 0).forGetter(SpellProperties::drawTime),
             Catalyst.CODEC.optionalFieldOf("catalyst", Catalyst.EMPTY).forGetter(SpellProperties::catalyst),
-            ClassType.CODEC.fieldOf("class").forGetter(SpellProperties::classType),
-            SpeciesType.CODEC.fieldOf("species").forGetter(SpellProperties::speciesType),
-            SpellResults.CODEC.fieldOf("results").forGetter(SpellProperties::results),
+            ClassType.CODEC.optionalFieldOf("class", ClassType.ANY).forGetter(SpellProperties::classType),
+            SpeciesType.CODEC.optionalFieldOf("species", SpeciesType.ANY).forGetter(SpellProperties::speciesType),
+            SpellResults.CODEC.optionalFieldOf("results", SpellResults.EMPTY).forGetter(SpellProperties::results),
             SoundEvent.DIRECT_CODEC.optionalFieldOf("cast_sound", SoundEvents.ALLAY_THROW).forGetter(SpellProperties::castSound)
     ).apply(instance, SpellProperties::new));
     

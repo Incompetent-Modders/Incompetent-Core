@@ -1,5 +1,3 @@
-/i_c list_features diets
-/i_c list_features species
 /i_c list_features spells
 /i_c list_features all
 /i_c list_features spells
@@ -48,3 +46,5 @@
 /i_c list_features all
 /i_c cast_spell Dev incompetent_core:test_ranged_spell
 /i_c toggleWelcomeMessage
+/i_c list_features spells
+/i_c list_features species

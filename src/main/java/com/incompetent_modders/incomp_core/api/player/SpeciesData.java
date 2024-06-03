@@ -230,4 +230,11 @@ public class SpeciesData {
             return spe.getPersistentData().getCompound(PLAYER_DATA_ID).contains("species");
         }
     }
+    
+    public static void initialize(Player spe) {
+        CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
+        if (!nc.contains("species") || Get.playerSpecies(spe).equals(new ResourceLocation("minecraft:"))) {
+            Set.playerSpecies(spe, Utils.defaultSpecies);
+        }
+    }
 }

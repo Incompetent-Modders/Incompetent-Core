@@ -30,6 +30,5 @@ public class ClientClassTypeManager {
         classTypeList.clear();
         classTypeList.addAll(updatedClassTypes);
         IncompCore.LOGGER.info("[CLIENT ONLY] Updated class type list with {} class types", updatedClassTypes.size());
-        
     }
 }
