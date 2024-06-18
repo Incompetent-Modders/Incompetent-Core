@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.json.spell;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -24,6 +25,15 @@ public record SpeciesType(ResourceLocation speciesID, boolean acceptAllSpecies) 
     }
     
     public static SpeciesType decode(RegistryFriendlyByteBuf buf) {
+        return fromNetwork(buf);
+    }
+    
+    public void toNetwork(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(speciesID);
+        buf.writeBoolean(acceptAllSpecies);
+    }
+    
+    public static SpeciesType fromNetwork(FriendlyByteBuf buf) {
         var id = buf.readResourceLocation();
         var acceptAll = buf.readBoolean();
         return new SpeciesType(id, acceptAll);

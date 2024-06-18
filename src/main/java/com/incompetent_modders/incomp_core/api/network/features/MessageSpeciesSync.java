@@ -3,6 +3,10 @@ package com.incompetent_modders.incomp_core.api.network.features;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.teamresourceful.resourcefullib.common.network.Packet;
+import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;
+import com.teamresourceful.resourcefullib.common.network.base.PacketType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -11,34 +15,45 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-public record MessageSpeciesSync(List<ResourceLocation> speciesIDList) implements CustomPacketPayload {
-    public static final Type<MessageSpeciesSync> TYPE = CustomIncompetentPayload.createType("species_sync");
-    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSpeciesSync> CODEC = StreamCodec.ofMember(
-            MessageSpeciesSync::write,
-            MessageSpeciesSync::decode);
+public record MessageSpeciesSync(List<ResourceLocation> speciesIDList) implements Packet<MessageSpeciesSync> {
+    public static final ClientboundPacketType<MessageSpeciesSync> TYPE = new MessageSpeciesSync.Type();
     
-    private void write(RegistryFriendlyByteBuf buf) {
-        buf.writeCollection(speciesIDList, ResourceLocation.STREAM_CODEC);
+    @Override
+    public PacketType<MessageSpeciesSync> type() {
+        return TYPE;
     }
-    
-    private static MessageSpeciesSync decode(RegistryFriendlyByteBuf buf) {
-        var spells = buf.readList(ResourceLocation.STREAM_CODEC);
-        return new MessageSpeciesSync(spells);
-    }
-    
     
     public List<ResourceLocation> getSpeciesIDList() {
         return speciesIDList;
     }
     
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-    
-    public static void handle(final MessageSpeciesSync message, final IPayloadContext ctx)
-    {
-        IncompCore.LOGGER.info("Received species list sync packet");
-        ClientSpeciesManager.getInstance().updateSpeciesList(message.getSpeciesIDList());
+    private static class Type implements ClientboundPacketType<MessageSpeciesSync> {
+        
+        @Override
+        public Class<MessageSpeciesSync> type() {
+            return MessageSpeciesSync.class;
+        }
+        
+        @Override
+        public ResourceLocation id() {
+            return IncompCore.makeId("sync_species");
+        }
+        
+        public void encode(MessageSpeciesSync message, RegistryFriendlyByteBuf buf) {
+            buf.writeCollection(message.speciesIDList, ResourceLocation.STREAM_CODEC);
+        }
+        
+        public MessageSpeciesSync decode(RegistryFriendlyByteBuf buf) {
+            var spells = buf.readList(ResourceLocation.STREAM_CODEC);
+            return new MessageSpeciesSync(spells);
+        }
+        
+        @Override
+        public Runnable handle(MessageSpeciesSync message) {
+            return () -> {
+                IncompCore.LOGGER.info("Received species list sync packet");
+                ClientSpeciesManager.getInstance().updateSpeciesList(message.getSpeciesIDList());
+            };
+        }
     }
 }

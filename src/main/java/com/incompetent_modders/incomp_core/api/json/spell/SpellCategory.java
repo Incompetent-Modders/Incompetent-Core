@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 public enum SpellCategory {
     CURSE,
@@ -42,4 +43,20 @@ public enum SpellCategory {
             return "SpellCategory";
         }
     };
+    
+    public static void toNetwork(SpellCategory category, FriendlyByteBuf buf) {
+        buf.writeUtf(category.name());
+    }
+    
+    public static SpellCategory fromNetwork(FriendlyByteBuf buf) {
+        var category = buf.readUtf();
+        for (SpellCategory spellCategory : SpellCategory.values()) {
+            if (spellCategory.name().equalsIgnoreCase(category)) {
+                return spellCategory;
+            } else {
+                return UTILITY;
+            }
+        }
+        return UTILITY;
+    }
 }

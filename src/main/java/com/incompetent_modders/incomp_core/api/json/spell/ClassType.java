@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.json.spell;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -23,6 +24,14 @@ public record ClassType(ResourceLocation classID, boolean acceptAllClasses) {
     }
     
     public static ClassType decode(RegistryFriendlyByteBuf buf) {
+        return fromNetwork(buf);
+    }
+    
+    public void toNetwork(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(classID);
+        buf.writeBoolean(acceptAllClasses);
+    }
+    public static ClassType fromNetwork(FriendlyByteBuf buf) {
         var id = buf.readResourceLocation();
         var acceptAll = buf.readBoolean();
         return new ClassType(id, acceptAll);

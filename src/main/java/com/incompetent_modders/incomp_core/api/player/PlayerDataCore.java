@@ -73,7 +73,7 @@ public class PlayerDataCore {
                 }
                 classAbilityCooldownInterval = 0;
             }
-            if (classType.equals(new ResourceLocation(IncompCore.MODID, "simple_human"))) {
+            if (classType.equals(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "simple_human"))) {
                 IncompCore.LOGGER.info("Player has old ID for default ClassType, setting to new default...");
                 ClassData.Set.playerClassType(player, Utils.defaultClass);
             }

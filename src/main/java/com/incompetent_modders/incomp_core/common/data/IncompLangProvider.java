@@ -86,6 +86,8 @@ public class IncompLangProvider extends LanguageProvider {
         this.welcomeMessage("enabled", "[AUTOMATIC] Welcome Message on World Join is enabled.");
         this.welcomeMessage("enabled.toggle", "To disable, use %s");
         
+        this.add("ability.incompetent_core.function_charges.no_charges", "You have no charges remaining for this ability.");
+        
     }
     
     private void tab(Holder<CreativeModeTab> tabHolder) {

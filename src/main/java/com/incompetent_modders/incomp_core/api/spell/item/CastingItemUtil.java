@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
 public class CastingItemUtil {
-    public static ResourceLocation emptySpell = new ResourceLocation(IncompCore.MODID, "empty");
+    public static ResourceLocation emptySpell = IncompCore.makeId("empty");
     public static CustomData getCustomData(ItemStack stack) {
         return stack.get(DataComponents.CUSTOM_DATA);
     }
@@ -27,7 +27,7 @@ public class CastingItemUtil {
             //The NBT formats the spells as modid:spellname. We need to separate them into two strings.
             String spellModid = getCustomData(stack).copyTag().getString("spellSlot_" + slot).split(":")[0];
             String spellName = getCustomData(stack).copyTag().getString("spellSlot_" + slot).split(":")[1];
-            return new ResourceLocation(spellModid, spellName);
+            return ResourceLocation.fromNamespaceAndPath(spellModid, spellName);
         }
         return emptySpell;
     }

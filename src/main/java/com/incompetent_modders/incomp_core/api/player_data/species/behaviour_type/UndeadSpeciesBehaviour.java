@@ -36,7 +36,7 @@ public class UndeadSpeciesBehaviour extends SpeciesBehaviour {
                     if (itemstack.isDamageableItem()) {
                         itemstack.setDamageValue(itemstack.getDamageValue() + player.getRandom().nextInt(2));
                         if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
-                            player.broadcastBreakEvent(EquipmentSlot.HEAD);
+                            player.onEquippedItemBroken(itemstack.getItem(), EquipmentSlot.HEAD);
                             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         }
                     }

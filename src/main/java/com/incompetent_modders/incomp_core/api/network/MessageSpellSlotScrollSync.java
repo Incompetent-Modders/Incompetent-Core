@@ -2,8 +2,13 @@ package com.incompetent_modders.incomp_core.api.network;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.teamresourceful.resourcefullib.common.network.Packet;
+import com.teamresourceful.resourcefullib.common.network.base.PacketType;
+import com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,23 +21,50 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record MessageSpellSlotScrollSync(boolean forward) implements CustomPacketPayload {
+import java.util.function.Consumer;
+
+public record MessageSpellSlotScrollSync(boolean forward) implements Packet<MessageSpellSlotScrollSync> {
+    public static final ServerboundPacketType<MessageSpellSlotScrollSync> TYPE = new MessageSpellSlotScrollSync.Type();
     
-    public static final Type<MessageSpellSlotScrollSync> TYPE = new Type<>(new ResourceLocation(IncompCore.MODID, "spell_slot_scroll"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSpellSlotScrollSync> CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL,
-            MessageSpellSlotScrollSync::forward,
-            MessageSpellSlotScrollSync::new
-    );
-    public static void handle(final MessageSpellSlotScrollSync message, final IPayloadContext ctx)
-    {
-        ctx.enqueueWork(() -> {
-            Player player = ctx.player();
-            ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
-            if (equipped.getItem() instanceof SpellCastingItem) {
-                changeSelectedSpell(equipped, message.forward());
-            }
-        });
+    public static void sendToServer(boolean forward) {
+        SyncHandler.DEFAULT_CHANNEL.sendToServer(new MessageSpellSlotScrollSync(forward));
+    }
+    
+    @Override
+    public PacketType<MessageSpellSlotScrollSync> type() {
+        return TYPE;
+    }
+    
+    private static class Type implements ServerboundPacketType<MessageSpellSlotScrollSync> {
+        @Override
+        public Class<MessageSpellSlotScrollSync> type() {
+            return MessageSpellSlotScrollSync.class;
+        }
+        
+        @Override
+        public ResourceLocation id() {
+            return IncompCore.makeId("spell_slot_scroll");
+        }
+        
+        @Override
+        public void encode(MessageSpellSlotScrollSync messageSpellSlotScrollSync, RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+            registryFriendlyByteBuf.writeBoolean(messageSpellSlotScrollSync.forward());
+        }
+        
+        @Override
+        public MessageSpellSlotScrollSync decode(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+            var forward = registryFriendlyByteBuf.readBoolean();
+            return new MessageSpellSlotScrollSync(forward);
+        }
+        @Override
+        public Consumer<Player> handle(MessageSpellSlotScrollSync messageSpellSlotScrollSync) {
+            return (player) -> {
+                ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
+                if (equipped.getItem() instanceof SpellCastingItem) {
+                    changeSelectedSpell(equipped, messageSpellSlotScrollSync.forward());
+                }
+            };
+        }
     }
     private static int selectedSpellSlot;
     
@@ -65,9 +97,5 @@ public record MessageSpellSlotScrollSync(boolean forward) implements CustomPacke
             });
             
         }
-    }
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
     }
 }

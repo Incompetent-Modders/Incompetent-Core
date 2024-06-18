@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public record ConvertCondition(ResourceLocation isClassOrSpecies, int hasXpLevel, ItemStack isHoldingItem) {
-    public static final ResourceLocation convertToNothing = new ResourceLocation(IncompCore.MODID, "convert_to_nothing");
+    public static final ResourceLocation convertToNothing = ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "convert_to_nothing");
     public static final Codec<ConvertCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.optionalFieldOf("is_class_or_species", convertToNothing).forGetter(ConvertCondition::isClassOrSpecies),
             Codec.INT.optionalFieldOf("xp_level", 0).forGetter(ConvertCondition::hasXpLevel),

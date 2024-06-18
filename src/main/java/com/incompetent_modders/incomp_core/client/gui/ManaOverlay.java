@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.GameType;
 public class ManaOverlay implements LayeredDraw.Layer {
     public static final ManaOverlay INSTANCE = new ManaOverlay();
     @Override
-    public void render(GuiGraphics guiGraphics, float partialTick) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
             return;
@@ -61,9 +62,9 @@ public class ManaOverlay implements LayeredDraw.Layer {
     
     public ResourceLocation getManaOverlayTexture(String spriteName, LocalPlayer player) {
         if (ClassTypeListener.getClassTypeProperties(getPlayerClassType(player)) == null)
-            return new ResourceLocation(IncompCore.MODID, "mana_bar/" + spriteName);
+            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "mana_bar/" + spriteName);
         if (!ClassTypeListener.getClassTypeProperties(getPlayerClassType(player)).useClassSpecificTexture())
-            return new ResourceLocation(IncompCore.MODID, "mana_bar/" + spriteName);
-        return new ResourceLocation(getPlayerClassType(player).getNamespace(), "mana_bar/" + getPlayerClassType(player).getPath() + "/" + spriteName);
+            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "mana_bar/" + spriteName);
+        return ResourceLocation.fromNamespaceAndPath(getPlayerClassType(player).getNamespace(), "mana_bar/" + getPlayerClassType(player).getPath() + "/" + spriteName);
     }
 }

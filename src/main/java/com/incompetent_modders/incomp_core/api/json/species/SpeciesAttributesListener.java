@@ -53,7 +53,7 @@ public class SpeciesAttributesListener extends SimpleJsonResourceReloadListener 
     }
     
     protected static ResourceLocation getSpeciesId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     
     public static SpeciesAttributes getSpeciesTypeAttributes(ResourceLocation speciesType) {

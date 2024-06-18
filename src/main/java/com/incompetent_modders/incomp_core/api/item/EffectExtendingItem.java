@@ -42,7 +42,7 @@ public class EffectExtendingItem extends Item {
         return extensionDuration;
     }
     public ResourceLocation getExtendingEffect(ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.STORED_EFFECT_POSTPONE.get(), new ResourceLocation("minecraft", "speed"));
+        return stack.getOrDefault(ModDataComponents.STORED_EFFECT_POSTPONE.get(), ResourceLocation.fromNamespaceAndPath("minecraft", "speed"));
     }
     public int getExtendDuration(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.EFFECT_POSTPONE_DURATION.get(), 600);

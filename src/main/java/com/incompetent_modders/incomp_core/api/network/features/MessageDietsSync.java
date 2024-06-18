@@ -1,44 +1,54 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
 import com.incompetent_modders.incomp_core.client.ClientDietManager;
+import com.teamresourceful.resourcefullib.common.network.Packet;
+import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;
+import com.teamresourceful.resourcefullib.common.network.base.PacketType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-public record MessageDietsSync(List<ResourceLocation> dietsIDList) implements CustomPacketPayload {
-    public static final Type<MessageDietsSync> TYPE = CustomIncompetentPayload.createType("diet_sync");
-    public static final StreamCodec<RegistryFriendlyByteBuf, MessageDietsSync> CODEC = StreamCodec.ofMember(
-            MessageDietsSync::write,
-            MessageDietsSync::decode);
+public record MessageDietsSync(List<ResourceLocation> dietsIDList) implements Packet<MessageDietsSync> {
+    public static final ClientboundPacketType<MessageDietsSync> TYPE = new MessageDietsSync.Type();
     
-    private void write(RegistryFriendlyByteBuf buf) {
-        buf.writeCollection(dietsIDList, ResourceLocation.STREAM_CODEC);
+    @Override
+    public PacketType<MessageDietsSync> type() {
+        return TYPE;
     }
-    
-    private static MessageDietsSync decode(RegistryFriendlyByteBuf buf) {
-        var spells = buf.readList(ResourceLocation.STREAM_CODEC);
-        return new MessageDietsSync(spells);
-    }
-    
     
     public List<ResourceLocation> getDietIDList() {
         return dietsIDList;
     }
     
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-    
-    public static void handle(final MessageDietsSync message, final IPayloadContext ctx)
-    {
-        IncompCore.LOGGER.info("Received diet list sync packet");
-        ClientDietManager.getInstance().updateDietList(message.getDietIDList());
+    private static class Type implements ClientboundPacketType<MessageDietsSync> {
+        
+        @Override
+        public Class<MessageDietsSync> type() {
+            return MessageDietsSync.class;
+        }
+        
+        @Override
+        public ResourceLocation id() {
+            return IncompCore.makeId("sync_diets");
+        }
+        
+        public void encode(MessageDietsSync message, RegistryFriendlyByteBuf buf) {
+            buf.writeCollection(message.dietsIDList, ResourceLocation.STREAM_CODEC);
+        }
+        
+        public MessageDietsSync decode(RegistryFriendlyByteBuf buf) {
+            var spells = buf.readList(ResourceLocation.STREAM_CODEC);
+            return new MessageDietsSync(spells);
+        }
+        
+        @Override
+        public Runnable handle(MessageDietsSync message) {
+            return () -> {
+                IncompCore.LOGGER.info("Received diet list sync packet");
+                ClientDietManager.getInstance().updateDietList(message.getDietIDList());
+            };
+        }
     }
 }

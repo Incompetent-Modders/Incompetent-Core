@@ -44,16 +44,16 @@ public class ClientUtil {
     public static final ChatFormatting DESCRIPTION_FORMAT = ChatFormatting.BLUE;
     
     private static final Component SELECTED_SPELL_TITLE = Component.translatable(
-            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.selected_spell"))
+            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.selected_spell"))
     ).withStyle(TITLE_FORMAT);
     private static final Component AVAILABLE_SPELLS_TITLE = Component.translatable(
-            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.available_spells"))
+            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.available_spells"))
     ).withStyle(TITLE_FORMAT);
     private static final Component SPELL_INFO_TITLE = Component.translatable(
-            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.spell_info"))
+            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.spell_info"))
     ).withStyle(TITLE_FORMAT);
     private static final Component PRECAST_INFO_TITLE = Component.translatable(
-            Util.makeDescriptionId("item", new ResourceLocation(MODID,"spellcasting.pre_cast_info"))
+            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.pre_cast_info"))
     ).withStyle(TITLE_FORMAT);
     public static Minecraft mc()
     {
@@ -126,7 +126,7 @@ public class ClientUtil {
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
         ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
-        SpellProperties spellProperties = SpellListener.getSpellProperties(spell);
+        SpellProperties spellProperties = ClientSpellManager.getSpellProperties(spell);
         tooltip.add(SELECTED_SPELL_TITLE);
         tooltip.add(CommonComponents.space().append(ClientSpellManager.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.EMPTY);

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.network.chat.Component;
@@ -54,7 +55,7 @@ public class ClassTypeListener extends SimpleJsonResourceReloadListener {
     }
     
     protected static ResourceLocation getClassTypeID(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     
     public static ClassTypeProperties getClassTypeProperties(ResourceLocation classType) {
@@ -71,6 +72,9 @@ public class ClassTypeListener extends SimpleJsonResourceReloadListener {
     
     public static void setProperties(Map<ResourceLocation, ClassTypeProperties> properties) {
         ClassTypeListener.properties = properties;
+    }
+    public static Map<ResourceLocation, ClassTypeProperties> getProperties() {
+        return properties;
     }
     
     public static boolean classTypeHasProperties(ResourceLocation classType) {

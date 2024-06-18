@@ -6,7 +6,9 @@ import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.common.event.SetupEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 public class EventHandler {
@@ -27,5 +29,7 @@ public class EventHandler {
         event.addListener(dietListener);
         //event.addListener(enchantmentWeaknessListener);
     }
+    
+    
     
 }

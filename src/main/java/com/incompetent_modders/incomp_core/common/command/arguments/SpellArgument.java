@@ -31,7 +31,7 @@ public class SpellArgument implements ArgumentType<ResourceLocation> {
     
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-        return SharedSuggestionProvider.suggestResource(ClientSpellManager.getInstance().getSpellList(), suggestionsBuilder);
+        return SharedSuggestionProvider.suggestResource(SpellListener.getAllSpells(), suggestionsBuilder);
     }
     private Stream<ResourceLocation> getSpells()
     {

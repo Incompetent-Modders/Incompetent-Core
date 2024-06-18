@@ -54,7 +54,7 @@ public class ModCreativeTabs {
                     stack.set(ModDataComponents.STORED_SPECIES_TYPE, speciesID);
                     output.accept(stack);
                 }
-                for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList()) {
+                for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList().keySet()) {
                     Item item = ModItems.SPELL_TOME.get();
                     ItemStack stack = new ItemStack(item);
                     CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> tag.putString("spellSlot_0", spellID.toString()));

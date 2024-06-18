@@ -30,9 +30,4 @@ public class DoNothingResult extends SpellResult {
     public SpellResultType<? extends SpellResult> getType() {
         return null;
     }
-    
-    @Override
-    public void write(RegistryFriendlyByteBuf buf) {
-    
-    }
 }

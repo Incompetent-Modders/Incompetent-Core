@@ -15,16 +15,19 @@ import com.incompetent_modders.incomp_core.api.network.features.MessageClassType
 import com.incompetent_modders.incomp_core.api.network.features.MessageDietsSync;
 import com.incompetent_modders.incomp_core.api.network.features.MessageSpeciesSync;
 import com.incompetent_modders.incomp_core.api.network.features.MessageSpellsSync;
+import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
+import com.incompetent_modders.incomp_core.api.syncing.FeaturesSyncer;
 import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
 import com.incompetent_modders.incomp_core.client.ClientDietManager;
 import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
 import com.incompetent_modders.incomp_core.client.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
+import com.incompetent_modders.incomp_core.common.event.SetupEvent;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -53,9 +56,11 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -70,11 +75,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.PLAYER_DATA_ID;
-import static com.incompetent_modders.incomp_core.common.util.Utils.applyDamage;
+//import static com.incompetent_modders.incomp_core.common.util.Utils.applyDamage;
 
 @EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class CommonForgeEvents {
     //private static boolean syncingData = false;
+    
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof ServerPlayer player) {
@@ -84,6 +90,7 @@ public class CommonForgeEvents {
             CompoundTag playerData = PlayerDataCore.getPlayerData(player);
             if (player.getPersistentData().getCompound(PLAYER_DATA_ID) != playerData) {
                 PlayerDataCore.setPlayerData(player, playerData);
+                MessagePlayerDataSync.sendToClient(player, playerData);
             }
             //    syncingData = false;
             //}
@@ -109,26 +116,12 @@ public class CommonForgeEvents {
             
         }
     }
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onDatapackSync(OnDatapackSyncEvent event) {
-        Stream<ServerPlayer> relevantPlayers = event.getRelevantPlayers();
-        var msgSpellList = new MessageSpellsSync(SpellListener.getAllSpells());
-        var msgSpeciesList = new MessageSpeciesSync(SpeciesListener.getAllSpecies());
-        var msgClassTypeList = new MessageClassTypesSync(ClassTypeListener.getAllClassTypes());
-        var msgDietList = new MessageDietsSync(DietListener.getAllDiets());
-        for (ServerPlayer player : relevantPlayers.toList()) {
-            if (!new HashSet<>(ClientSpellManager.getInstance().getSpellList()).containsAll(SpellListener.getAllSpells()))
-                PacketDistributor.sendToPlayer(player, msgSpellList);
-            if (!new HashSet<>(ClientSpeciesManager.getInstance().getSpeciesList()).containsAll(SpeciesListener.getAllSpecies()))
-                PacketDistributor.sendToPlayer(player, msgSpeciesList);
-            if (!new HashSet<>(ClientClassTypeManager.getInstance().getClassTypeList()).containsAll(ClassTypeListener.getAllClassTypes()))
-                PacketDistributor.sendToPlayer(player, msgClassTypeList);
-            if (!new HashSet<>(ClientDietManager.getInstance().getDietList()).containsAll(DietListener.getAllDiets()))
-                PacketDistributor.sendToPlayer(player, msgDietList);
-        }
-    }
-    
-    static AttributeModifier PACIFIST = new AttributeModifier(UUID.fromString("70eeca5e-46ed-4b8a-bf75-f102419395cc"), "Pacifist", 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    //@SubscribeEvent(priority = EventPriority.HIGH)
+    //public static void onDatapackSync(OnDatapackSyncEvent event) {
+    //    Stream<ServerPlayer> relevantPlayers = event.getRelevantPlayers();
+    //    FeaturesSyncer.syncAllToAll(relevantPlayers.toList());
+    //}
+    static AttributeModifier PACIFIST = new AttributeModifier(IncompCore.makeId("pacifist"), 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
@@ -142,7 +135,7 @@ public class CommonForgeEvents {
             
             AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
             if (classTypeProperties != null && damage != null) {
-                if (classTypeProperties.pacifist() && !damage.hasModifier(PACIFIST)) {
+                if (classTypeProperties.pacifist() && !damage.hasModifier(PACIFIST.id())) {
                     damage.addPermanentModifier(PACIFIST);
                 }
                 if (!classTypeProperties.pacifist()) {
@@ -161,16 +154,16 @@ public class CommonForgeEvents {
             }
         });
     }
-    @SubscribeEvent
-    public static void onPlayerHurt(LivingHurtEvent event) {
-        LivingEntity entity = event.getEntity();
-        DamageSource source = event.getSource();
-        Entity attacker = source.getEntity();
-        ItemStack weapon = attacker instanceof LivingEntity livingEntity ? livingEntity.getMainHandItem() : ItemStack.EMPTY;
-        if (entity instanceof Player player) {
-            applyDamage(event, player, weapon);
-        }
-    }
+    //@SubscribeEvent
+    //public static void onPlayerHurt(LivingHurtEvent event) {
+    //    LivingEntity entity = event.getEntity();
+    //    DamageSource source = event.getSource();
+    //    Entity attacker = source.getEntity();
+    //    ItemStack weapon = attacker instanceof LivingEntity livingEntity ? livingEntity.getMainHandItem() : ItemStack.EMPTY;
+    //    if (entity instanceof Player player) {
+    //        applyDamage(event, player, weapon);
+    //    }
+    //}
     
     @SubscribeEvent
     public static void onItemStartUse(LivingEntityUseItemEvent.Start event) {
@@ -326,4 +319,8 @@ public class CommonForgeEvents {
         };
     }
     
+    //@SubscribeEvent
+    //private static void onSetup(FMLCommonSetupEvent event) {
+    //    SetupEvent.EVENT.invoke(new SetupEvent(event::enqueueWork));
+    //}
 }

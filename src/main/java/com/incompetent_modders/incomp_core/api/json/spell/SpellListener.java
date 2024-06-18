@@ -53,7 +53,7 @@ public class SpellListener extends SimpleJsonResourceReloadListener {
         IncompCore.LOGGER.info("Load Complete for {} spells", spells.size());
     }
     protected static ResourceLocation getSpellId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     public static SpellProperties getSpellProperties(ResourceLocation spell) {
         return properties.get(spell);
@@ -74,7 +74,9 @@ public class SpellListener extends SimpleJsonResourceReloadListener {
     public static boolean spellHasProperties(ResourceLocation spell) {
         return properties.containsKey(spell);
     }
-    
+    public static Map<ResourceLocation, SpellProperties> getProperties() {
+        return properties;
+    }
     
     public static List<ResourceLocation> getAllSpells() {
         List<ResourceLocation> spells = new ArrayList<>();

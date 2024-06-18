@@ -43,12 +43,12 @@ public class IncompBlockTagsProvider extends BlockTagsProvider {
     
     
     public static TagKey<Block> forgeBlockTag(String path) {
-        return BlockTags.create(new ResourceLocation("forge", path));
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("forge", path));
     }
     public static TagKey<Block> modBlockTag(String path) {
-        return BlockTags.create(new ResourceLocation(IncompCore.MODID, path));
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, path));
     }
     public static TagKey<Block> modBlockTag(String namespace, String path) {
-        return BlockTags.create(new ResourceLocation(namespace, path));
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(namespace, path));
     }
 }

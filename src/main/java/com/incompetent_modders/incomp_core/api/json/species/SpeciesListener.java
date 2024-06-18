@@ -57,7 +57,7 @@ public class SpeciesListener extends SimpleJsonResourceReloadListener {
     }
     
     protected static ResourceLocation getSpeciesId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     public static SpeciesProperties getSpeciesTypeProperties(ResourceLocation speciesType) {
         return properties.get(speciesType);
@@ -73,6 +73,9 @@ public class SpeciesListener extends SimpleJsonResourceReloadListener {
     
     public static void setProperties(Map<ResourceLocation, SpeciesProperties> properties) {
         SpeciesListener.properties = properties;
+    }
+    public static Map<ResourceLocation, SpeciesProperties> getProperties() {
+        return properties;
     }
     
     public static List<ResourceLocation> getAllSpecies() {

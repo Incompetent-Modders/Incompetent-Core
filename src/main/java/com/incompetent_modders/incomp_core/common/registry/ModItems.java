@@ -18,10 +18,10 @@ import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
     
-    public static final DeferredHolder<Item, Item> ASSIGN_CLASS = ITEMS.register("assign_class", () -> new ClassAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "none")));
-    public static final DeferredHolder<Item, Item> ASSIGN_SPECIES = ITEMS.register("assign_species", () -> new SpeciesAssigningItem(new Item.Properties(), new ResourceLocation(MODID, "human")));
+    public static final DeferredHolder<Item, Item> ASSIGN_CLASS = ITEMS.register("assign_class", () -> new ClassAssigningItem(new Item.Properties(), ResourceLocation.fromNamespaceAndPath(MODID, "none")));
+    public static final DeferredHolder<Item, Item> ASSIGN_SPECIES = ITEMS.register("assign_species", () -> new SpeciesAssigningItem(new Item.Properties(), ResourceLocation.fromNamespaceAndPath(MODID, "human")));
     public static final DeferredHolder<Item, Item> SPELL_TOME = ITEMS.register("spell_tome", () -> new SpellCastingItem(new Item.Properties(), 1));
-    public static final DeferredHolder<Item, Item> EFFECT_POSTPONE = ITEMS.register("postpone_effect", () -> new EffectExtendingItem(new ResourceLocation("minecraft", "speed"), 600));
+    public static final DeferredHolder<Item, Item> EFFECT_POSTPONE = ITEMS.register("postpone_effect", () -> new EffectExtendingItem(ResourceLocation.fromNamespaceAndPath("minecraft", "speed"), 600));
     
     
     public static void register(IEventBus eventBus) {

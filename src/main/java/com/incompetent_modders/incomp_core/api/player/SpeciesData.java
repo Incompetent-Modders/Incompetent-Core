@@ -79,7 +79,7 @@ public class SpeciesData {
         }
         public static ResourceLocation playerSpecies(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return new ResourceLocation(nc.getString("species"));
+            return ResourceLocation.parse(nc.getString("species"));
         }
         public static boolean isInvertedHealAndHarm(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
@@ -91,15 +91,15 @@ public class SpeciesData {
         }
         public static ResourceLocation diet(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return new ResourceLocation(nc.getString("speciesDiet"));
+            return ResourceLocation.parse(nc.getString("speciesDiet"));
         }
         public static SpeciesBehaviourType<?> behaviour(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return ModRegistries.SPECIES_BEHAVIOUR_TYPE.get(new ResourceLocation(nc.getString("speciesBehaviour")));
+            return ModRegistries.SPECIES_BEHAVIOUR_TYPE.get(ResourceLocation.parse(nc.getString("speciesBehaviour")));
         }
         public static AbilityType<?> ability(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return ModRegistries.ABILITY_TYPE.get(new ResourceLocation(nc.getString("speciesAbility")));
+            return ModRegistries.ABILITY_TYPE.get(ResourceLocation.parse(nc.getString("speciesAbility")));
         }
         public static int abilityCooldown(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
@@ -233,7 +233,7 @@ public class SpeciesData {
     
     public static void initialize(Player spe) {
         CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-        if (!nc.contains("species") || Get.playerSpecies(spe).equals(new ResourceLocation("minecraft:"))) {
+        if (!nc.contains("species") || Get.playerSpecies(spe).equals(ResourceLocation.parse("minecraft:"))) {
             Set.playerSpecies(spe, Utils.defaultSpecies);
         }
     }

@@ -50,6 +50,6 @@ public class EnchantmentWeaknessListener extends SimpleJsonResourceReloadListene
     }
     
     protected static ResourceLocation getWeaknessId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), resourceLocation.getPath().substring(0, resourceLocation.getPath().length() - 5));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath().substring(0, resourceLocation.getPath().length() - 5));
     }
 }

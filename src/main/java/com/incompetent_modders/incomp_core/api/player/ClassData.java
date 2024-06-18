@@ -56,7 +56,7 @@ public class ClassData {
     public static class Get {
         public static ResourceLocation playerClassType(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return new ResourceLocation(nc.getString("classType"));
+            return ResourceLocation.parse(nc.getString("classType"));
         }
         public static boolean canRegenMana(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
@@ -72,11 +72,11 @@ public class ClassData {
         }
         public static ClassPassiveEffectType<?>  passiveEffect(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return ModRegistries.CLASS_PASSIVE_EFFECT_TYPE.get(new ResourceLocation(nc.getString("classPassiveEffect")));
+            return ModRegistries.CLASS_PASSIVE_EFFECT_TYPE.get(ResourceLocation.parse(nc.getString("classPassiveEffect")));
         }
         public static AbilityType<?> ability(Player spe) {
             CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-            return ModRegistries.ABILITY_TYPE.get(new ResourceLocation(nc.getString("classAbility")));
+            return ModRegistries.ABILITY_TYPE.get(ResourceLocation.parse(nc.getString("classAbility")));
         }
     }
     
@@ -97,7 +97,7 @@ public class ClassData {
     
     public static void initialize(Player spe) {
         CompoundTag nc = spe.getPersistentData().getCompound(PLAYER_DATA_ID);
-        if (!nc.contains("classType") || Get.playerClassType(spe).equals(new ResourceLocation("minecraft:"))) {
+        if (!nc.contains("classType") || Get.playerClassType(spe).equals(ResourceLocation.parse("minecraft:"))) {
             Set.playerClassType(spe, Utils.defaultClass);
         }
     }

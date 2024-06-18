@@ -58,7 +58,7 @@ public class DietListener extends SimpleJsonResourceReloadListener {
     }
     
     public static ResourceLocation getDietId(ResourceLocation resourceLocation) {
-        return new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", ""));
     }
     
     public static DietProperties getDietProperties(ResourceLocation resourceLocation) {
@@ -85,6 +85,9 @@ public class DietListener extends SimpleJsonResourceReloadListener {
     
     public static void setProperties(Map<ResourceLocation, DietProperties> properties) {
         DietListener.properties = properties;
+    }
+    public static Map<ResourceLocation, DietProperties> getProperties() {
+        return properties;
     }
     
     public static void setDiet(List<ResourceLocation> diet) {

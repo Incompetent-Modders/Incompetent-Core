@@ -1,10 +1,10 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.105'
+    id 'net.neoforged.gradle.userdev' version '7.0.+'
 }
 
-version = mc_version + "-" + mod_version
+version = minecraft_version + "-" + mod_version
 group = mod_group_id
 
 repositories {
@@ -54,6 +54,9 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    maven {
+        url = "https://maven.resourcefulbees.com/repository/maven-public/"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -61,7 +64,12 @@ repositories {
 dependencies {
     // NeoForge
     implementation "net.neoforged:neoforge:${neo_version}"
-    runtimeOnly "dev.emi:emi-1.1.6+1.20.6+neoforge"
+    runtimeOnly "dev.emi:emi-${emi_version}"
+    implementation "com.teamresourceful.resourcefullib:resourcefullib-neoforge-${resourcefulLib_version}"
+
+    implementation "com.teamresourceful:yabn:${yabn_version}"
+    implementation "com.teamresourceful:bytecodecs:${bytecodecs_version}"
+
     //compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
     //runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"

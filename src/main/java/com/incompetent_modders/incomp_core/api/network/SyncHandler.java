@@ -17,6 +17,8 @@ import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
 import com.incompetent_modders.incomp_core.client.ClientDietManager;
 import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
 import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.teamresourceful.resourcefullib.common.network.Network;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -26,39 +28,30 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+import java.nio.channels.NetworkChannel;
+
 public class SyncHandler {
+    public static final Network DEFAULT_CHANNEL = new Network(IncompCore.makeId("main"), 1);
     private static final String PROTOCOL_VERSION = "1.0.0";
-    
-    public static void register(final RegisterPayloadHandlersEvent event)
-    {
-        final PayloadRegistrar registrar = event.registrar(IncompCore.MODID)
-                .versioned(PROTOCOL_VERSION)
-                .optional();
-        
-        //TO SERVER
-        registrar.playToServer(MessageSpellSlotScrollSync.TYPE, MessageSpellSlotScrollSync.CODEC, MessageSpellSlotScrollSync::handle);
-        registrar.playToServer(MessageClassAbilitySync.TYPE, MessageClassAbilitySync.CODEC, MessageClassAbilitySync::handle);
-        registrar.playToServer(MessageSpeciesAbilitySync.TYPE, MessageSpeciesAbilitySync.CODEC, MessageSpeciesAbilitySync::handle);
-        
-        //TO CLIENT
-        registrar.playToClient(MessagePlayerDataSync.TYPE, MessagePlayerDataSync.CODEC, MessagePlayerDataSync::handle);
-        
-        registrar.playToClient(MessageSpellsSync.TYPE, MessageSpellsSync.CODEC, MessageSpellsSync::handle);
-        registrar.playToClient(MessageSpeciesSync.TYPE, MessageSpeciesSync.CODEC, MessageSpeciesSync::handle);
-        registrar.playToClient(MessageClassTypesSync.TYPE, MessageClassTypesSync.CODEC, MessageClassTypesSync::handle);
-        registrar.playToClient(MessageDietsSync.TYPE, MessageDietsSync.CODEC, MessageDietsSync::handle);
-        
-        //registrar.playToClient(MessageSpeciesDataSync.TYPE, MessageSpeciesDataSync.CODEC, MessageSpeciesDataSync::handle);
-        
-        NeoForge.EVENT_BUS.register(new SyncHandler());
-    }
     
     @SubscribeEvent
     public void onLivingTickEvent(PlayerTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
-        var msgCD = new MessagePlayerDataSync(PlayerDataCore.getPlayerData(player));
-        PacketDistributor.sendToPlayer(player, msgCD);
+        MessagePlayerDataSync.sendToClient(player, PlayerDataCore.getPlayerData(player));
+    }
+    
+    public static void init() {
+        DEFAULT_CHANNEL.register(MessagePlayerDataSync.TYPE);
         
+        DEFAULT_CHANNEL.register(MessageSpellsSync.TYPE);
+        DEFAULT_CHANNEL.register(MessageSpeciesSync.TYPE);
+        DEFAULT_CHANNEL.register(MessageDietsSync.TYPE);
+        DEFAULT_CHANNEL.register(MessageClassTypesSync.TYPE);
+        
+        DEFAULT_CHANNEL.register(MessageClassAbilitySync.TYPE);
+        DEFAULT_CHANNEL.register(MessageSpeciesAbilitySync.TYPE);
+        
+        DEFAULT_CHANNEL.register(MessageSpellSlotScrollSync.TYPE);
     }
 }

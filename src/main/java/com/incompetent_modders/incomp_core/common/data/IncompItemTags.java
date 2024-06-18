@@ -24,13 +24,13 @@ public class IncompItemTags {
     
     
     public static TagKey<Item> modItemTag(String path) {
-        return create(new ResourceLocation(IncompCore.MODID, path));
+        return create(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, path));
     }
     public static TagKey<Item> modItemTag(String namespace, String path) {
-        return create(new ResourceLocation(namespace, path));
+        return create(ResourceLocation.fromNamespaceAndPath(namespace, path));
     }
     public static TagKey<Item> forgeItemTag(String path) {
-        return create(new ResourceLocation("forge", path));
+        return create(ResourceLocation.fromNamespaceAndPath("forge", path));
     }
     
     public static TagKey<Item> create(ResourceLocation name) {

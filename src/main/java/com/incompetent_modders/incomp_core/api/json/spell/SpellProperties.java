@@ -8,10 +8,14 @@ import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -151,6 +155,25 @@ public record SpellProperties(SpellCategory category, double manaCost, int drawT
         String classTypeText = classType.acceptAllClasses() ? "any class" : classType.classID().toString();
         String speciesTypeText = speciesType.acceptAllSpecies() ? "any species" : speciesType.speciesID().toString();
         IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);
+    }
+    
+    public void toNetwork(RegistryFriendlyByteBuf buf) {
+        ByteBufCodecs.DOUBLE.encode(buf, manaCost);
+        ByteBufCodecs.INT.encode(buf, drawTime);
+        SpellCategory.toNetwork(category, buf);
+        catalyst.toNetwork(buf);
+        classType.toNetwork(buf);
+        speciesType.toNetwork(buf);
+    }
+    
+    public static SpellProperties fromNetwork(FriendlyByteBuf buf) {
+        double manaCost = buf.readDouble();
+        int drawTime = buf.readInt();
+        SpellCategory category = SpellCategory.fromNetwork(buf);
+        Catalyst catalyst = Catalyst.fromNetwork(buf);
+        ClassType classType = ClassType.fromNetwork(buf);
+        SpeciesType speciesType = SpeciesType.fromNetwork(buf);
+        return new SpellProperties(category, manaCost, drawTime, catalyst, classType, speciesType, SpellResults.EMPTY, SoundEvents.ALLAY_THROW);
     }
     
     

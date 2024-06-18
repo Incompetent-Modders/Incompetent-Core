@@ -5,11 +5,6 @@
     "burn_in_sun": true
   },
   "diet_type": "incompetent_core:carnivore",
-  "enchant_weaknesses": [
-    {
-      "enchantment": "minecraft:smite"
-    }
-  ],
   "ability": {
     "type": "incompetent_core:apply_effect",
     "effect": "minecraft:speed",

@@ -55,7 +55,7 @@ public class PotionEffectPropertyListener extends SimpleJsonResourceReloadListen
     }
     
     protected static MobEffect getEffect(ResourceLocation resourceLocation) {
-        return BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", "")));
+        return BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), Utils.removeExtension(resourceLocation).replace(".json", "")));
     }
     
     public static PotionEffectProperties getEffectProperties(MobEffect effect) {

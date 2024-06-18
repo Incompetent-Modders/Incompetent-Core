@@ -33,7 +33,7 @@ public class ListFeaturesCommand {
     private static int listSpells(CommandSourceStack source, boolean showID) {
             Component result = Component.translatable("commands.incompetent_core.list_features.spells", ClientSpellManager.getInstance().getSpellList().size()).withStyle(ClientUtil.styleFromColor(0x624a95));
             source.sendSuccess(() -> result, false);
-            for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList()) {
+            for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList().keySet()) {
                 Component spellIDMessage = Component.literal("> (" + spellID.toString() + ")").withStyle(ClientUtil.styleFromColor(0x624a95));
                 Component spellNameMessage = ClientSpellManager.getDisplayName(spellID).copy().withStyle(ClientUtil.styleFromColor(0xa05baf));
                 if (showID) {

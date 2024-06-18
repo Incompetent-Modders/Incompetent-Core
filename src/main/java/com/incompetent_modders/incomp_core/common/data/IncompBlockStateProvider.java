@@ -151,7 +151,7 @@ public abstract class IncompBlockStateProvider extends BlockStateProvider {
     }
     
     
-    private ResourceLocation extend(ResourceLocation rl, String suffix) {return new ResourceLocation(rl.getNamespace(), rl.getPath() + suffix);}
+    private ResourceLocation extend(ResourceLocation rl, String suffix) {return ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), rl.getPath() + suffix);}
     
     private String name(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block).getPath();

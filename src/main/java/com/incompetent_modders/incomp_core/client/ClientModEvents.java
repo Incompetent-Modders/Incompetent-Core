@@ -29,8 +29,8 @@ import java.util.function.BiConsumer;
 import static com.incompetent_modders.incomp_core.IncompCore.MODID;
 @EventBusSubscriber(value = Dist.CLIENT, modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
-    static ResourceLocation mana = new ResourceLocation(MODID, "mana");
-    static ResourceLocation selected_spell = new ResourceLocation(MODID, "selected_spell");
+    static ResourceLocation mana = ResourceLocation.fromNamespaceAndPath(MODID, "mana");
+    static ResourceLocation selected_spell = ResourceLocation.fromNamespaceAndPath(MODID, "selected_spell");
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, mana, ManaOverlay.INSTANCE);

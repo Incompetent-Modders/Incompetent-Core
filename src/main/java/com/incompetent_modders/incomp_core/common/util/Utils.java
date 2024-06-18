@@ -2,11 +2,7 @@ package com.incompetent_modders.incomp_core.common.util;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
-import com.incompetent_modders.incomp_core.api.json.species.diet.EnchantmentWeaknessProperties;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
-import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -15,28 +11,25 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
 public class Utils {
     
     public boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
-    public static ResourceLocation defaultSpecies = new ResourceLocation(IncompCore.MODID, "human");
-    public static ResourceLocation defaultClass = new ResourceLocation(IncompCore.MODID, "none");
-    public static ResourceLocation defaultDiet = new ResourceLocation(IncompCore.MODID, "omnivore");
+    public static ResourceLocation defaultSpecies = IncompCore.makeId("human");
+    public static ResourceLocation defaultClass = IncompCore.makeId("none");
+    public static ResourceLocation defaultDiet = IncompCore.makeId("omnivore");
     public static ResourceLocation location(String path) {
-        return new ResourceLocation(IncompCore.MODID, path);
+        return IncompCore.makeId(path);
     }
     public static ResourceLocation location(String modId, String path) {
-        return new ResourceLocation(modId, path);
+        return ResourceLocation.fromNamespaceAndPath(modId, path);
     }
     
     public static void onCastEvent(Level level, Player player, InteractionHand hand) {
@@ -126,30 +119,30 @@ public class Utils {
         return pathElements[pathElements.length - 1];
     }
     
-    public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
-        ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
-        SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-        if (speciesProperties != null) {
-            if (speciesProperties.hasEnchantWeaknesses()) {
-                for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {
-                    if (isEnchantedWith(properties.getEnchantment(), weapon)) {
-                        float damage = event.getAmount();
-                        float damageMultiplier = properties.multiplier();
-                        event.setAmount(damage + getDamageBonus(getEnchantmentLevel(properties.getEnchantment(), weapon), damageMultiplier));
-                    }
-                }
-            }
-        }
-    }
-    
-    public static float getDamageBonus(int level, float mulBy) {
-        return  (float)level * mulBy;
-    }
-    public static boolean isEnchantedWith(Enchantment enchantment, ItemStack stack) {
-        return getEnchantmentLevel(enchantment, stack) > 0;
-    }
-    
-    public static int getEnchantmentLevel(Enchantment enchantment, ItemStack stack) {
-        return stack.getEnchantmentLevel(enchantment);
-    }
+    //public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
+    //    ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
+    //    SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
+    //    if (speciesProperties != null) {
+    //        if (speciesProperties.hasEnchantWeaknesses()) {
+    //            for (EnchantmentWeaknessProperties properties : speciesProperties.enchantWeaknesses()) {
+    //                if (isEnchantedWith(properties.enchantment(), weapon)) {
+    //                    float damage = event.getAmount();
+    //                    float damageMultiplier = properties.multiplier();
+    //                    event.setAmount(damage + getDamageBonus(getEnchantmentLevel(properties.enchantment(), weapon), damageMultiplier));
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+    //
+    //public static float getDamageBonus(int level, float mulBy) {
+    //    return  (float)level * mulBy;
+    //}
+    //public static boolean isEnchantedWith(Holder<Enchantment> enchantment, ItemStack stack) {
+    //    return getEnchantmentLevel(enchantment, stack) > 0;
+    //}
+    //
+    //public static int getEnchantmentLevel(Holder<Enchantment> enchantment, ItemStack stack) {
+    //    return stack.getEnchantmentLevel(enchantment);
+    //}
 }

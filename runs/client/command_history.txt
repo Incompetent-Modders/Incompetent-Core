@@ -1,9 +1,3 @@
-/i_c list_features spells
-/i_c list_features all
-/i_c list_features spells
-/i_c list_features class_types show_id
-/tellraw Dev {"text":"Hover me!","hoverEvent":{"action":"show_text","value":"Hi!"}}
-/tellraw Dev ["",{"text":"Security breach! ","color":"gold"},{"text":"Click to activate alarm.","underlined":true,"color":"red","clickEvent":{"action":"run_command","value":"/i_c cast_spell @s incompetent_core:data_spell_yippee"}}]
 /i_c toggleWelcomeMessage
 /neoforge tps minecraft:overworld
 /give @s incompetent_core:spell_tome
@@ -48,3 +42,9 @@
 /i_c toggleWelcomeMessage
 /i_c list_features spells
 /i_c list_features species
+/reload
+/data get entity Dev
+/data get entity Dev AbilityCharges
+/reload
+/data get entity Dev AbilityCharges
+/data get entity Dev

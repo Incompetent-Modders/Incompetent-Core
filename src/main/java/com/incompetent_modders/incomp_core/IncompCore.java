@@ -1,17 +1,20 @@
 package com.incompetent_modders.incomp_core;
 
 import com.incompetent_modders.incomp_core.api.network.SyncHandler;
+import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
+import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
 import com.incompetent_modders.incomp_core.client.ClientProxy;
 import com.incompetent_modders.incomp_core.common.CommonProxy;
 import com.incompetent_modders.incomp_core.common.data.IncompDatagen;
-import com.incompetent_modders.incomp_core.client.ClientEventHandler;
 import com.incompetent_modders.incomp_core.common.EventHandler;
+import com.incompetent_modders.incomp_core.common.event.SetupEvent;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,6 +26,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.slf4j.Logger;
 
@@ -48,6 +52,7 @@ public class IncompCore
         this.modEventBus = modEventBus;
         INSTANCE = this;
         DIST = dist;
+        //SetupEvent.EVENT.addListener(IncompCore::setup);
         ModRegistries.register(modEventBus);
         ModAttributes.register(modEventBus);
         ModArgumentTypes.register(modEventBus);
@@ -61,6 +66,7 @@ public class IncompCore
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         
+        
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         
         EventHandler commonHandler = new EventHandler();
@@ -71,16 +77,17 @@ public class IncompCore
         this.modEventBus.addListener(IncompDatagen::gatherDataEvent);
         this.modEventBus.register(this);
     }
+    
+    //private static void setup(final SetupEvent event) {
+    //    SyncHandler.init();
+    //}
     @SubscribeEvent
     private void commonSetup(FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
+        SyncHandler.init();
     }
-    @SubscribeEvent
-    private void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event)
-    {
-        SyncHandler.register(event);
-    }
+    
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
@@ -97,6 +104,6 @@ public class IncompCore
     }
     
     public static ResourceLocation makeId(String path) {
-        return new ResourceLocation(MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 }

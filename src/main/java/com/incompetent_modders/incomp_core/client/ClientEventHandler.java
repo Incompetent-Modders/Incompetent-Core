@@ -28,8 +28,7 @@ public class ClientEventHandler {
             {
                 if(equipped.getItem() instanceof SpellCastingItem)
                 {
-                    var msg = new MessageSpellSlotScrollSync(event.getScrollDeltaY() < 0);
-                    PacketDistributor.sendToServer(msg);
+                    MessageSpellSlotScrollSync.sendToServer(event.getScrollDeltaY() < 0);
                     event.setCanceled(true);
                 }
             }
@@ -41,12 +40,12 @@ public class ClientEventHandler {
         while (ACTIVATE_CLASS_ABILITY.get().consumeClick()) {
             if (player == null)
                 return;
-            PacketDistributor.sendToServer(new MessageClassAbilitySync(true));
+            MessageClassAbilitySync.sendToServer(true);
         }
         while (ACTIVATE_SPECIES_ABILITY.get().consumeClick()) {
             if (player == null)
                 return;
-            PacketDistributor.sendToServer(new MessageSpeciesAbilitySync(true));
+            MessageSpeciesAbilitySync.sendToServer(true);
         }
     }
     

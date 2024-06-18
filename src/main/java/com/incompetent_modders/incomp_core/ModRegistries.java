@@ -28,7 +28,7 @@ public class ModRegistries {
     public static final Registry<SpellResultType<?>> SPELL_RESULT_TYPE = makeSyncedRegistry(SPELL_RESULT_TYPES_KEY);
     
     private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
-        return ResourceKey.createRegistryKey(new ResourceLocation(IncompCore.MODID, name));
+        return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, name));
     }
     private static <T> Registry<T> makeSyncedRegistry(ResourceKey<Registry<T>> registryKey) {
         return new RegistryBuilder<>(registryKey).sync(true).create();
