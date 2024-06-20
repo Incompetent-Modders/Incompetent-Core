@@ -19,7 +19,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SpellCastingItem extends Item {
     
@@ -94,36 +96,22 @@ public class SpellCastingItem extends Item {
         }
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
-        if (CastingItemUtil.getCustomData(stack) == null) {
-            return;
+        if (!stack.has(ModDataComponents.SELECTED_SPELL_SLOT)) {
+            stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
         }
-        for (int i = 0; i < stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()); i++) {
-            String spellSlot_NBT = "spellSlot_";
-            if (!CastingItemUtil.getCustomData(stack).contains(spellSlot_NBT + i) || CastingItemUtil.getCustomData(stack).copyTag().getString(spellSlot_NBT + i).isEmpty()) {
-                int finalI = i;
-                CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                    tag.putString(spellSlot_NBT + finalI, CastingItemUtil.emptySpell.toString());
-                });
-            }
-            if (CastingItemUtil.deserializeFromSlot(stack, i) == null) {
-                int finalI = i;
-                CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                    tag.putString(spellSlot_NBT + finalI, CastingItemUtil.emptySpell.toString());
-                });
-            }
-        }
-        String selSpellSlot_NBT = "selectedSpellSlot";
-        if (!CastingItemUtil.getCustomData(stack).contains(selSpellSlot_NBT)) {
-            CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                tag.putInt(selSpellSlot_NBT, 0);
-            });
-        }
-        
         if (!stack.has(ModDataComponents.REMAINING_DRAW_TIME)) {
             stack.set(ModDataComponents.REMAINING_DRAW_TIME, getUseDuration(stack));
         }
         if (!stack.has(ModDataComponents.MAX_SPELL_SLOTS)) {
             stack.set(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
+        }
+        if (!stack.has(ModDataComponents.SPELLS)) {
+            Map<Integer, ResourceLocation> spells = new HashMap<>();
+            int maxSpellSlots = stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
+            for (int i = 0; i <= maxSpellSlots; i++) {
+                spells.put(i, CastingItemUtil.emptySpell);
+            }
+            stack.set(ModDataComponents.SPELLS, spells);
         }
     }
     public static ResourceLocation getSelectedSpell(ItemStack stack) {

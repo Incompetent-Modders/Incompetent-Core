@@ -17,6 +17,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ModCreativeTabs {
@@ -54,7 +55,10 @@ public class ModCreativeTabs {
                 for (ResourceLocation spellID : ClientSpellManager.getInstance().getSpellList().keySet()) {
                     Item item = ModItems.SPELL_TOME.get();
                     ItemStack stack = new ItemStack(item);
-                    CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> tag.putString("spellSlot_0", spellID.toString()));
+                    Map<Integer, ResourceLocation> spells = Map.of(0, spellID);
+                    stack.set(ModDataComponents.SPELLS, spells);
+                    stack.set(ModDataComponents.MAX_SPELL_SLOTS, 0);
+                    stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
                     output.accept(stack);
                 }
             }, builder -> builder.withTabsBefore(BASE_CREATIVE_TAB.getId()));

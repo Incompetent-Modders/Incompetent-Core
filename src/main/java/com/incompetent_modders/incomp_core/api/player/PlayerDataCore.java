@@ -58,8 +58,11 @@ public class PlayerDataCore {
                         }
                     });
                 }
-                regenInterval++;
-                if (regenInterval >= (20 / mod.get())) {
+                {
+                    regenInterval++;
+                    if (regenInterval < (20 / mod.get())) {
+                        return;
+                    }
                     ManaData.Util.healMana(player, manaRegen.getValue());
                     Utils.onManaHeal(player, manaRegen.getValue());
                     MessageManaDataSync.sendToClient(player, ManaData.Get.mana(player), ManaData.Get.maxMana(player));
@@ -67,16 +70,30 @@ public class PlayerDataCore {
                 }
             }
             AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
-            if (maxMana != null && classTypeProperties != null) {
+            {
+                if (maxMana == null) {
+                    return;
+                }
+                
+                if (classTypeProperties == null) {
+                    return;
+                }
+                
                 ManaData.Set.maxMana(player, classTypeProperties.maxMana());
                 MessageManaDataSync.sendToClient(player, ManaData.Get.mana(player), ManaData.Get.maxMana(player));
             }
-            classAbilityCooldownInterval++;
-            if (classAbilityCooldownInterval >= 20) {
-                if (ClassData.Get.abilityCooldown(player) > 0) {
-                    ClassData.Set.abilityCooldown(player, ClassData.Get.abilityCooldown(player) - 1);
-                    MessagePlayerDataSync.sendToClient(player, playerData);
+            {
+                classAbilityCooldownInterval++;
+                if (classAbilityCooldownInterval < 20) {
+                    return;
                 }
+                if (ClassData.Get.abilityCooldown(player) <= 0) {
+                    return;
+                }
+                
+                IncompCore.LOGGER.info("Decrementing class ability cooldown for player {}", player.getName().getString());
+                ClassData.Set.abilityCooldown(player, ClassData.Get.abilityCooldown(player) - 1);
+                MessagePlayerDataSync.sendToClient(player, playerData);
                 classAbilityCooldownInterval = 0;
             }
             if (classType.equals(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "simple_human"))) {
@@ -84,33 +101,43 @@ public class PlayerDataCore {
                 ClassData.Set.playerClassType(player, Utils.defaultClass);
                 MessagePlayerDataSync.sendToClient(player, playerData);
             }
-            if (classTypeProperties != null) {
-                ClassData.Set.playerClassType(player, classType);
-                ClassData.Set.canRegenMana(player, classTypeProperties.canRegenerateMana(player, player.level()));
-                ClassData.Set.isPacifist(player, classTypeProperties.pacifist());
-                ClassData.Set.ability(player, classTypeProperties.ability().getType());
-                ClassData.Set.passiveEffect(player, classTypeProperties.passiveEffect().getType());
-                classTypeProperties.tickClassFeatures(event);
-            }
+            
+            ClassData.Set.playerClassType(player, classType);
+            ClassData.Set.canRegenMana(player, classTypeProperties.canRegenerateMana(player, player.level()));
+            ClassData.Set.isPacifist(player, classTypeProperties.pacifist());
+            ClassData.Set.ability(player, classTypeProperties.ability().getType());
+            ClassData.Set.passiveEffect(player, classTypeProperties.passiveEffect().getType());
+            classTypeProperties.tickClassFeatures(event);
         }
     }
     public static void handleSpeciesDataTick(ServerPlayer player, PlayerTickEvent event) {
         ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
         CompoundTag playerData = getPlayerData(player);
         if (SpeciesData.Util.isSpeciesPresent(player)) {
-            speciesAbilityCooldownInterval++;
-            if (speciesAbilityCooldownInterval >= 20) {
-                if (SpeciesData.Get.abilityCooldown(player) > 0) {
-                    SpeciesData.Set.abilityCooldown(player, SpeciesData.Get.abilityCooldown(player) - 1);
+            {
+                speciesAbilityCooldownInterval++;
+                
+                if (speciesAbilityCooldownInterval < 20) {
+                    return;
                 }
+                
                 speciesAbilityCooldownInterval = 0;
+                
+                if (SpeciesData.Get.abilityCooldown(player) <= 0) {
+                    return;
+                }
+                
+                SpeciesData.Set.abilityCooldown(player, SpeciesData.Get.abilityCooldown(player) - 1);
                 MessagePlayerDataSync.sendToClient(player, playerData);
             }
+            
             SpeciesData.Util.decrementAbilityCooldown(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
             SpeciesAttributes speciesAttributes = SpeciesAttributesListener.getSpeciesTypeAttributes(speciesType);
-            
-            if (speciesProperties != null) {
+            {
+                if (speciesProperties == null) {
+                    return;
+                }
                 SpeciesData.Set.playerSpecies(player, speciesType);
                 SpeciesData.Set.isInvertedHealAndHarm(player, speciesProperties.invertHealAndHarm());
                 SpeciesData.Set.keepOnDeath(player, speciesProperties.keepOnDeath());
@@ -118,7 +145,10 @@ public class PlayerDataCore {
                 SpeciesData.Set.behaviour(player, speciesProperties.behaviour().getType());
                 SpeciesData.Set.ability(player, speciesProperties.ability().getType());
                 speciesProperties.tickSpeciesAttributes(player);
-                if (speciesAttributes != null) {
+                {
+                    if (speciesAttributes == null) {
+                        return;
+                    }
                     SpeciesData.Set.Attributes.maxHealth(player, speciesAttributes.maxHealth());
                     SpeciesData.Set.Attributes.attackDamage(player, speciesAttributes.attackDamage());
                     SpeciesData.Set.Attributes.attackKnockback(player, speciesAttributes.attackKnockback());
@@ -137,6 +167,7 @@ public class PlayerDataCore {
                     MessageSpeciesAttributesSync.sendToClient(player, speciesAttributes);
                 }
             }
+            
         }
     }
     

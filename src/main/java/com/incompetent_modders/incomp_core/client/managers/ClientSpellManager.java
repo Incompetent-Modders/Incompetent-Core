@@ -39,7 +39,7 @@ public class ClientSpellManager {
     }
     
     public static SpellProperties getSpellProperties(ResourceLocation spell) {
-        return spellProperties.get(spell);
+        return getInstance().getSpellList().get(spell);
     }
     
 }

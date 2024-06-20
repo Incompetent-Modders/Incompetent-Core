@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.common.registry;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.common.util.IncompetentCodecs;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -9,6 +10,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 public class ModDataComponents {
@@ -23,7 +25,9 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> STORED_SPECIES_TYPE = register("stored_species_type", builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> STORED_EFFECT_POSTPONE = register("stored_effect_postpone", builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EFFECT_POSTPONE_DURATION = register("effect_postpone_duration", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MAX_SPELL_SLOTS = register("max_spell_slots", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MAX_SPELL_SLOTS = register("max_spell_slots", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding().cacheEncoding());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SELECTED_SPELL_SLOT = register("selected_spell_slot", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding().cacheEncoding());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Map<Integer, ResourceLocation>>> SPELLS = register("spells", builder -> builder.persistent(IncompetentCodecs.MAP_OF_INT_RESOURCE_LOCATION).networkSynchronized(IncompetentCodecs.MAP_OF_INT_RESOURCE_LOCATION_BYTE).cacheEncoding());
     
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SUMMONED_MAX_USES  = register("summoned_max_uses", builder -> builder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SUMMONED_USES = register("summoned_uses", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));

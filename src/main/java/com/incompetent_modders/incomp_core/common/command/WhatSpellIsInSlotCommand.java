@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -37,6 +36,6 @@ public class WhatSpellIsInSlotCommand {
         if (spell == null) {
             return false;
         }
-        return SpellListener.getSpellProperties(spell).isBlankSpell();
+        return ClientSpellManager.getSpellProperties(spell).isBlankSpell();
     }
 }
