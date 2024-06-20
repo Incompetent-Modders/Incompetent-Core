@@ -1,9 +1,8 @@
-package com.incompetent_modders.incomp_core.api.network;
+package com.incompetent_modders.incomp_core.api.network.action;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.SyncHandler;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.teamresourceful.resourcefullib.common.network.Packet;
@@ -11,15 +10,11 @@ import com.teamresourceful.resourcefullib.common.network.base.PacketType;
 import com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.Consumer;
 

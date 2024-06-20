@@ -1,9 +1,9 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.network.player.MessageClassAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.MessageSpellSlotScrollSync;
+import com.incompetent_modders.incomp_core.api.network.action.MessageClassAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.action.MessageSpeciesAbilitySync;
+import com.incompetent_modders.incomp_core.api.network.action.MessageSpellSlotScrollSync;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.incompetent_modders.incomp_core.client.ClientModEvents.ACTIVATE_CLASS_ABILITY;
 import static com.incompetent_modders.incomp_core.client.ClientModEvents.ACTIVATE_SPECIES_ABILITY;

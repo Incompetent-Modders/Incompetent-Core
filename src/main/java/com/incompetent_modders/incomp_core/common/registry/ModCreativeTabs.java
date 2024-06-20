@@ -2,12 +2,9 @@ package com.incompetent_modders.incomp_core.common.registry;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;

@@ -1,18 +1,12 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.network.CustomIncompetentPayload;
-import com.incompetent_modders.incomp_core.client.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.ClientDietManager;
-import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
 import com.teamresourceful.resourcefullib.common.network.Packet;
 import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;
 import com.teamresourceful.resourcefullib.common.network.base.PacketType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 

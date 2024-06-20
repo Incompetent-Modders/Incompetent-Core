@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.client;
+package com.incompetent_modders.incomp_core.client.managers;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;

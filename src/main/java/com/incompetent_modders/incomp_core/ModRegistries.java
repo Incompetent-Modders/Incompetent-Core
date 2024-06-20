@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core;
 
+import com.incompetent_modders.incomp_core.api.ability.Ability;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen_condition.ManaRegenConditionType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
@@ -20,12 +21,14 @@ public class ModRegistries {
     public static final ResourceKey<Registry<ManaRegenConditionType<?>>> MANA_REGEN_CONDITION_TYPE_KEY = createRegistryKey("mana_regen_condition_type");
     public static final ResourceKey<Registry<SpeciesBehaviourType<?>>> SPECIES_BEHAVIOUR_TYPE_KEY = createRegistryKey("species_behaviour_type");
     public static final ResourceKey<Registry<SpellResultType<?>>> SPELL_RESULT_TYPES_KEY = createRegistryKey("spell_result_type");
+    public static final ResourceKey<Registry<Ability>> ABILITY_KEY = createRegistryKey("ability");
     
     public static final Registry<AbilityType<?>> ABILITY_TYPE = makeSyncedRegistry(ABILITY_TYPE_KEY);
     public static final Registry<ClassPassiveEffectType<?>> CLASS_PASSIVE_EFFECT_TYPE = makeSyncedRegistry(CLASS_PASSIVE_EFFECT_TYPE_KEY);
     public static final Registry<ManaRegenConditionType<?>> MANA_REGEN_CONDITION_TYPE = makeSyncedRegistry(MANA_REGEN_CONDITION_TYPE_KEY);
     public static final Registry<SpeciesBehaviourType<?>> SPECIES_BEHAVIOUR_TYPE = makeSyncedRegistry(SPECIES_BEHAVIOUR_TYPE_KEY);
     public static final Registry<SpellResultType<?>> SPELL_RESULT_TYPE = makeSyncedRegistry(SPELL_RESULT_TYPES_KEY);
+    public static final Registry<Ability> ABILITY = registerSimpleWithIntrusiveHolders(ABILITY_KEY);
     
     private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
         return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, name));
@@ -42,5 +45,6 @@ public class ModRegistries {
         bus.addListener(NewRegistryEvent.class, event -> event.register(MANA_REGEN_CONDITION_TYPE));
         bus.addListener(NewRegistryEvent.class, event -> event.register(SPECIES_BEHAVIOUR_TYPE));
         bus.addListener(NewRegistryEvent.class, event -> event.register(SPELL_RESULT_TYPE));
+        bus.addListener(NewRegistryEvent.class, event -> event.register(ABILITY));
     }
 }

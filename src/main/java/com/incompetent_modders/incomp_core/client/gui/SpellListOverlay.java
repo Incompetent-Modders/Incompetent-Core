@@ -2,10 +2,9 @@ package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.player.ClassData;
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.player_data.ClientClassData;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -14,18 +13,12 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
 public class SpellListOverlay implements LayeredDraw.Layer {
     public static final SpellListOverlay INSTANCE = new SpellListOverlay();
-    //public static final ResourceLocation castTimeIcon = new ResourceLocation(MODID, "spell_list/cast_time");
-    //public static final ResourceLocation castTimeSideIcon = new ResourceLocation(MODID, "spell_list/cast_time_side");
-    //public static final ResourceLocation castTimeTopIcon = new ResourceLocation(MODID, "spell_list/cast_time_top");
-    //public static final ResourceLocation spellFrameIcon = new ResourceLocation(MODID, "spell_list/spell_frame");
-    //public static final ResourceLocation spellSlotFrameIcon = new ResourceLocation(MODID, "spell_list/spell_slot_frame");
     public static final String spriteLoc = "spell_list";
     static final int CAST_TIME = 20;
     public static ResourceLocation classType;
@@ -49,45 +42,18 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         int y1 = graphics.guiHeight() - spellIconInsetY - 16;
         if (getSelectedSpell(player) == null)
             return;
-        //ClassType classType = getWielderClassType(player);
-        //ResourceLocation castTimeSideIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_side");
-        //ResourceLocation castTimeTopIcon = getWielderClassType(player).getSpellOverlayTexture("cast_time_top");
-        ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame", player);
-        ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame", player);
+        
+        ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame");
+        ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame");
         
         ResourceLocation spellIcon = ResourceLocation.fromNamespaceAndPath(this.getSelectedSpell(player).getNamespace(), "textures/incompetent_spells/" + this.getSelectedSpell(player).getPath() + ".png");
         Component spellName = ClientSpellManager.getDisplayName(getSelectedSpell(player));
         
-        //PoseStack poseStack = graphics.pose();
-        //poseStack.pushPose();
-        //poseStack.scale(1.25F, 1.25F, 1.25F);
-        
-        //DrawingUtils.drawTexturedRect(x1, y1, 0, 0, 16, 16, 16, 16);
-        //DrawingUtils.drawTexturedFlippedRect(x1, y1, 0, 0, screenWidth, screenHeight, 256, 256, false, false);
-        //DrawingUtils.drawString(graphics, mc.font, spellName, 16, 10, 0x00FF00);
         DrawingUtils.blitSprite(graphics, spellFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
         DrawingUtils.blitSpellIcon(graphics, spellIcon, graphics.guiWidth() - (graphics.guiWidth() - 17), graphics.guiHeight() - 37);
         DrawingUtils.blitSprite(graphics, spellSlotFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
-        //if (getSelectedSpell(player).hasSpellCatalyst()) {
-        //    graphics.renderItem(getSelectedSpell(player).getSpellCatalyst(), screenWidth - (screenWidth - 10), screenHeight - 52);
-        //    if (getSelectedSpell(player).getSpellCatalyst().getCount() > 1)
-        //        DrawingUtils.drawNumberString(graphics, mc.font, getSelectedSpell(player).getSpellCatalyst().getCount(), screenWidth - (screenWidth - 16), screenHeight - 52, 0xFFFFFF);
-        //}
-        //DrawingUtils.blitSprite(graphics, castTimeTopIcon, screenWidth - (screenWidth - 10), screenHeight - 52, (int) (20 * castCompletionPercent + (0) / 2), 3);
-        //DrawingUtils.blitSprite(graphics, castTimeSideIcon, screenWidth - (screenWidth - 10), screenHeight - 52, 3, (int) (20 * (1 - castCompletionPercent)));
-        //poseStack.popPose();
     }
     
-    //public float getSpellCooldownPercent(ItemStack stack) {
-    //    if (!(stack.getItem() instanceof SpellCastingItem staffItem))
-    //        return 0;
-    //    int selectedSpell = SpellUtils.getSelectedSpellSlot(stack.getOrCreateTag());
-    //    if (staffItem.getCoolDown(selectedSpell, stack) == 0) {
-    //        return 0;
-    //    }
-    //
-    //    return 1 - (staffItem.getCoolDown(selectedSpell, stack) / (float) staffItem.getSelectedSpell(stack).getCoolDown());
-    //}
     public ResourceLocation getSelectedSpell(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
             return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "empty");
@@ -116,16 +82,16 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         return ClientSpellManager.getSpellProperties(getSelectedSpell(player)).drawTime();
     }
     
-    public ResourceLocation getWielderClassType(LocalPlayer player) {
-        return ClassData.Get.playerClassType(player);
+    public ResourceLocation getWielderClassType() {
+        return ClientClassData.getInstance().getPlayerClassType();
     }
     
-    public ResourceLocation getSpellOverlayTexture(String spriteName, LocalPlayer player) {
-        if (ClassTypeListener.getClassTypeProperties(getWielderClassType(player)) == null)
+    public ResourceLocation getSpellOverlayTexture(String spriteName) {
+        if (ClassTypeListener.getClassTypeProperties(getWielderClassType()) == null)
             return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "spell_list/" + spriteName);
-        if (!ClassTypeListener.getClassTypeProperties(getWielderClassType(player)).useClassSpecificTexture())
+        if (!ClassTypeListener.getClassTypeProperties(getWielderClassType()).useClassSpecificTexture())
             return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "spell_list/" + spriteName);
-        return ResourceLocation.fromNamespaceAndPath(getWielderClassType(player).getNamespace(), "spell_list/" + getWielderClassType(player).getPath() + "/" + spriteName);
+        return ResourceLocation.fromNamespaceAndPath(getWielderClassType().getNamespace(), "spell_list/" + getWielderClassType().getPath() + "/" + spriteName);
     }
     
 }

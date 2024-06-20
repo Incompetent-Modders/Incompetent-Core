@@ -9,7 +9,9 @@ import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
 import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
+import com.incompetent_modders.incomp_core.api.network.player.MessageManaDataSync;
 import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
+import com.incompetent_modders.incomp_core.api.network.player.MessageSpeciesAttributesSync;
 import com.incompetent_modders.incomp_core.common.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
@@ -39,6 +41,7 @@ public class PlayerDataCore {
     
     public static void handleClassDataTick(ServerPlayer player, PlayerTickEvent event) {
         ResourceLocation classType = ClassData.Get.playerClassType(player);
+        CompoundTag playerData = getPlayerData(player);
         if (ClassData.Util.isClassPresent(player)) {
             ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
             AttributeInstance manaRegen = player.getAttribute(ModAttributes.MANA_REGEN);
@@ -59,23 +62,27 @@ public class PlayerDataCore {
                 if (regenInterval >= (20 / mod.get())) {
                     ManaData.Util.healMana(player, manaRegen.getValue());
                     Utils.onManaHeal(player, manaRegen.getValue());
+                    MessageManaDataSync.sendToClient(player, ManaData.Get.mana(player), ManaData.Get.maxMana(player));
                     regenInterval = 0;
                 }
             }
             AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
             if (maxMana != null && classTypeProperties != null) {
                 ManaData.Set.maxMana(player, classTypeProperties.maxMana());
+                MessageManaDataSync.sendToClient(player, ManaData.Get.mana(player), ManaData.Get.maxMana(player));
             }
             classAbilityCooldownInterval++;
             if (classAbilityCooldownInterval >= 20) {
                 if (ClassData.Get.abilityCooldown(player) > 0) {
                     ClassData.Set.abilityCooldown(player, ClassData.Get.abilityCooldown(player) - 1);
+                    MessagePlayerDataSync.sendToClient(player, playerData);
                 }
                 classAbilityCooldownInterval = 0;
             }
             if (classType.equals(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "simple_human"))) {
                 IncompCore.LOGGER.info("Player has old ID for default ClassType, setting to new default...");
                 ClassData.Set.playerClassType(player, Utils.defaultClass);
+                MessagePlayerDataSync.sendToClient(player, playerData);
             }
             if (classTypeProperties != null) {
                 ClassData.Set.playerClassType(player, classType);
@@ -89,6 +96,7 @@ public class PlayerDataCore {
     }
     public static void handleSpeciesDataTick(ServerPlayer player, PlayerTickEvent event) {
         ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
+        CompoundTag playerData = getPlayerData(player);
         if (SpeciesData.Util.isSpeciesPresent(player)) {
             speciesAbilityCooldownInterval++;
             if (speciesAbilityCooldownInterval >= 20) {
@@ -96,6 +104,7 @@ public class PlayerDataCore {
                     SpeciesData.Set.abilityCooldown(player, SpeciesData.Get.abilityCooldown(player) - 1);
                 }
                 speciesAbilityCooldownInterval = 0;
+                MessagePlayerDataSync.sendToClient(player, playerData);
             }
             SpeciesData.Util.decrementAbilityCooldown(player);
             SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
@@ -125,6 +134,7 @@ public class PlayerDataCore {
                     SpeciesData.Set.Attributes.scale(player, speciesAttributes.scale());
                     SpeciesData.Set.Attributes.stepHeight(player, speciesAttributes.stepHeight());
                     SpeciesData.Set.Attributes.armourToughness(player, speciesAttributes.armourToughness());
+                    MessageSpeciesAttributesSync.sendToClient(player, speciesAttributes);
                 }
             }
         }
@@ -132,6 +142,11 @@ public class PlayerDataCore {
     
     public static void setPlayerData(Player spe, CompoundTag nc) {
         spe.getPersistentData().put(PLAYER_DATA_ID, nc);
+    }
+    public static void updatePlayerData(ServerPlayer player) {
+        CompoundTag playerData = getPlayerData(player);
+        setPlayerData(player, playerData);
+        MessagePlayerDataSync.sendToClient(player, playerData);
     }
     public static void setData(Player spe, String id, CompoundTag nc) {
         spe.getPersistentData().put(id, nc);

@@ -2,10 +2,14 @@ package com.incompetent_modders.incomp_core.api.json.species;
 
 import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
+import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
+import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesBehaviourTypes;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -70,5 +74,12 @@ public record SpeciesProperties(SpeciesBehaviour behaviour, boolean invertHealAn
         armourToughness.setBaseValue(speciesAttributes.armourToughness());
         SpeciesBehaviour behaviour = speciesProperties.behaviour();
         behaviour.apply(player.level(), player);
+    }
+    
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeBoolean(invertHealAndHarm());
+        buf.writeResourceLocation(dietType());
+        buf.writeBoolean(keepOnDeath());
+        buf.writeInt(abilityCooldown());
     }
 }

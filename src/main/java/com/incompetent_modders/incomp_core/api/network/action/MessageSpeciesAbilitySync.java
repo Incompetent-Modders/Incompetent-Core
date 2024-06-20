@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.api.network.player;
+package com.incompetent_modders.incomp_core.api.network.action;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;

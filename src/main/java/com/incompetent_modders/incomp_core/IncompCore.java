@@ -82,8 +82,10 @@ public class IncompCore
     //    SyncHandler.init();
     //}
     @SubscribeEvent
-    private void commonSetup(FMLCommonSetupEvent event)
-    {
+    private void commonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+        
+        });
         LOGGER.info("HELLO FROM COMMON SETUP");
         SyncHandler.init();
     }

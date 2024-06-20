@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.command.arguments.SpellArgument;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;

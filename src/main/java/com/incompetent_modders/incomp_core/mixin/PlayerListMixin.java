@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,13 +31,17 @@ public class PlayerListMixin {
             at = @At("TAIL")
     )
     private void incompetentCore$afterSyncData(Connection connection, ServerPlayer serverPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
-        FeaturesSyncer.syncAllToPlayer(serverPlayer);
+        if (FMLEnvironment.dist.isClient()) {
+            FeaturesSyncer.syncAllToPlayer(serverPlayer);
+        }
     }
     @Inject(
             method = "reloadResources",
             at = @At("TAIL")
     )
     private void incompetentCore$afterSyncDataToAll(CallbackInfo ci) {
-        FeaturesSyncer.syncAllToAll(server);
+        if (FMLEnvironment.dist.isClient()) {
+            FeaturesSyncer.syncAllToAll(server);
+        }
     }
 }

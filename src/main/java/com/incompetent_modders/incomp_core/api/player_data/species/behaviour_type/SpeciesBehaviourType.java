@@ -8,4 +8,8 @@ public record SpeciesBehaviourType<T extends SpeciesBehaviour>(MapCodec<T> codec
     public ResourceLocation getBehaviourTypeIdentifier() {
         return ModRegistries.SPECIES_BEHAVIOUR_TYPE.getKey(this);
     }
+    
+    public static SpeciesBehaviourType<?> fromIdentifier(ResourceLocation identifier) {
+        return ModRegistries.SPECIES_BEHAVIOUR_TYPE.get(identifier);
+    }
 }

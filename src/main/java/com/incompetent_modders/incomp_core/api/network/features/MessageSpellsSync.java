@@ -2,7 +2,7 @@ package com.incompetent_modders.incomp_core.api.network.features;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.mojang.serialization.Codec;
 import com.teamresourceful.resourcefullib.common.network.Packet;
 import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;

@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command.arguments;
 
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.client.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;

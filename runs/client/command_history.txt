@@ -1,9 +1,3 @@
-/i_c toggleWelcomeMessage
-/neoforge tps minecraft:overworld
-/give @s incompetent_core:spell_tome
-/i_c cast_spell Dev data_spell_yippee
-/i_c setSpell 0 incompetent_core:test_spell
-/gamemode creative
 /i_c setSpecies incompetent_core:zombie
 /reload
 /i_c setSpell 0 incompetent_core:data_spell_yippee
@@ -48,3 +42,9 @@
 /reload
 /data get entity Dev AbilityCharges
 /data get entity Dev
+/i_c getSpell 1
+/i_c getSpell 0
+/data get entity @s
+/i_c cast_spell Dev incompetent_core:test_spell
+/i_c refillMana true
+/i_c getSpell 0

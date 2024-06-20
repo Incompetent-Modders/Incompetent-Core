@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.api.network.features;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.client.ClientDietManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientDietManager;
 import com.teamresourceful.resourcefullib.common.network.Packet;
 import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;
 import com.teamresourceful.resourcefullib.common.network.base.PacketType;

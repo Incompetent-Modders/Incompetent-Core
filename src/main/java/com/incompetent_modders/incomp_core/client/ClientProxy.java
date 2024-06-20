@@ -1,5 +1,9 @@
 package com.incompetent_modders.incomp_core.client;
 
+import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientDietManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;

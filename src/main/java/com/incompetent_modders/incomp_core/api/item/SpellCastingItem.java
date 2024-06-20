@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.api.item;
 
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
@@ -57,28 +57,33 @@ public class SpellCastingItem extends Item {
             if (spell != null && !casting) {
                 casting = true;
                 if (entity instanceof Player player) {
+                    IncompCore.LOGGER.info("Executing spell: {}", ClientSpellManager.getDisplayName(spell).getString());
                     SpellListener.getSpellProperties(spell).executeCast(player);
                     casting = false;
                 }
             }
+            IncompCore.LOGGER.info("Casting has finished.");
             entity.stopUsingItem();
         }
     }
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack castingStack = player.getItemInHand(hand);
-        if (SpellCastingItem.getCastProgress(castingStack) == 0) {
+        boolean noCastProgress = SpellCastingItem.getCastProgress(castingStack) == 0;
+        boolean isOffhand = player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND;
+        boolean isBlankSpell = CastingItemUtil.isBlankSpell(castingStack);
+        if (noCastProgress) {
             SpellCastingItem.setCastProgress(castingStack);
-        }
-        if (player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND) {
+        } if (isOffhand) {
             IncompCore.LOGGER.info("Offhand casting is not allowed.");
             return InteractionResultHolder.fail(castingStack);
-        }
-        if (CastingItemUtil.isBlankSpell(castingStack)) {
+        } if (isBlankSpell) {
             IncompCore.LOGGER.info("No spell selected.");
             return InteractionResultHolder.fail(castingStack);
         }
-        player.startUsingItem(hand);
-        IncompCore.LOGGER.info("Player has begun casting spell: {}", ClientSpellManager.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
+        if (!isOffhand && !isBlankSpell && !noCastProgress) {
+            player.startUsingItem(hand);
+            IncompCore.LOGGER.info("Player has selected spell: {}", ClientSpellManager.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
+        }
         return InteractionResultHolder.consume(castingStack);
     }
     
@@ -139,6 +144,9 @@ public class SpellCastingItem extends Item {
     
     public static void setCastProgress(ItemStack stack) {
         int ticks = CastingItemUtil.getSpellDrawTime(stack);
+        if (ticks == 0) {
+            IncompCore.LOGGER.warn("Spell draw time is 0 for {}", stack);
+        }
         stack.set(ModDataComponents.REMAINING_DRAW_TIME, ticks);
     }
     

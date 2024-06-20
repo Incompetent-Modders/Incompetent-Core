@@ -1,23 +1,16 @@
-package com.incompetent_modders.incomp_core.api.network.player;
+package com.incompetent_modders.incomp_core.api.network.action;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
-import com.incompetent_modders.incomp_core.api.network.MessageSpellSlotScrollSync;
 import com.incompetent_modders.incomp_core.api.network.SyncHandler;
-import com.incompetent_modders.incomp_core.api.network.features.MessageSpellsSync;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.teamresourceful.resourcefullib.common.network.Packet;
-import com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType;
 import com.teamresourceful.resourcefullib.common.network.base.PacketType;
 import com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.Consumer;
 

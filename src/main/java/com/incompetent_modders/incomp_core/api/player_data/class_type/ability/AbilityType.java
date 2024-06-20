@@ -8,4 +8,8 @@ public record AbilityType<T extends Ability>(MapCodec<T> codec) {
     public ResourceLocation getAbilityTypeIdentifier() {
         return ModRegistries.ABILITY_TYPE.getKey(this);
     }
+    
+    public static AbilityType<?> fromIdentifier(ResourceLocation identifier) {
+        return ModRegistries.ABILITY_TYPE.get(identifier);
+    }
 }

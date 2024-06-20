@@ -1,10 +1,9 @@
 package com.incompetent_modders.incomp_core.client.util;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.client.ClientSpellManager;
+import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import net.minecraft.ChatFormatting;
