@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.Random;
@@ -23,7 +24,7 @@ public class DefaultManaRegenCondition extends ManaRegenCondition {
         this.chance = chance;
     }
     @Override
-    public boolean apply(Level level, ServerPlayer player) {
+    public boolean apply(Level level, Player player) {
         float random = new Random().nextFloat();
         return random <= chance;
     }

@@ -40,7 +40,7 @@ public class SpellCastingItem extends Item {
     }
     
     public int getUseDuration(ItemStack stack) {
-        return CastingItemUtil.getSpellDrawTime(stack);
+        return CastingItemUtil.getServerSpellProperties(stack).drawTime();
     }
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BOW;
@@ -72,19 +72,22 @@ public class SpellCastingItem extends Item {
         ItemStack castingStack = player.getItemInHand(hand);
         boolean noCastProgress = SpellCastingItem.getCastProgress(castingStack) == 0;
         boolean isOffhand = player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND;
-        boolean isBlankSpell = CastingItemUtil.isBlankSpell(castingStack);
-        if (noCastProgress) {
-            SpellCastingItem.setCastProgress(castingStack);
-        } if (isOffhand) {
+        boolean isBlankSpell = CastingItemUtil.getServerSpellProperties(castingStack).isBlankSpell();
+         if (isOffhand) {
             IncompCore.LOGGER.info("Offhand casting is not allowed.");
             return InteractionResultHolder.fail(castingStack);
         } if (isBlankSpell) {
             IncompCore.LOGGER.info("No spell selected.");
             return InteractionResultHolder.fail(castingStack);
         }
-        if (!isOffhand && !isBlankSpell && !noCastProgress) {
+        if (noCastProgress) {
+            IncompCore.LOGGER.info("Starting cast progress.");
+            SpellCastingItem.setCastProgress(castingStack);
+            player.getCooldowns().addCooldown(this, getUseDuration(castingStack));
+        } else  {
             player.startUsingItem(hand);
             IncompCore.LOGGER.info("Player has selected spell: {}", ClientSpellManager.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
+            SpellListener.getSpellProperties(getSelectedSpell(castingStack)).executeCast(player);
         }
         return InteractionResultHolder.consume(castingStack);
     }
@@ -100,18 +103,13 @@ public class SpellCastingItem extends Item {
             stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
         }
         if (!stack.has(ModDataComponents.REMAINING_DRAW_TIME)) {
-            stack.set(ModDataComponents.REMAINING_DRAW_TIME, getUseDuration(stack));
+            stack.set(ModDataComponents.REMAINING_DRAW_TIME, CastingItemUtil.getClientSpellProperties(stack).drawTime());
         }
         if (!stack.has(ModDataComponents.MAX_SPELL_SLOTS)) {
             stack.set(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
         }
         if (!stack.has(ModDataComponents.SPELLS)) {
-            Map<Integer, ResourceLocation> spells = new HashMap<>();
-            int maxSpellSlots = stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
-            for (int i = 0; i <= maxSpellSlots; i++) {
-                spells.put(i, CastingItemUtil.emptySpell);
-            }
-            stack.set(ModDataComponents.SPELLS, spells);
+            stack.set(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY);
         }
     }
     public static ResourceLocation getSelectedSpell(ItemStack stack) {
@@ -131,20 +129,23 @@ public class SpellCastingItem extends Item {
     }
     
     public static void setCastProgress(ItemStack stack) {
-        int ticks = CastingItemUtil.getSpellDrawTime(stack);
+        int ticks = CastingItemUtil.getClientSpellProperties(stack).drawTime();
         if (ticks == 0) {
             IncompCore.LOGGER.warn("Spell draw time is 0 for {}", stack);
         }
         stack.set(ModDataComponents.REMAINING_DRAW_TIME, ticks);
+        IncompCore.LOGGER.info("Set cast progress to {} for {}", ticks, stack);
     }
     
     private void resetCastProgress(ItemStack stack) {
         stack.set(ModDataComponents.REMAINING_DRAW_TIME, 0);
+        IncompCore.LOGGER.info("Reset cast progress for {}", stack);
     }
     private void decrementCastProgress(ItemStack stack) {
         DataComponentMap components = stack.getComponents();
         int ticks = components.getOrDefault(ModDataComponents.REMAINING_DRAW_TIME.get(), 0);
         if (ticks > 0) {
+            IncompCore.LOGGER.info("Decrementing cast progress for {}", stack);
             stack.set(ModDataComponents.REMAINING_DRAW_TIME, ticks - 1);
         }
     }

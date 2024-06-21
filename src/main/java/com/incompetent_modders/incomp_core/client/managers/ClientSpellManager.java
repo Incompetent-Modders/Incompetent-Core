@@ -38,8 +38,8 @@ public class ClientSpellManager {
         return Component.translatable("spells." + spell.getNamespace() + "." + spell.getPath().replace("/", "."));
     }
     
-    public static SpellProperties getSpellProperties(ResourceLocation spell) {
-        return getInstance().getSpellList().get(spell);
+    public SpellProperties getSpellProperties(ResourceLocation spell) {
+        return getSpellList().get(spell);
     }
     
 }

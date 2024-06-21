@@ -69,7 +69,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     public float getCastCompletionPercent(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem castingItem))
             return 0;
-        if (ClientSpellManager.getSpellProperties(getSelectedSpell(player)).drawTime() == 0) {
+        if (ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(player)).drawTime() == 0) {
             return 0;
         }
         
@@ -79,7 +79,7 @@ public class SpellListOverlay implements LayeredDraw.Layer {
     public float getCastDuration(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
             return 0;
-        return ClientSpellManager.getSpellProperties(getSelectedSpell(player)).drawTime();
+        return ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(player)).drawTime();
     }
     
     public ResourceLocation getWielderClassType() {

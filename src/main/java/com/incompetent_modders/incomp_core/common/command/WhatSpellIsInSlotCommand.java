@@ -36,6 +36,6 @@ public class WhatSpellIsInSlotCommand {
         if (spell == null) {
             return false;
         }
-        return ClientSpellManager.getSpellProperties(spell).isBlankSpell();
+        return ClientSpellManager.getInstance().getSpellProperties(spell).isBlankSpell();
     }
 }

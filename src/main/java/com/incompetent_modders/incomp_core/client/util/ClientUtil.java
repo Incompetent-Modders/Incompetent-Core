@@ -125,7 +125,7 @@ public class ClientUtil {
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
         ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
-        SpellProperties spellProperties = ClientSpellManager.getSpellProperties(spell);
+        SpellProperties spellProperties = ClientSpellManager.getInstance().getSpellProperties(spell);
         tooltip.add(SELECTED_SPELL_TITLE);
         tooltip.add(CommonComponents.space().append(ClientSpellManager.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.EMPTY);

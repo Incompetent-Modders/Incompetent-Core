@@ -11,6 +11,7 @@ import com.incompetent_modders.incomp_core.api.json.species.*;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
 import com.incompetent_modders.incomp_core.api.json.species.diet.DietProperties;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
+import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
 import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.api.player.ManaData;
 import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
@@ -61,7 +62,7 @@ public class CommonForgeEvents {
     
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+        if (event.getEntity() instanceof Player player) {
             //Setting Data :3
             //if (!syncingData) {
             //    syncingData = true;
@@ -121,6 +122,7 @@ public class CommonForgeEvents {
             }
             ClassData.initialize(player);
             SpeciesData.initialize(player);
+            MessagePlayerDataSync.sendToClient(player, PlayerDataCore.getPlayerData(player));
         }
     }
     @SubscribeEvent
@@ -234,6 +236,7 @@ public class CommonForgeEvents {
                     sendWelcomeMessage(player, true);
             }
         }
+        
     }
     
     public static void sendWelcomeMessage(Player player, boolean isToggledOn) {

@@ -1,50 +1,50 @@
-/tick unfreeze
-/give @s minecraft:bundle
-/i_c list_features spells
-/i_c list_features class_types
-/i_c list_features spells show_id
-/i_c list_features all
-/i_c cast_spell Dev incompetent_core:test_ranged_spell
-/i_c toggleWelcomeMessage
-/i_c list_features spells
-/i_c list_features species
-/reload
-/data get entity Dev
-/data get entity Dev AbilityCharges
-/reload
-/data get entity Dev AbilityCharges
-/data get entity Dev
+/attribute Dev incompetent_core:max_mana modifier add mana_addition 20 add_value
+/attribute Dev incompetent_core:max_mana modifier add mana_addition 20 add_multiplied_total
+/attribute Dev incompetent_core:max_mana modifier add mana_mult 20 add_multiplied_total
+/give @s minecraft:stick[minecraft:attribute_modifiers=["max_health"]]
+/data get entity Dev Inventory
+/give @s incompetent_core:spell_tome[incompetent_core:max_spell_slots=3]
+/i_c setSpell 0 incompetent_core:test_spell
+/give @s incompetent_core:spell_tome[incompetent_core:max_spell_slots=3]
+/i_c setSpell 0 incompetent_core:test_spell
+/data get entity Dev Inventory
+/give @s incompetent_core:spell_tome[incompetent_core:max_spell_slots=3]
+/give @s incompetent_core:spell_tome[incompetent_core:max_spell_slots=3, incompetent_core:spells=[]]
+/data get entity Dev Inventory
+/i_c getSpell 0
+/data get entity Dev Inventory
+/give @s minecraft:suspicious_stew[minecraft:suspicious_stew_effects=[{duration:100, id: "minecraft:night_vision"}]]
+/give @s incompetent_core:spell_tome[incompetent_core:spells=[{slot:2, spell: "incompetent_core:test_ranged_spell"}], incompetent_core:max_spell_slots=3]
+/data get entity Dev Inventory
+/i_c getSpell 2
 /i_c getSpell 1
 /i_c getSpell 0
-/data get entity @s
-/i_c cast_spell Dev incompetent_core:test_spell
 /i_c refillMana true
-/i_c getSpell 0
-/data get entity Dev incompetent_core:PlayerData
-/data get entity Dev "incompetent_core:PlayerData"
-/data get entity Dev PlayerData
-/data get entity Dev
-/data get entity Dev NeoForgeData{incompetent_core:PlayerData}
-/data get entity Dev NeoForgeData/incompetent_core:PlayerData
+/i_c setSpell 0 incompetent_core:test_spell
+/i_c getSpell 1
+/i_c getSpell 2
+/data get entity Dev Inventory
+/give @s incompetent_core:spell_tome[incompetent_core:max_spell_slots=3]
+/i_c setSpell 0 incompetent_core:test_spell
+/i_c setSpell 1 incompetent_core:test_ranged_spell
+/data get entity Dev Inventory
+/data get entity Dev ForgeCaps
 /data get entity Dev NeoForgeData
-/data get entity Dev NeoForgeData:{incompetent_core:PlayerData}
-/data get entity Dev NeoForgeData:incompetent_core:PlayerData
-/data get entity Dev NeoForgeData:incompetent_core
-/data get entity Dev NeoForgeData/
-/data get entity Dev NeoForgeData{}
-/data get entity Dev NeoForgeData{incompetent_core:PlayerData}
-/data get entity Dev NeoForgeData{incompetent_core:PlayerData} 20
-/data get entity Dev NeoForgeData 20
+/i_c cast_spell Dev incompetent_core:test_spell
+/i_c cast_spell Dev incompetent_core:test_ranged_spell
+/data get entity Dev Inventory
 /data get entity Dev NeoForgeData
-/i_c getSpell 0
-/data get entity Dev
+/give @s minecraft:stick[incompetent_core:remaining_draw_time=50]
 /data get entity Dev Inventory
-/give Dev incompetent_core:spell_tome[incompetent_core:max_spell_slots=5]
-/i_c setSpell 0 incompetent_core:data_spell
-/data get entity Dev Inventory
-/i_c getSpell 0
-/data get entity Dev Inventory
-/enchant Dev minecraft:density 5
-/enchant Dev minecraft:wind_burst 3
-/summon minecraft:wither
-/data get entity Dev Inventory
+/i_c refillMana true
+/data get entity Dev NeoForgeData
+/i_c refillMana true
+/attribute Dev incompetent_core:max_mana get
+/data get entity Dev NeoForgeData
+/i_c shoot_from_rotation 3 5 firework_rocket[fireworks={flight_duration:3,explosions:[{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;1973019,11743532,3887386,15790320],fade_colors:[I;1973019,11743532,3887386,15790320]},{shape:"burst",has_twinkle:1,has_
+/i_c shoot_from_rotation 3 5 firework_rocket[fireworks={flight_duration:3,explosions:[{shape:"burst",has_twinkle:1,has_trail:1,colors:[I;1973019,11743532,3887386,15790320],fa
+/i_c shoot_from_rotation 20 1 minecraft:snowball ~ ~ ~
+/i_c shoot_from_rotation 20 1 minecraft:firework_rocket
+/i_c shoot_from_rotation 2 1 minecraft:firework_rocket
+/i_c shoot_from_rotation 2 1 minecraft:arrow
+/data get entity Dev NeoForgeData

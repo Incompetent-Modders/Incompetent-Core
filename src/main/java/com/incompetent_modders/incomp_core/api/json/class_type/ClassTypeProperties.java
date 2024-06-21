@@ -23,7 +23,7 @@ public record ClassTypeProperties(boolean canCastSpells, int maxMana, boolean pa
             Codec.INT.fieldOf("ability_cooldown").forGetter(ClassTypeProperties::abilityCooldown)
     ).apply(instance, ClassTypeProperties::new));
     
-    public boolean canRegenerateMana(ServerPlayer player, Level level) {
+    public boolean canRegenerateMana(Player player, Level level) {
         return manaRegenCondition().apply(level, player);
     }
     

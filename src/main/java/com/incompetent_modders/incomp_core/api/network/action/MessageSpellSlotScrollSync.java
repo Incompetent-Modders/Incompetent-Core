@@ -87,10 +87,7 @@ public record MessageSpellSlotScrollSync(boolean forward) implements Packet<Mess
             if (selectedSpellSlot < 0) {
                 selectedSpellSlot = 0;
             }
-            CustomData.update(DataComponents.CUSTOM_DATA, stack, (tag) -> {
-                tag.putInt("selectedSpellSlot", selectedSpellSlot);
-            });
-            
+            stack.set(ModDataComponents.SELECTED_SPELL_SLOT, selectedSpellSlot);
         }
     }
 }

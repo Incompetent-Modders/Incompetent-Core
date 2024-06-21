@@ -47,18 +47,16 @@ public class RaycastProjectileResult extends SpellResult {
     @Override
     public void execute(Player player) {
         HitResult result = SpellUtils.genericSpellRayTrace(player, rangeBonus, hitLiquids);
-        if (player instanceof ServerPlayer serverPlayer) {
-            onHit(serverPlayer, result);
-        }
+        onHit(player, result);
     }
     
     @Override
     public SpellResultType<? extends SpellResult> getType() {
         return ModSpellResultTypes.RAYCAST_PROJECTILE.get();
     }
-    public void onHit(ServerPlayer player, HitResult result) {
+    public void onHit(Player player, HitResult result) {
         
-        MinecraftServer minecraftserver = player.server;
+        MinecraftServer minecraftserver = player.getServer();
         this.function.flatMap((function) -> {
             return function.get(minecraftserver.getFunctions());
         }).ifPresent((commandFunction) -> {
