@@ -12,9 +12,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.resources.ResourceLocation;
 
 public record ClassType(boolean canCastSpells, int maxMana, boolean pacifist, boolean useClassSpecificTexture, ManaRegenCondition manaRegenCondition, ClassPassiveEffect passiveEffect, Ability ability, int passiveEffectTickFrequency, int abilityCooldown) {
     public static final Codec<ClassType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -65,6 +67,9 @@ public record ClassType(boolean canCastSpells, int maxMana, boolean pacifist, bo
         return new Builder();
     }
 
+    public static Component getDisplayName(ResourceLocation classType) {
+        return Component.translatable("class_types." + classType.getNamespace() + "." + classType.getPath());
+    }
 
     public static class Builder {
         private boolean canCastSpells = false;

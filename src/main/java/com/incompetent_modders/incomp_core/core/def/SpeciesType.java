@@ -12,6 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
@@ -57,6 +58,10 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static Component getDisplayName(ResourceLocation species) {
+        return Component.translatable("species." + species.getNamespace() + "." + species.getPath());
     }
 
     public static class Builder {
