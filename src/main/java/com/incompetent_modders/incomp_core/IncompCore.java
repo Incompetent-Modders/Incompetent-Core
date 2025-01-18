@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.client.ClientProxy;
 import com.incompetent_modders.incomp_core.common.CommonProxy;
 import com.incompetent_modders.incomp_core.common.data.IncompDatagen;
 import com.incompetent_modders.incomp_core.common.EventHandler;
+import com.incompetent_modders.incomp_core.common.event.ModEventHandlers;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.mojang.logging.LogUtils;
@@ -45,6 +46,7 @@ public class IncompCore
     public IncompCore(Dist dist, IEventBus modEventBus) {
         this.modEventBus = modEventBus;
         INSTANCE = this;
+        new ModEventHandlers(modEventBus).register();
         DIST = dist;
         //SetupEvent.EVENT.addListener(IncompCore::setup);
         ModRegistries.register(modEventBus);

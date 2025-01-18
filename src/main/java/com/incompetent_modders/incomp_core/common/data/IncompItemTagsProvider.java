@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.common.registry.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
@@ -23,6 +24,15 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
     
     @SuppressWarnings("unchecked")
     protected void registerModTags() {
+        tag(IncompItemTags.pescetarianFriendly).add(
+                Items.COD,
+                Items.SALMON,
+                Items.COOKED_COD,
+                Items.COOKED_SALMON,
+                Items.PUFFERFISH,
+                Items.TROPICAL_FISH
+        );
+
         tag(IncompItemTags.carnivoreFriendly).add(
                 Items.BEEF,
                 Items.CHICKEN,
@@ -34,16 +44,11 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
                 Items.COOKED_MUTTON,
                 Items.COOKED_PORKCHOP,
                 Items.COOKED_RABBIT,
-                Items.COOKED_COD,
-                Items.COOKED_SALMON,
-                Items.COD,
-                Items.SALMON,
-                Items.PUFFERFISH,
                 Items.ROTTEN_FLESH,
                 Items.SPIDER_EYE,
-                Items.TROPICAL_FISH,
                 Items.RABBIT_STEW
         );
+
         tag(IncompItemTags.veganFriendly).add(
                 Items.APPLE,
                 Items.GOLDEN_APPLE,
@@ -67,27 +72,30 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
                 Items.SUSPICIOUS_STEW,
                 Items.COOKIE
         );
-        
-        tag(IncompItemTags.veganFriendly).addTags(
-                IncompItemTags.neutralFood
+
+        tag(IncompItemTags.pescetarianFriendly).addTags(
+                IncompItemTags.vegetarianFriendly
         );
+
         tag(IncompItemTags.vegetarianFriendly).addTags(
-                IncompItemTags.veganFriendly,
-                IncompItemTags.neutralFood
+                IncompItemTags.veganFriendly
         );
+
+        tag(IncompItemTags.carnivoreFriendly).addTags(
+                IncompItemTags.pescetarianFriendly
+        );
+
         tag(IncompItemTags.vegetarianFriendly).add(
                 Items.HONEY_BOTTLE,
                 Items.MILK_BUCKET,
                 Items.PUMPKIN_PIE
         );
+
         tag(IncompItemTags.omnivoreFriendly).addTags(
                 IncompItemTags.carnivoreFriendly,
-                IncompItemTags.vegetarianFriendly,
-                IncompItemTags.neutralFood
+                IncompItemTags.vegetarianFriendly
         );
-        tag(IncompItemTags.carnivoreFriendly).addTags(
-                IncompItemTags.neutralFood
-        );
+
         tag(IncompItemTags.givesHunger).add(
                 Items.ROTTEN_FLESH,
                 Items.CHICKEN,

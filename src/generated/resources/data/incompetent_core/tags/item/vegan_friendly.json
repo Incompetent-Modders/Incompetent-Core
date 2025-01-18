@@ -20,7 +20,6 @@
     "minecraft:bread",
     "minecraft:glow_berries",
     "minecraft:suspicious_stew",
-    "minecraft:cookie",
-    "#incompetent_core:neutral_food"
+    "minecraft:cookie"
   ]
 }

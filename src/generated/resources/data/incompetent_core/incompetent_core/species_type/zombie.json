@@ -1,0 +1,12 @@
+{
+  "ability": {
+    "type": "incompetent_core:default"
+  },
+  "ability_cooldown": 0,
+  "behaviour": {
+    "type": "incompetent_core:undead",
+    "burn_in_sun": true
+  },
+  "diet_type": "incompetent_core:carnivore",
+  "invert_heal_and_harm": true
+}

@@ -1,0 +1,10 @@
+{
+  "able_to_consume": [
+    {
+      "tag": "incompetent_core:omnivore_friendly"
+    },
+    {
+      "tag": "incompetent_core:neutral_food"
+    }
+  ]
+}

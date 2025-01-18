@@ -1,12 +1,21 @@
 package com.incompetent_modders.incomp_core.common.data;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.common.registry.ModDiets;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
+import com.incompetent_modders.incomp_core.common.registry.ModSpells;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class IncompDatagen {
@@ -23,6 +32,17 @@ public class IncompDatagen {
         dataGenerator.addProvider(event.includeServer(), blockTags);
         dataGenerator.addProvider(event.includeServer(), itemTags);
         dataGenerator.addProvider(event.includeClient(), new IncompLangProvider(packOutput, modId, "en_us"));
+
+        event.getGenerator().addProvider(
+                event.includeServer(),
+                (DataProvider.Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(output, lookupProvider, new RegistrySetBuilder()
+                        .add(ModRegistries.Keys.SPELL, ModSpells::bootstrap)
+                        .add(ModRegistries.Keys.DIET, ModDiets::bootstrap)
+                        .add(ModRegistries.Keys.SPECIES_TYPE, ModSpeciesTypes::bootstrap)
+                        .add(ModRegistries.Keys.CLASS_TYPE, ModClassTypes::bootstrap)
+                        , Set.of(IncompCore.MODID))
+        );
+
     }
     
 }

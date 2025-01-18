@@ -16,6 +16,7 @@ public class IncompItemTags {
     
     public static TagKey<Item> carnivoreFriendly = modItemTag("carnivore_friendly");
     public static TagKey<Item> veganFriendly = modItemTag("vegan_friendly");
+    public static TagKey<Item> pescetarianFriendly = modItemTag("pescetarian_friendly");
     public static TagKey<Item> omnivoreFriendly = modItemTag("omnivore_friendly");
     public static TagKey<Item> vegetarianFriendly = modItemTag("vegetarian_friendly");
     public static TagKey<Item> neutralFood = modItemTag("neutral_food");

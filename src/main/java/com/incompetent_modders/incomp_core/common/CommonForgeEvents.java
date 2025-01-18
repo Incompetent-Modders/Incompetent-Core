@@ -63,15 +63,10 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof Player player) {
-            //Setting Data :3
-            //if (!syncingData) {
-            //    syncingData = true;
             CompoundTag playerData = PlayerDataCore.getPlayerData(player);
             if (player.getPersistentData().getCompound(PLAYER_DATA_ID) != playerData) {
                 PlayerDataCore.updatePlayerData(player);
             }
-            //    syncingData = false;
-            //}
             PlayerDataCore.handleClassDataTick(player, event);
             PlayerDataCore.handleSpeciesDataTick(player, event);
             

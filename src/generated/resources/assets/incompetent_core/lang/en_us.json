@@ -1,4 +1,5 @@
 {
+  "ability.incompetent_core.function_charges.no_charges": "You have no charges remaining for this ability.",
   "argument.species_type.id.invalid": "Invalid Species ID: %s",
   "argument.spell.id.invalid": "Invalid Spell ID: %s",
   "commands.cast_spell.success.all": "Cast Spell %s from %s Player(s) [%s]",

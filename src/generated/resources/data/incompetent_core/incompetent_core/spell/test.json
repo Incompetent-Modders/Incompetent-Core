@@ -1,0 +1,17 @@
+{
+  "definition": {
+    "draw_time": 5,
+    "mana_cost": 1.0,
+    "results": {
+      "spell_result": {
+        "type": "incompetent_core:add_effect",
+        "amplifier": 1,
+        "duration": 200,
+        "effect": "minecraft:strength"
+      }
+    }
+  },
+  "description": {
+    "translate": "spell.incompetent_core.test"
+  }
+}

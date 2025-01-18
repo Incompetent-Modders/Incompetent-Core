@@ -6,6 +6,10 @@ import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.def.Diet;
+import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -16,20 +20,27 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public class ModRegistries {
-    public static final ResourceKey<Registry<AbilityType<?>>> ABILITY_TYPE_KEY = createRegistryKey("ability_type");
-    public static final ResourceKey<Registry<ClassPassiveEffectType<?>>> CLASS_PASSIVE_EFFECT_TYPE_KEY = createRegistryKey("class_passive_effect_type");
-    public static final ResourceKey<Registry<ManaRegenConditionType<?>>> MANA_REGEN_CONDITION_TYPE_KEY = createRegistryKey("mana_regen_condition_type");
-    public static final ResourceKey<Registry<SpeciesBehaviourType<?>>> SPECIES_BEHAVIOUR_TYPE_KEY = createRegistryKey("species_behaviour_type");
-    public static final ResourceKey<Registry<SpellResultType<?>>> SPELL_RESULT_TYPES_KEY = createRegistryKey("spell_result_type");
-    public static final ResourceKey<Registry<Ability>> ABILITY_KEY = createRegistryKey("ability");
+
+    public static class Keys {
+        public static final ResourceKey<Registry<AbilityType<?>>> ABILITY_TYPE = createRegistryKey("ability_type");
+        public static final ResourceKey<Registry<ClassPassiveEffectType<?>>> CLASS_PASSIVE_EFFECT_TYPE = createRegistryKey("class_passive_effect_type");
+        public static final ResourceKey<Registry<ManaRegenConditionType<?>>> MANA_REGEN_CONDITION_TYPE = createRegistryKey("mana_regen_condition_type");
+        public static final ResourceKey<Registry<SpeciesBehaviourType<?>>> SPECIES_BEHAVIOUR_TYPE = createRegistryKey("species_behaviour_type");
+        public static final ResourceKey<Registry<SpellResultType<?>>> SPELL_RESULT_TYPES = createRegistryKey("spell_result_type");
+        public static final ResourceKey<Registry<Ability>> ABILITY = createRegistryKey("ability");
+        public static final ResourceKey<Registry<Spell>> SPELL = createRegistryKey("spell");
+        public static final ResourceKey<Registry<Diet>> DIET = createRegistryKey("diet");
+        public static final ResourceKey<Registry<SpeciesType>> SPECIES_TYPE = createRegistryKey("species_type");
+        public static final ResourceKey<Registry<ClassType>> CLASS_TYPE = createRegistryKey("class_type");
+    }
     
-    public static final Registry<AbilityType<?>> ABILITY_TYPE = makeSyncedRegistry(ABILITY_TYPE_KEY);
-    public static final Registry<ClassPassiveEffectType<?>> CLASS_PASSIVE_EFFECT_TYPE = makeSyncedRegistry(CLASS_PASSIVE_EFFECT_TYPE_KEY);
-    public static final Registry<ManaRegenConditionType<?>> MANA_REGEN_CONDITION_TYPE = makeSyncedRegistry(MANA_REGEN_CONDITION_TYPE_KEY);
-    public static final Registry<SpeciesBehaviourType<?>> SPECIES_BEHAVIOUR_TYPE = makeSyncedRegistry(SPECIES_BEHAVIOUR_TYPE_KEY);
-    public static final Registry<SpellResultType<?>> SPELL_RESULT_TYPE = makeSyncedRegistry(SPELL_RESULT_TYPES_KEY);
-    public static final Registry<Ability> ABILITY = registerSimpleWithIntrusiveHolders(ABILITY_KEY);
-    
+    public static final Registry<AbilityType<?>> ABILITY_TYPE = makeSyncedRegistry(Keys.ABILITY_TYPE);
+    public static final Registry<ClassPassiveEffectType<?>> CLASS_PASSIVE_EFFECT_TYPE = makeSyncedRegistry(Keys.CLASS_PASSIVE_EFFECT_TYPE);
+    public static final Registry<ManaRegenConditionType<?>> MANA_REGEN_CONDITION_TYPE = makeSyncedRegistry(Keys.MANA_REGEN_CONDITION_TYPE);
+    public static final Registry<SpeciesBehaviourType<?>> SPECIES_BEHAVIOUR_TYPE = makeSyncedRegistry(Keys.SPECIES_BEHAVIOUR_TYPE);
+    public static final Registry<SpellResultType<?>> SPELL_RESULT_TYPE = makeSyncedRegistry(Keys.SPELL_RESULT_TYPES);
+    public static final Registry<Ability> ABILITY = registerSimpleWithIntrusiveHolders(Keys.ABILITY);
+
     private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
         return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, name));
     }
