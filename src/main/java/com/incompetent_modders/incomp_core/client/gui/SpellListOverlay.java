@@ -6,16 +6,24 @@ import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.player_data.ClientClassData;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
+import com.incompetent_modders.incomp_core.common.registry.ModSpells;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.def.Spell;
+import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+
+import java.util.Map;
 
 public class SpellListOverlay implements LayeredDraw.Layer {
     public static final SpellListOverlay INSTANCE = new SpellListOverlay();
@@ -43,20 +51,20 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         if (getSelectedSpell(player) == null)
             return;
         
-        ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame");
-        ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame");
+        ResourceLocation spellFrameIcon = getSpellOverlayTexture("spell_frame", player);
+        ResourceLocation spellSlotFrameIcon = getSpellOverlayTexture("spell_slot_frame", player);
         
-        ResourceLocation spellIcon = ResourceLocation.fromNamespaceAndPath(this.getSelectedSpell(player).getNamespace(), "textures/incompetent_spells/" + this.getSelectedSpell(player).getPath() + ".png");
-        Component spellName = ClientSpellManager.getDisplayName(getSelectedSpell(player));
+        ResourceLocation spellIcon = ResourceLocation.fromNamespaceAndPath(this.getSelectedSpell(player).location().getNamespace(), "textures/incompetent_spells/" + this.getSelectedSpell(player).location().getPath() + ".png");
+        Component spellName = Spell.getDisplayName(getSelectedSpell(player));
         
         DrawingUtils.blitSprite(graphics, spellFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
         DrawingUtils.blitSpellIcon(graphics, spellIcon, graphics.guiWidth() - (graphics.guiWidth() - 17), graphics.guiHeight() - 37);
         DrawingUtils.blitSprite(graphics, spellSlotFrameIcon, graphics.guiWidth() - (graphics.guiWidth() - 10), graphics.guiHeight() - 52, 48, 48);
     }
     
-    public ResourceLocation getSelectedSpell(LocalPlayer player) {
+    public ResourceKey<Spell> getSelectedSpell(LocalPlayer player) {
         if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
-            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "empty");
+            return ModSpells.EMPTY;
         return SpellCastingItem.getSelectedSpell(getCastingItem(player));
     }
     public ItemStack getCastingItem(LocalPlayer player) {
@@ -82,16 +90,14 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         return ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(player)).drawTime();
     }
     
-    public ResourceLocation getWielderClassType() {
-        return ClientClassData.getInstance().getPlayerClassType();
-    }
-    
-    public ResourceLocation getSpellOverlayTexture(String spriteName) {
-        if (ClassTypeListener.getClassTypeProperties(getWielderClassType()) == null)
-            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "spell_list/" + spriteName);
-        if (!ClassTypeListener.getClassTypeProperties(getWielderClassType()).useClassSpecificTexture())
-            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, "spell_list/" + spriteName);
-        return ResourceLocation.fromNamespaceAndPath(getWielderClassType().getNamespace(), "spell_list/" + getWielderClassType().getPath() + "/" + spriteName);
+    public ResourceLocation getSpellOverlayTexture(String spriteName, LocalPlayer player) {
+        Pair<ResourceKey<ClassType>, ClassType> classType = PlayerDataHelper.getClassTypeWithKey(player);
+        if (classType.getSecond().useClassSpecificTexture()) {
+            String path = classType.getFirst().location().getPath();
+            return ResourceLocation.fromNamespaceAndPath(classType.getFirst().location().getNamespace(), spriteLoc + "/" + path + "/" + spriteName);
+        } else {
+            return ResourceLocation.fromNamespaceAndPath(IncompCore.MODID, spriteLoc + "/" + spriteName);
+        }
     }
     
 }

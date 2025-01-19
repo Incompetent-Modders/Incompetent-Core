@@ -2,10 +2,7 @@ package com.incompetent_modders.incomp_core.common.data;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
-import com.incompetent_modders.incomp_core.common.registry.ModDiets;
-import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
-import com.incompetent_modders.incomp_core.common.registry.ModSpells;
+import com.incompetent_modders.incomp_core.common.registry.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
@@ -40,6 +37,7 @@ public class IncompDatagen {
                         .add(ModRegistries.Keys.DIET, ModDiets::bootstrap)
                         .add(ModRegistries.Keys.SPECIES_TYPE, ModSpeciesTypes::bootstrap)
                         .add(ModRegistries.Keys.CLASS_TYPE, ModClassTypes::bootstrap)
+                        .add(ModRegistries.Keys.POTION_PROPERTY, ModPotionProperties::bootstrap)
                         , Set.of(IncompCore.MODID))
         );
 

@@ -1,26 +1,29 @@
 package com.incompetent_modders.incomp_core.core.def.conditions;
 
+import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
 import com.incompetent_modders.incomp_core.common.util.Utils;
+import com.incompetent_modders.incomp_core.core.def.SpeciesType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 
-public record SpeciesTypeCondition(ResourceLocation speciesID, boolean acceptAllSpecies) {
+public record SpeciesTypeCondition(ResourceKey<SpeciesType> speciesKey, boolean acceptAllSpecies) {
     public static final Codec<SpeciesTypeCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.optionalFieldOf("id", Utils.defaultSpecies).forGetter(SpeciesTypeCondition::speciesID),
+            ResourceKey.codec(ModRegistries.Keys.SPECIES_TYPE).optionalFieldOf("species", ModSpeciesTypes.HUMAN).forGetter(SpeciesTypeCondition::speciesKey),
             Codec.BOOL.optionalFieldOf("accept_all_species", false).forGetter(SpeciesTypeCondition::acceptAllSpecies)
     ).apply(instance, SpeciesTypeCondition::new));
     
-    public static final SpeciesTypeCondition ANY = new SpeciesTypeCondition(Utils.defaultSpecies, false);
+    public static final SpeciesTypeCondition ANY = new SpeciesTypeCondition(ModSpeciesTypes.HUMAN, true);
     
-    public SpeciesTypeCondition(ResourceLocation speciesID) {
+    public SpeciesTypeCondition(ResourceKey<SpeciesType> speciesID) {
         this(speciesID, false);
     }
     
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeResourceLocation(speciesID);
+        buf.writeResourceKey(speciesKey);
         buf.writeBoolean(acceptAllSpecies);
     }
     
@@ -29,13 +32,13 @@ public record SpeciesTypeCondition(ResourceLocation speciesID, boolean acceptAll
     }
     
     public void toNetwork(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(speciesID);
+        buf.writeResourceKey(speciesKey);
         buf.writeBoolean(acceptAllSpecies);
     }
     
     public static SpeciesTypeCondition fromNetwork(FriendlyByteBuf buf) {
-        var id = buf.readResourceLocation();
+        var key = buf.readResourceKey(ModRegistries.Keys.SPECIES_TYPE);
         var acceptAll = buf.readBoolean();
-        return new SpeciesTypeCondition(id, acceptAll);
+        return new SpeciesTypeCondition(key, acceptAll);
     }
 }

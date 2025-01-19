@@ -1,21 +1,41 @@
 package com.incompetent_modders.incomp_core.core.def;
 
+import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
+import com.incompetent_modders.incomp_core.api.player.ClassData;
+import com.incompetent_modders.incomp_core.api.player.ManaData;
+import com.incompetent_modders.incomp_core.api.player.SpeciesData;
+import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.core.def.conditions.*;
 import com.incompetent_modders.incomp_core.core.def.conditions.SpeciesTypeCondition;
 import com.incompetent_modders.incomp_core.core.def.conditions.ClassTypeCondition;
+import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BundleItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.level.Level;
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public record Spell(Component description, SpellDefinition definition) {
 
@@ -161,5 +181,123 @@ public record Spell(Component description, SpellDefinition definition) {
                 return new SpellConditions(catalyst, classType, speciesType);
             }
         }
+    }
+
+    public boolean isBlankSpell() {
+        return definition().manaCost() == 0.0 && definition().drawTime() == 0 && definition().conditions().catalyst().item().isEmpty() && Objects.equals(definition().conditions().classType.classKey(), Utils.defaultClass) && Objects.equals(definition().conditions().speciesType.speciesKey(), Utils.defaultSpecies) && definition().results().spellResult().isEmpty() && definition().results().function().isEmpty();
+    }
+
+    public void executeCast(Player player) {
+        Level level = player.level();
+        ResourceKey<ClassType> playerClass = PlayerDataHelper.getClassTypeWithKey(player).getFirst();
+        ResourceKey<SpeciesType> playerSpecies = PlayerDataHelper.getSpeciesTypeWithKey(player).getFirst();
+        if (!checkPlayerClass(definition.conditions.classType(), playerClass) ||  !checkPlayerSpecies(definition.conditions.speciesType(), playerSpecies)) {
+            generateClassSpeciesLogger(player);
+            return;
+        }
+        int playerMana = (int) ManaData.Get.mana(player);
+        if (playerMana < getManaCost(player)) {
+            IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
+            return;
+        }
+        if (!playerIsHoldingSpellCatalyst(player)) {
+            IncompCore.LOGGER.info("{} is not holding the required catalyst to cast spell!", player.getName().getString());
+            return;
+        }
+        ManaData.Util.removeMana(player, getManaCost(player));
+        handleCatalystConsumption(player);
+        executeCast(level, player);
+    }
+
+    public void executeCast(Level level, Player player) {
+        definition().results().execute(player);
+        if (level.isClientSide()) {
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), definition().castSound(), player.getSoundSource(), 1.0F, 1.0F);
+        }
+        Utils.onCastEvent(level, player, player.getUsedItemHand());
+        player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
+        IncompCore.LOGGER.info("Spell cast by {}", player.getName().getString());
+    }
+
+    public boolean hasSpellCatalyst() {
+        return !this.definition().conditions().catalyst().item().isEmpty();
+    }
+    public boolean playerIsHoldingSpellCatalyst(Player player) {
+        if (hasSpellCatalyst() && player != null) {
+            return ItemStack.isSameItemSameComponents(player.getOffhandItem(), definition().conditions().catalyst().item());
+        }
+        return true;
+    }
+
+    public void handleCatalystConsumption(Player player) {
+        if (this.definition().conditions().catalyst().item().isEmpty()) {
+            return;
+        }
+        boolean catalystHasDurability = this.definition().conditions().catalyst().item().isDamageableItem();
+        boolean catalystIsUnbreakable = this.definition().conditions().catalyst().item().has(DataComponents.UNBREAKABLE) || this.definition().conditions().catalyst().item().getItem() instanceof BundleItem || this.definition().conditions().catalyst().keepCatalyst();
+        boolean catalystDropsLeftoverItems = this.definition().conditions().catalyst().dropLeftoverItems();
+        if (playerIsHoldingSpellCatalyst(player)) {
+            if (!player.isCreative()) {
+                if (catalystHasDurability) {
+                    this.definition().conditions().catalyst().item().hurtAndBreak(1, player, EquipmentSlot.OFFHAND);
+                } else {
+                    if (catalystIsUnbreakable) {
+                        if (this.definition().conditions().catalyst().item().getItem() instanceof BundleItem) {
+                            this.definition().conditions().catalyst().item().set(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+                        }
+                    } else {
+                        player.getOffhandItem().shrink(1);
+                        if (catalystDropsLeftoverItems) {
+                            player.drop(player.getOffhandItem(), true, true);
+                        }
+                    }
+                }
+                player.awardStat(Stats.ITEM_USED.get(this.definition().conditions().catalyst().item().getItem()));
+            } else
+                player.awardStat(Stats.ITEM_USED.get(this.definition().conditions().catalyst().item().getItem()));
+        } else {
+            Component message = Component.translatable("item.incompetent_core.spellcasting.catalyst_required", this.definition().conditions().catalyst().item().getDisplayName());
+            player.displayClientMessage(message, false);
+        }
+    }
+
+    public double getManaCost(Player player) {
+        AtomicReference<Float> mod = new AtomicReference<>(1.0F);
+        if (player == null) return definition().manaCost();
+        if (!player.getActiveEffects().isEmpty()) {
+            player.getActiveEffects().forEach(effect -> {
+                float manaCostModifier = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()) == null ? 1.0F : PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()).manaCostModifier();
+                if (manaCostModifier != 1.0F) {
+                    mod.set(manaCostModifier);
+                }
+            });
+        }
+        return definition().manaCost() * mod.get();
+    }
+
+    public boolean checkPlayerClass(ClassTypeCondition requiredClass, ResourceKey<ClassType> playerClass) {
+        if (requiredClass.acceptAllClasses()) {
+            return true;
+        } else
+            return requiredClass.classKey().equals(playerClass);
+    }
+
+    public boolean checkPlayerSpecies(SpeciesTypeCondition requiredSpecies, ResourceKey<SpeciesType> playerSpecies) {
+        if (requiredSpecies.acceptAllSpecies()) {
+            return true;
+        } else
+            return requiredSpecies.speciesKey().equals(playerSpecies);
+    }
+
+    public void generateClassSpeciesLogger(Player player) {
+        ResourceKey<ClassType> playerClass = PlayerDataHelper.getClassTypeWithKey(player).getFirst();
+        ResourceKey<SpeciesType> playerSpecies = PlayerDataHelper.getSpeciesTypeWithKey(player).getFirst();
+        String classTypeText = definition.conditions.classType().acceptAllClasses() ? "any class" : definition.conditions.classType().classKey().toString();
+        String speciesTypeText = definition.conditions.speciesType().acceptAllSpecies() ? "any species" : definition.conditions.speciesType().speciesKey().toString();
+        IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);
+    }
+
+    public static Component getDisplayName(ResourceKey<Spell> spell) {
+        return Component.translatable("spells." + spell.location().getNamespace() + "." + spell.location().getPath().replace("/", "."));
     }
 }

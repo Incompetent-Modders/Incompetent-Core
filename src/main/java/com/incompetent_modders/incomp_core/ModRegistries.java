@@ -6,10 +6,7 @@ import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResultType;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.Diet;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
-import com.incompetent_modders.incomp_core.core.def.Spell;
+import com.incompetent_modders.incomp_core.core.def.*;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -32,6 +29,7 @@ public class ModRegistries {
         public static final ResourceKey<Registry<Diet>> DIET = createRegistryKey("diet");
         public static final ResourceKey<Registry<SpeciesType>> SPECIES_TYPE = createRegistryKey("species_type");
         public static final ResourceKey<Registry<ClassType>> CLASS_TYPE = createRegistryKey("class_type");
+        public static final ResourceKey<Registry<PotionProperty>> POTION_PROPERTY = createRegistryKey("potion_property");
     }
     
     public static final Registry<AbilityType<?>> ABILITY_TYPE = makeSyncedRegistry(Keys.ABILITY_TYPE);

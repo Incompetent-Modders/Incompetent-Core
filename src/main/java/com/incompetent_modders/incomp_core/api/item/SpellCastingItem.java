@@ -6,9 +6,12 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.registry.ModSpells;
+import com.incompetent_modders.incomp_core.core.def.Spell;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -55,12 +58,12 @@ public class SpellCastingItem extends Item {
             decrementCastProgress(itemstack);
         }
         if (getCastProgress(itemstack) == 0 && !casting) {
-            ResourceLocation spell = getSelectedSpell(itemstack);
+            Spell spell = CastingItemUtil.getSelectedSpellInstanceWithKey(itemstack, entity).getSecond();
             if (spell != null && !casting) {
                 casting = true;
                 if (entity instanceof Player player) {
-                    IncompCore.LOGGER.info("Executing spell: {}", ClientSpellManager.getDisplayName(spell).getString());
-                    SpellListener.getSpellProperties(spell).executeCast(player);
+                    IncompCore.LOGGER.info("Executing spell: {}", Spell.getDisplayName(CastingItemUtil.getSelectedSpellInstanceWithKey(itemstack, entity).getFirst()).getString());
+                    spell.executeCast(player);
                     casting = false;
                 }
             }
@@ -72,7 +75,7 @@ public class SpellCastingItem extends Item {
         ItemStack castingStack = player.getItemInHand(hand);
         boolean noCastProgress = SpellCastingItem.getCastProgress(castingStack) == 0;
         boolean isOffhand = player.getItemInHand(hand) == castingStack && hand == InteractionHand.OFF_HAND;
-        boolean isBlankSpell = CastingItemUtil.getServerSpellProperties(castingStack).isBlankSpell();
+        boolean isBlankSpell = CastingItemUtil.getSelectedSpellInstance(castingStack, player).isBlankSpell();
          if (isOffhand) {
             IncompCore.LOGGER.info("Offhand casting is not allowed.");
             return InteractionResultHolder.fail(castingStack);
@@ -85,9 +88,10 @@ public class SpellCastingItem extends Item {
             SpellCastingItem.setCastProgress(castingStack);
             player.getCooldowns().addCooldown(this, getUseDuration(castingStack));
         } else  {
+            Spell spell = CastingItemUtil.getSelectedSpellInstanceWithKey(castingStack, player).getSecond();
             player.startUsingItem(hand);
-            IncompCore.LOGGER.info("Player has selected spell: {}", ClientSpellManager.getDisplayName(CastingItemUtil.getSelectedSpell(castingStack)).getString());
-            SpellListener.getSpellProperties(getSelectedSpell(castingStack)).executeCast(player);
+            IncompCore.LOGGER.info("Player has selected spell: {}", Spell.getDisplayName(CastingItemUtil.getSelectedSpellInstanceWithKey(castingStack, player).getFirst()).getString());
+            spell.executeCast(player);
         }
         return InteractionResultHolder.consume(castingStack);
     }
@@ -112,12 +116,12 @@ public class SpellCastingItem extends Item {
             stack.set(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY);
         }
     }
-    public static ResourceLocation getSelectedSpell(ItemStack stack) {
+    public static ResourceKey<Spell> getSelectedSpell(ItemStack stack) {
         return CastingItemUtil.deserializeFromSlot(stack, CastingItemUtil.getSelectedSpellSlot(stack));
     }
     
     public static String getSpellNameInSlot(ItemStack stack, int slot) {
-        return ClientSpellManager.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
+        return Spell.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {

@@ -3,12 +3,15 @@ package com.incompetent_modders.incomp_core.common.command;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.common.registry.ModSpells;
+import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +28,7 @@ public class ClearSpellSlotsCommand {
                 player = FakePlayerFactory.getMinecraft(world);
             if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
-                ResourceLocation spell = CastingItemUtil.emptySpell;
+                ResourceKey<Spell> spell = ModSpells.EMPTY;
                 CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), spell);
                 Component spellComponent = Component.translatable("commands.clear_spell.success.single", IntegerArgumentType.getInteger(arguments, "spellSlot"));
                 player.displayClientMessage(spellComponent, false);
@@ -40,7 +43,7 @@ public class ClearSpellSlotsCommand {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                 int slotsAmount = staff.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 6) - 1;
                 for (int i = 0; i <= slotsAmount; i++) {
-                    ResourceLocation spell = CastingItemUtil.emptySpell;
+                    ResourceKey<Spell> spell = ModSpells.EMPTY;
                     CastingItemUtil.serializeToSlot(staff, i, spell);
                 }
                 Component spellComponent = Component.translatable("commands.clear_spell.success.all");

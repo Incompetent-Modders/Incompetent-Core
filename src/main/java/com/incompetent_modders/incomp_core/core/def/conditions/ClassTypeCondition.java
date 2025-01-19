@@ -1,25 +1,27 @@
 package com.incompetent_modders.incomp_core.core.def.conditions;
 
-import com.incompetent_modders.incomp_core.common.util.Utils;
+import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 
-public record ClassTypeCondition(ResourceLocation classID, boolean acceptAllClasses) {
+public record ClassTypeCondition(ResourceKey<ClassType> classKey, boolean acceptAllClasses) {
     public static final Codec<ClassTypeCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.optionalFieldOf("id", Utils.defaultClass).forGetter(ClassTypeCondition::classID),
+            ResourceKey.codec(ModRegistries.Keys.CLASS_TYPE).optionalFieldOf("class", ModClassTypes.NONE).forGetter(ClassTypeCondition::classKey),
             Codec.BOOL.optionalFieldOf("accept_all_classes", false).forGetter(ClassTypeCondition::acceptAllClasses)
     ).apply(instance, ClassTypeCondition::new));
     
-    public static final ClassTypeCondition ANY = new ClassTypeCondition(Utils.defaultClass, false);
-    public ClassTypeCondition(ResourceLocation classID) {
-        this(classID, false);
+    public static final ClassTypeCondition ANY = new ClassTypeCondition(ModClassTypes.NONE, false);
+    public ClassTypeCondition(ResourceKey<ClassType> classKey) {
+        this(classKey, false);
     }
     
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeResourceLocation(classID);
+        buf.writeResourceKey(classKey);
         buf.writeBoolean(acceptAllClasses);
     }
     
@@ -28,12 +30,12 @@ public record ClassTypeCondition(ResourceLocation classID, boolean acceptAllClas
     }
     
     public void toNetwork(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(classID);
+        buf.writeResourceKey(classKey);
         buf.writeBoolean(acceptAllClasses);
     }
     public static ClassTypeCondition fromNetwork(FriendlyByteBuf buf) {
-        var id = buf.readResourceLocation();
+        var key = buf.readResourceKey(ModRegistries.Keys.CLASS_TYPE);
         var acceptAll = buf.readBoolean();
-        return new ClassTypeCondition(id, acceptAll);
+        return new ClassTypeCondition(key, acceptAll);
     }
 }

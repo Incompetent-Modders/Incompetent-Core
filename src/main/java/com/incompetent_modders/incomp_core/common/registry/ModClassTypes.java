@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 
 public class ModClassTypes {
+    public static final ResourceKey<ClassType> NONE = create("none");
     public static final ResourceKey<ClassType> PLAGUE_DOCTOR = create("plague_doctor");
 
     private static ResourceKey<ClassType> create(String name) {
@@ -16,6 +17,7 @@ public class ModClassTypes {
     }
 
     private static void registerClasses(BootstrapContext<ClassType> context) {
+        register(context, NONE, ClassType.builder());
         register(context, PLAGUE_DOCTOR, ClassType.builder().maxMana(100).canCastSpells(true).passiveEffect(new ApplyEffectPassiveEffect(MobEffects.NIGHT_VISION, 20, 1), 20));
     }
 

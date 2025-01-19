@@ -24,9 +24,15 @@ import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.util.Utils;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.def.Diet;
+import com.incompetent_modders.incomp_core.core.def.Spell;
+import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -69,24 +75,9 @@ public class CommonForgeEvents {
             }
             PlayerDataCore.handleClassDataTick(player, event);
             PlayerDataCore.handleSpeciesDataTick(player, event);
-            
-            ManaData.Set.mana(player, ManaData.Get.mana(player));
-            ManaData.Set.maxMana(player, ManaData.Get.maxMana(player));
-            
-            if (player.getPersistentData().contains(IncompCore.MODID + ":ClassData")) {
-                IncompCore.LOGGER.info("{} has old data format for Class Data, removing...", player.getName().getString());
-                player.getPersistentData().remove(IncompCore.MODID + ":ClassData");
-            }
-            if (player.getPersistentData().contains(IncompCore.MODID + ":SpeciesData")) {
-                IncompCore.LOGGER.info("{} has old data format for Species Data, removing...", player.getName().getString());
-                player.getPersistentData().remove(IncompCore.MODID + ":SpeciesData");
-            }
-            if (player.getPersistentData().contains(IncompCore.MODID + ":ManaData")) {
-                IncompCore.LOGGER.info("{} has old data format for Mana Data, removing...", player.getName().getString());
-                player.getPersistentData().remove(IncompCore.MODID + ":ManaData");
-            }
-            
-            
+
+            ClassType playerClass = PlayerDataHelper.getClassType(player);
+            PlayerDataHelper.setMaxMana(player, playerClass.maxMana());
         }
     }
     //@SubscribeEvent(priority = EventPriority.HIGH)
@@ -145,9 +136,9 @@ public class CommonForgeEvents {
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
             if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem && !(stack.getItem() instanceof SpellCastingItem)) {
-                ResourceLocation selectedSpell = CastingItemUtil.getSelectedSpell(player.getItemInHand(InteractionHand.MAIN_HAND));
+                ResourceKey<Spell> selectedSpell = CastingItemUtil.getSelectedSpell(player.getItemInHand(InteractionHand.MAIN_HAND));
                 if (selectedSpell != null) {
-                    ItemStack catalyst = SpellListener.getSpellProperties(selectedSpell).catalyst().item();
+                    ItemStack catalyst = CastingItemUtil.getSelectedSpellInstance(stack, player).definition().conditions().catalyst().item();
                     if (catalyst != null && !catalyst.isEmpty()) {
                         if (player.getItemInHand(InteractionHand.OFF_HAND).equals(catalyst) && catalyst.getItem() instanceof BundleItem) {
                             event.setCanceled(true);
@@ -155,13 +146,11 @@ public class CommonForgeEvents {
                     }
                 }
             }
-            ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
-            SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-            if (speciesProperties != null) {
-                ResourceLocation dietType = speciesProperties.dietType();
-                if (stack.getFoodProperties(entity) != null && dietType != Utils.defaultDiet) {
-                    if (DietListener.getDietProperties(dietType) != null) {
-                        NonNullList<Ingredient> ableToConsume = DietListener.getDietProperties(dietType).ableToConsume();
+            if (PlayerDataHelper.getSpeciesType(player) != null) {
+                Holder<Diet> dietType = PlayerDataHelper.getSpeciesType(player).dietType();
+                if (stack.getFoodProperties(entity) != null && dietType.getKey() != Utils.defaultDiet) {
+                    if (!dietType.value().ableToConsume().isEmpty()) {
+                        NonNullList<Ingredient> ableToConsume = dietType.value().ableToConsume();
                         for (Ingredient ingredient : ableToConsume) {
                             if (!ingredient.test(stack)) {
                                 event.setCanceled(true);
@@ -177,12 +166,9 @@ public class CommonForgeEvents {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
         if (entity instanceof Player player) {
-            ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
-            SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);
-            if (speciesProperties != null) {
-                ResourceLocation dietType = speciesProperties.dietType();
-                DietProperties dietProperties = DietListener.getDietProperties(dietType);
-                if (dietProperties != null && dietProperties.ignoreHungerFromFood()) {
+            if (PlayerDataHelper.getSpeciesType(player) != null) {
+                Holder<Diet> dietType = PlayerDataHelper.getSpeciesType(player).dietType();
+                if (dietType != null && dietType.value().ignoreHunger()) {
                     FoodProperties foodProperties = stack.getFoodProperties(entity);
                     if (foodProperties != null) {
                         List<FoodProperties.PossibleEffect> effects = foodProperties.effects();

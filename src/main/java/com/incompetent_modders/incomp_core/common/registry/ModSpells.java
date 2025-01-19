@@ -13,6 +13,7 @@ import net.minecraft.world.effect.MobEffects;
 
 public class ModSpells {
 
+    public static final ResourceKey<Spell> EMPTY = create("empty");
     public static final ResourceKey<Spell> TEST = create("test");
 
     private static ResourceKey<Spell> create(String name) {
@@ -20,6 +21,7 @@ public class ModSpells {
     }
 
     private static void registerSpells(BootstrapContext<Spell> context) {
+        register(context, EMPTY, toMsgId(EMPTY), Spell.SpellDefinition.builder(0.0, 0));
         register(context, TEST, toMsgId(TEST),
                 Spell.SpellDefinition
                         .builder(1.0, 5)
@@ -32,7 +34,7 @@ public class ModSpells {
     }
 
     private static void register(BootstrapContext<Spell> context, ResourceKey<Spell> key, String msgId, SpellCategory category, double manaCost, int drawTime, CatalystCondition catalyst, ClassTypeCondition classType, SpeciesTypeCondition speciesType, SpellResults results, SoundEvent castSound) {
-        context.register(key, new Spell(Component.translatable(msgId), new Spell.SpellDefinition(category, manaCost, drawTime, catalyst, classType, speciesType, results, castSound)));
+        context.register(key, new Spell(Component.translatable(msgId), new Spell.SpellDefinition(category, manaCost, drawTime, results, castSound, Spell.SpellConditions.builder().catalyst(catalyst).classType(classType).speciesType(speciesType).build())));
     }
 
     private static String toMsgId(ResourceKey<Spell> key) {

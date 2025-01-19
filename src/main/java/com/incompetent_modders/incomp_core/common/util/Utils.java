@@ -4,8 +4,13 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
 import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.common.registry.ModDiets;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
+import com.incompetent_modders.incomp_core.core.def.Diet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -22,9 +27,9 @@ public class Utils {
     public boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
-    public static ResourceLocation defaultSpecies = IncompCore.makeId("human");
-    public static ResourceLocation defaultClass = IncompCore.makeId("none");
-    public static ResourceLocation defaultDiet = IncompCore.makeId("omnivore");
+    public static ResourceLocation defaultSpecies = ModSpeciesTypes.HUMAN;
+    public static ResourceLocation defaultClass = ModClassTypes.NONE;
+    public static ResourceKey<Diet> defaultDiet = ModDiets.OMNIVORE;
     public static ResourceLocation location(String path) {
         return IncompCore.makeId(path);
     }

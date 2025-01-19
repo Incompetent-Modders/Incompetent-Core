@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.core.def.conditions;
 
 import com.incompetent_modders.incomp_core.api.spell.data.SpellResult;
+import com.incompetent_modders.incomp_core.common.registry.content.spell_results.DoNothingResult;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
@@ -16,7 +17,7 @@ public record SpellResults(Optional<SpellResult> spellResult, Optional<Cacheable
             CacheableFunction.CODEC.optionalFieldOf("function").forGetter(SpellResults::function)
     ).apply(instance, SpellResults::new));
     
-    public static SpellResults EMPTY = new SpellResults(Optional.empty(), Optional.empty());
+    public static SpellResults EMPTY = new SpellResults(Optional.of(new DoNothingResult(true)), Optional.empty());
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public SpellResults(Optional<SpellResult> spellResult, Optional<CacheableFunction> function) {

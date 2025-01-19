@@ -1,5 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command;
 
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
@@ -9,6 +10,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -18,14 +20,14 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 public class SetSpellInSlotCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
-        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", new SpellArgument()).executes(arguments -> {
+        return Commands.literal("setSpell").requires(s -> s.hasPermission(2)).then(Commands.argument("spellSlot", IntegerArgumentType.integer()).then(Commands.argument("spells", ResourceArgument.resource(context, ModRegistries.Keys.SPELL)).executes(arguments -> {
                     ServerLevel world = arguments.getSource().getLevel();
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)
                         player = FakePlayerFactory.getMinecraft(world);
                     if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
-                        CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), SpellArgument.getSpell(arguments, "spells"));
+                        CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), ResourceArgument.getResource(arguments, "spells", ModRegistries.Keys.SPELL).getKey());
                         Component outputComponent = Component.translatable("commands.set_spell", ClientSpellManager.getDisplayName(SpellArgument.getSpell(arguments, "spells")), IntegerArgumentType.getInteger(arguments, "spellSlot"));
                         player.displayClientMessage(outputComponent, false);
                     }

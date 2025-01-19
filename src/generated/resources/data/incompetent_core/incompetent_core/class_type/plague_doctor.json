@@ -1,0 +1,18 @@
+{
+  "ability": {
+    "type": "incompetent_core:default"
+  },
+  "ability_cooldown": 0,
+  "can_cast_spells": true,
+  "mana_regen_condition": {
+    "type": "incompetent_core:default"
+  },
+  "max_mana": 100,
+  "passive_effect": {
+    "type": "incompetent_core:apply_effect",
+    "amplifier": 1,
+    "duration": 20,
+    "effect": "minecraft:night_vision"
+  },
+  "passive_effect_tick_frequency": 20
+}

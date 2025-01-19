@@ -8,6 +8,8 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
 public class ModSpeciesTypes {
+
+    public static final ResourceKey<SpeciesType> HUMAN = create("human");
     public static final ResourceKey<SpeciesType> ZOMBIE = create("zombie");
 
     private static ResourceKey<SpeciesType> create(String name) {
@@ -15,7 +17,8 @@ public class ModSpeciesTypes {
     }
 
     private static void registerSpecies(BootstrapContext<SpeciesType> context) {
-        register(context, ZOMBIE, SpeciesType.builder().behaviour(new UndeadSpeciesBehaviour(true)).dietType(ModDiets.CARNIVORE.location()).invertPotionHealAndHarm().keepOnDeath(true));
+        register(context, HUMAN, SpeciesType.builder(context));
+        register(context, ZOMBIE, SpeciesType.builder(context).behaviour(new UndeadSpeciesBehaviour(true)).diet(ModDiets.CARNIVORE).invertPotionHealAndHarm().keepOnDeath(true));
     }
 
     private static void register(BootstrapContext<SpeciesType> context, ResourceKey<SpeciesType> key, SpeciesType.Builder dietBuilder) {

@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class SpeciesArgument implements ArgumentType<ResourceLocation> {
     public static <S> ResourceLocation getSpecies(CommandContext<S> commandContext, String name) {
         return commandContext.getArgument(name, ResourceLocation.class);
     }
-    
+
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
         return SharedSuggestionProvider.suggestResource(ClientSpeciesManager.getInstance().getSpeciesList(), suggestionsBuilder);
     }

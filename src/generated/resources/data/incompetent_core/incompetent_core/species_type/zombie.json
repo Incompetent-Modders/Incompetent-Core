@@ -7,6 +7,6 @@
     "type": "incompetent_core:undead",
     "burn_in_sun": true
   },
-  "diet_type": "incompetent_core:carnivore",
+  "diet": "incompetent_core:carnivore",
   "invert_heal_and_harm": true
 }
