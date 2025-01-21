@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.effect.MobEffect;
@@ -23,26 +24,28 @@ import net.minecraft.world.level.Level;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class EffectExtendingItem extends Item {
-    private final ResourceLocation effectToExtendID;
+    private final ResourceKey<MobEffect> effectToExtendKey;
     private final int extensionDuration;
-    public EffectExtendingItem(ResourceLocation effectID, int extendDuration) {
+    public EffectExtendingItem(ResourceKey<MobEffect> effectKey, int extendDuration) {
         super(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0.0F).fast().build()));
-        effectToExtendID = effectID;
+        effectToExtendKey = effectKey;
         extensionDuration = extendDuration;
     }
     
-    public ResourceLocation getExtendingEffect() {
-        return effectToExtendID;
+    public ResourceKey<MobEffect> getExtendingEffect() {
+        return effectToExtendKey;
     }
     public int getExtendDuration() {
         return extensionDuration;
     }
-    public ResourceLocation getExtendingEffect(ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.STORED_EFFECT_POSTPONE.get(), ResourceLocation.fromNamespaceAndPath("minecraft", "speed"));
+
+    public ResourceKey<MobEffect> getExtendingEffect(ItemStack stack) {
+        return stack.getOrDefault(ModDataComponents.STORED_EFFECT_POSTPONE.get(), Objects.requireNonNull(MobEffects.MOVEMENT_SPEED.getKey()));
     }
     public int getExtendDuration(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.EFFECT_POSTPONE_DURATION.get(), 600);

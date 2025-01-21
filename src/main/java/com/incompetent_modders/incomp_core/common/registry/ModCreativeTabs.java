@@ -1,25 +1,24 @@
 package com.incompetent_modders.incomp_core.common.registry;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
-import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.core.def.Spell;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ModCreativeTabs {
@@ -32,14 +31,41 @@ public class ModCreativeTabs {
                     output.accept(registry.get());
                 }
             }, builder -> builder.withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
-    
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> UTIL_CREATIVE_TAB = registerTabSearchBar("utility",
-            ModItems.ASSIGN_CLASS, output -> {
-                generateEffectPostponeItems(output, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-                generateClassItems(output, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-                generateSpeciesItems(output, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-                generateSpellTomes(output, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            }, builder -> builder.withTabsBefore(BASE_CREATIVE_TAB.getId()));
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> UTIL_CREATIVE_TAB = REGISTER.register("utility", id -> {
+        final CreativeModeTab.Builder builder = CreativeModeTab.builder();
+        builder.title(Component.translatable(id.toLanguageKey("itemGroup")))
+                .icon(() -> new ItemStack(ModItems.ASSIGN_CLASS))
+                .withSearchBar()
+                .displayItems((pParameters, pOutput) -> {
+                    pParameters.holders()
+                            .lookup(ModRegistries.Keys.SPELL)
+                            .ifPresent(
+                                    registryLookup -> {
+                                        generateSpellTomes(pOutput, registryLookup, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                                    });
+                    pParameters.holders()
+                            .lookup(Registries.MOB_EFFECT)
+                            .ifPresent(
+                                    registryLookup -> {
+                                        generateEffectPostponeItems(pOutput, registryLookup, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                                    });
+                    pParameters.holders()
+                            .lookup(ModRegistries.Keys.SPECIES_TYPE)
+                            .ifPresent(
+                                    registryLookup -> {
+                                        generateSpeciesItems(pOutput, registryLookup, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                                    });
+                    pParameters.holders()
+                            .lookup(ModRegistries.Keys.CLASS_TYPE)
+                            .ifPresent(
+                                    registryLookup -> {
+                                        generateClassItems(pOutput, registryLookup, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                                    });
+                })
+                .withTabsBefore(BASE_CREATIVE_TAB.getId());
+        return builder.build();
+    });
     
     private static DeferredHolder<CreativeModeTab, CreativeModeTab> registerTab(String name, Holder<Item> icon, Consumer<CreativeModeTab.Output> displayItems, Consumer<CreativeModeTab.Builder> additionalProperties) {
         return REGISTER.register(name, id -> {
@@ -51,62 +77,50 @@ public class ModCreativeTabs {
             return builder.build();
         });
     }
-    private static DeferredHolder<CreativeModeTab, CreativeModeTab> registerTabSearchBar(String name, Holder<Item> icon, Consumer<CreativeModeTab.Output> displayItems, Consumer<CreativeModeTab.Builder> additionalProperties) {
+    private static DeferredHolder<CreativeModeTab, CreativeModeTab> registerTabSearchBar(String name, Holder<Item> icon, BiConsumer<CreativeModeTab.ItemDisplayParameters, CreativeModeTab.Output> displayItems, Consumer<CreativeModeTab.Builder> additionalProperties) {
         return REGISTER.register(name, id -> {
             final CreativeModeTab.Builder builder = CreativeModeTab.builder();
             builder.title(Component.translatable(id.toLanguageKey("itemGroup")))
                     .icon(() -> new ItemStack(icon))
                     .withSearchBar()
-                    .displayItems((pParameters, pOutput) -> displayItems.accept(pOutput));
+                    .displayItems((pParameters, pOutput) -> displayItems.accept(pParameters, pOutput));
             additionalProperties.accept(builder);
             return builder.build();
         });
     }
-    
-    private static void generateSpellTomes(CreativeModeTab.Output output, CreativeModeTab.TabVisibility visibility) {
-        List<ResourceLocation> list = ClientSpellManager.getInstance().getSpellList().keySet().stream().toList();
-        Set<ItemStack> set = ItemStackLinkedSet.createTypeAndComponentsSet();
-        for (ResourceLocation resourceLocation : list) {
-            ItemSpellSlots.Entry entry = new ItemSpellSlots.Entry(resourceLocation, 0);
-            ItemSpellSlots spellSlots = new ItemSpellSlots(List.of());
-            ItemStack itemstack = new ItemStack(ModItems.SPELL_TOME);
-            itemstack.set(ModDataComponents.SPELLS, spellSlots.withSpellAdded(entry));
-            itemstack.set(ModDataComponents.MAX_SPELL_SLOTS, 0);
-            itemstack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
-            set.add(itemstack);
-        }
-        output.acceptAll(set, visibility);
+
+    private static void generateSpellTomes(CreativeModeTab.Output output, HolderLookup<Spell> spells, CreativeModeTab.TabVisibility tabVisibility) {
+        spells.listElements().forEach((spell) -> {
+            ItemStack stack = new ItemStack(ModItems.SPELL_TOME);
+            ItemSpellSlots.Entry entry = new ItemSpellSlots.Entry(spell.getKey(), 0);
+            ItemSpellSlots spellSlots = new ItemSpellSlots(List.of(entry));
+            stack.set(ModDataComponents.SPELLS, spellSlots);
+            stack.set(ModDataComponents.MAX_SPELL_SLOTS, 1);
+            stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
+            output.accept(stack, tabVisibility);
+        });
     }
-    private static void generateEffectPostponeItems(CreativeModeTab.Output output, CreativeModeTab.TabVisibility visibility) {
-        Set<ItemStack> set = ItemStackLinkedSet.createTypeAndComponentsSet();
-        for (ResourceLocation mobEffectID : BuiltInRegistries.MOB_EFFECT.keySet()) {
-            Item item = ModItems.EFFECT_POSTPONE.get();
-            ItemStack stack = new ItemStack(item);
-            if (Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.get(mobEffectID)).isInstantenous()) continue;
-            stack.set(ModDataComponents.STORED_EFFECT_POSTPONE, mobEffectID);
-            set.add(stack);
-        }
-        output.acceptAll(set, visibility);
+
+    private static void generateEffectPostponeItems(CreativeModeTab.Output output, HolderLookup<MobEffect> effects, CreativeModeTab.TabVisibility tabVisibility) {
+        effects.listElements().filter(effect -> !effect.value().isInstantenous()).forEach((effect) -> {
+            ItemStack stack = new ItemStack(ModItems.EFFECT_POSTPONE);
+            stack.set(ModDataComponents.STORED_EFFECT_POSTPONE, effect.getKey());
+            output.accept(stack, tabVisibility);
+        });
     }
-    private static void generateSpeciesItems(CreativeModeTab.Output output, CreativeModeTab.TabVisibility visibility) {
-        Set<ItemStack> set = ItemStackLinkedSet.createTypeAndComponentsSet();
-        for (ResourceLocation speciesID : ClientSpeciesManager.getInstance().getSpeciesList()) {
-            Item item = ModItems.ASSIGN_SPECIES.get();
-            ItemStack stack = new ItemStack(item);
-            stack.set(ModDataComponents.STORED_SPECIES_TYPE, speciesID);
-            set.add(stack);
-        }
-        output.acceptAll(set, visibility);
+    private static void generateSpeciesItems(CreativeModeTab.Output output, HolderLookup<SpeciesType> speciesTypes, CreativeModeTab.TabVisibility tabVisibility) {
+        speciesTypes.listElements().forEach((species) -> {
+            ItemStack stack = new ItemStack(ModItems.ASSIGN_SPECIES);
+            stack.set(ModDataComponents.STORED_SPECIES_TYPE, species.getKey());
+            output.accept(stack, tabVisibility);
+        });
     }
-    private static void generateClassItems(CreativeModeTab.Output output, CreativeModeTab.TabVisibility visibility) {
-        Set<ItemStack> set = ItemStackLinkedSet.createTypeAndComponentsSet();
-        for (ResourceLocation classID : ClientClassTypeManager.getInstance().getClassTypeList()) {
-            Item item = ModItems.ASSIGN_CLASS.get();
-            ItemStack stack = new ItemStack(item);
-            stack.set(ModDataComponents.STORED_CLASS_TYPE, classID);
-            set.add(stack);
-        }
-        output.acceptAll(set, visibility);
+    private static void generateClassItems(CreativeModeTab.Output output, HolderLookup<ClassType> classTypes, CreativeModeTab.TabVisibility visibility) {
+        classTypes.listElements().forEach((classType) -> {
+            ItemStack stack = new ItemStack(ModItems.ASSIGN_CLASS);
+            stack.set(ModDataComponents.STORED_CLASS_TYPE, classType.getKey());
+            output.accept(stack, visibility);
+        });
     }
     
     public static void register(IEventBus eventBus) {

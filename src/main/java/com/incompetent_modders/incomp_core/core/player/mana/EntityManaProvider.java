@@ -1,9 +1,7 @@
 package com.incompetent_modders.incomp_core.core.player.mana;
 
 import com.incompetent_modders.incomp_core.common.registry.ModAttachmentTypes;
-import com.incompetent_modders.incomp_core.core.network.UpdateManaPayload;
-import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeProvider;
-import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeStorage;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateManaPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;

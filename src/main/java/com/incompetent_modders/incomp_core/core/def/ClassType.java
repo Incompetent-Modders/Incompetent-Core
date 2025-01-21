@@ -1,7 +1,6 @@
 package com.incompetent_modders.incomp_core.core.def;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.DefaultAbility;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen_condition.DefaultManaRegenCondition;
@@ -68,7 +67,7 @@ public record ClassType(boolean canCastSpells, int maxMana, boolean pacifist, bo
     }
 
     public static Component getDisplayName(ResourceLocation classType) {
-        return Component.translatable("class_types." + classType.getNamespace() + "." + classType.getPath());
+        return Component.translatable("class_type." + classType.getNamespace() + "." + classType.getPath());
     }
 
     public static class Builder {
@@ -83,18 +82,6 @@ public record ClassType(boolean canCastSpells, int maxMana, boolean pacifist, bo
         private int abilityCooldown = 0;
 
         public Builder() {
-        }
-
-        public Builder(ClassTypeProperties properties) {
-            this.canCastSpells = properties.canCastSpells();
-            this.maxMana = properties.maxMana();
-            this.pacifist = properties.pacifist();
-            this.useClassSpecificTexture = properties.useClassSpecificTexture();
-            this.manaRegenCondition = properties.manaRegenCondition();
-            this.passiveEffect = properties.passiveEffect();
-            this.ability = properties.ability();
-            this.passiveEffectTickFrequency = properties.passiveEffectTickFrequency();
-            this.abilityCooldown = properties.abilityCooldown();
         }
 
         public Builder canCastSpells(boolean canCastSpells) {

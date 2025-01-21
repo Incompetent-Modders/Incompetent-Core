@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.core.player.class_type;
 
 import com.incompetent_modders.incomp_core.common.registry.ModAttachmentTypes;
-import com.incompetent_modders.incomp_core.core.network.UpdateClassTypePayload;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateClassTypePayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;

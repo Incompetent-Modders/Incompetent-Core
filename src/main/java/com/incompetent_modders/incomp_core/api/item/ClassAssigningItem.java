@@ -1,15 +1,15 @@
 package com.incompetent_modders.incomp_core.api.item;
 
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.api.player.ClassData;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -26,24 +26,24 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @HasOwnTab
 public class ClassAssigningItem extends Item {
-    private final ResourceLocation classType;
-    public ClassAssigningItem(Properties properties, ResourceLocation classType) {
+    private final ResourceKey<ClassType> classType;
+    public ClassAssigningItem(Properties properties, ResourceKey<ClassType> classType) {
         super(properties);
         this.classType = classType;
     }
-    public ResourceLocation getClassType() {
+    public ResourceKey<ClassType> getClassType() {
         return classType;
     }
-    public ResourceLocation getClassType(ItemStack stack) {
+    public ResourceKey<ClassType> getClassType(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.STORED_CLASS_TYPE.get(), Utils.defaultClass);
     }
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (player.isShiftKeyDown()) {
-            if (ClassData.Get.playerClassType(player) == getClassType(itemstack)) {
+            if (PlayerDataHelper.getClassTypeWithKey(player).getFirst() == getClassType(itemstack)) {
                 return InteractionResultHolder.fail(itemstack);
             } else {
-                ClassData.Set.playerClassType(player, getClassType(itemstack));
+                PlayerDataHelper.setClassType(player, getClassType(itemstack));
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.TOTEM_OF_UNDYING, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.ENCHANT, 10);
                 Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ParticleTypes.SCULK_SOUL, 10);
@@ -54,7 +54,7 @@ public class ClassAssigningItem extends Item {
     }
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(ClassTypeListener.getDisplayName(getClassType(stack)));
+        tooltip.add(ClassType.getDisplayName(getClassType(stack).location()));
     }
     
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
@@ -64,6 +64,6 @@ public class ClassAssigningItem extends Item {
     }
     @Override
     public String getDescriptionId(ItemStack stack) {
-        return "item.incompetent_core.assign_class." + getClassType(stack).getNamespace() + "." + getClassType(stack).getPath();
+        return "item.incompetent_core.assign_class." + getClassType(stack).location().getNamespace() + "." + getClassType(stack).location().getPath();
     }
 }

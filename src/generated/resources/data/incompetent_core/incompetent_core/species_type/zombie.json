@@ -3,6 +3,58 @@
     "type": "incompetent_core:default"
   },
   "ability_cooldown": 0,
+  "attribute_modifiers": {
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.armor",
+        "modifier": {
+          "amount": 4.0,
+          "id": "incompetent_core:species_generic_armor_modifier",
+          "operation": "add_value"
+        }
+      },
+      {
+        "attribute": "minecraft:generic.attack_damage",
+        "modifier": {
+          "amount": 3.0,
+          "id": "incompetent_core:species_generic_attack_damage_modifier",
+          "operation": "add_value"
+        }
+      },
+      {
+        "attribute": "minecraft:generic.movement_speed",
+        "modifier": {
+          "amount": 0.075,
+          "id": "incompetent_core:species_generic_movement_speed_modifier",
+          "operation": "add_multiplied_base"
+        }
+      },
+      {
+        "attribute": "minecraft:generic.scale",
+        "modifier": {
+          "amount": 1.05,
+          "id": "incompetent_core:species_generic_scale_modifier",
+          "operation": "add_multiplied_base"
+        }
+      },
+      {
+        "attribute": "minecraft:generic.max_health",
+        "modifier": {
+          "amount": 10.0,
+          "id": "incompetent_core:species_generic_max_health_modifier",
+          "operation": "add_value"
+        }
+      },
+      {
+        "attribute": "minecraft:generic.armor_toughness",
+        "modifier": {
+          "amount": 3.0,
+          "id": "incompetent_core:species_generic_armor_toughness_modifier",
+          "operation": "add_value"
+        }
+      }
+    ]
+  },
   "behaviour": {
     "type": "incompetent_core:undead",
     "burn_in_sun": true

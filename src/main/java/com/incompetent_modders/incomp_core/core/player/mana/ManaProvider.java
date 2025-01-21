@@ -12,17 +12,17 @@ public interface ManaProvider {
 
     void setStorage(ManaStorage storage);
 
-    default int getAmount() {
+    default double getAmount() {
         return this.asStorage().data().amount();
     }
 
-    default void setAmount(int amount) {
+    default void setAmount(double amount) {
         ManaStorage storage = this.asStorage();
 
         this.setStorage(new ManaStorage(ManaData.of(Math.min(amount, storage.data().limit()), storage.data().limit()), storage.showInTooltip()));
     }
 
-    default void addAmount(int amount) {
+    default void addAmount(double amount) {
         this.setAmount(this.getAmount() + amount);
     }
 

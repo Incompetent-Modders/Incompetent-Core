@@ -7,7 +7,9 @@ import com.incompetent_modders.incomp_core.api.spell.*;
 import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.common.registry.ModDiets;
 import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.def.Diet;
+import com.incompetent_modders.incomp_core.core.def.SpeciesType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -27,8 +29,8 @@ public class Utils {
     public boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
-    public static ResourceLocation defaultSpecies = ModSpeciesTypes.HUMAN;
-    public static ResourceLocation defaultClass = ModClassTypes.NONE;
+    public static ResourceKey<SpeciesType> defaultSpecies = ModSpeciesTypes.HUMAN;
+    public static ResourceKey<ClassType> defaultClass = ModClassTypes.NONE;
     public static ResourceKey<Diet> defaultDiet = ModDiets.OMNIVORE;
     public static ResourceLocation location(String path) {
         return IncompCore.makeId(path);

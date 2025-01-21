@@ -1,8 +1,9 @@
 package com.incompetent_modders.incomp_core.core.def;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.core.def.conditions.ConvertToClassType;
-import com.incompetent_modders.incomp_core.core.def.conditions.ConvertToSpeciesType;
+import com.incompetent_modders.incomp_core.core.def.params.ConvertToClassType;
+import com.incompetent_modders.incomp_core.core.def.params.ConvertToSpeciesType;
+import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -11,6 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.player.Player;
 
 public record PotionProperty(Holder<MobEffect> effect, float manaCostModifier, float manaRegenModifier, ConvertToSpeciesType convertToSpeciesOnFinish, ConvertToClassType convertToClassOnFinish) {
     public static final Codec<PotionProperty> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -39,6 +41,18 @@ public record PotionProperty(Holder<MobEffect> effect, float manaCostModifier, f
 
     public static Builder builder(Holder<MobEffect> effect) {
         return new Builder(effect);
+    }
+
+    public void applyConverts(Player player) {
+        boolean shouldConvertSpecies = convertToSpeciesOnFinish.condition().shouldConvert(player) && !convertToSpeciesOnFinish.convertTo().equals(ConvertToSpeciesType.convertToNothing);
+        boolean shouldConvertClass = convertToClassOnFinish.condition().shouldConvert(player) && !convertToClassOnFinish.convertTo().equals(ConvertToClassType.convertToNothing);
+
+        if (shouldConvertSpecies) {
+            PlayerDataHelper.setSpeciesType(player, convertToSpeciesOnFinish.convertTo());
+        }
+        if (shouldConvertClass) {
+            PlayerDataHelper.setClassType(player, convertToClassOnFinish.convertTo());
+        }
     }
 
     public static class Builder {

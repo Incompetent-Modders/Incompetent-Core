@@ -1,9 +1,6 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.client.player_data.ClientClassData;
-import com.incompetent_modders.incomp_core.client.player_data.ClientManaData;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
@@ -47,7 +44,7 @@ public class ManaOverlay implements LayeredDraw.Layer {
         guiGraphics.drawString(mc.font, value, 16, 5, color);
     }
 
-    public float getMana(Player player) {
+    public double getMana(Player player) {
         return PlayerDataHelper.getMana(player);
     }
     
@@ -55,7 +52,7 @@ public class ManaOverlay implements LayeredDraw.Layer {
         return PlayerDataHelper.getMaxMana(player);
     }
     
-    public float getManaPercentage(Player player) {
+    public double getManaPercentage(Player player) {
         return getMana(player) / getMaxMana(player);
     }
     

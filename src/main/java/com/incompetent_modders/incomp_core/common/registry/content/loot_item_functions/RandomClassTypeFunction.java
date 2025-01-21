@@ -1,15 +1,16 @@
 package com.incompetent_modders.incomp_core.common.registry.content.loot_item_functions;
 
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.registry.ModItems;
 import com.incompetent_modders.incomp_core.common.registry.ModLootItemFunctions;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -35,15 +36,10 @@ public class RandomClassTypeFunction extends LootItemConditionalFunction {
     }
     
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        RandomSource randomsource = lootContext.getRandom();
-        List<ResourceLocation> allClassTypes = ClassTypeListener.getAllClassTypes();
+        Registry<ClassType> classTypeRegistry = lootContext.getLevel().registryAccess().registryOrThrow(ModRegistries.Keys.CLASS_TYPE);
         if (stack.is(ModItems.ASSIGN_CLASS)) {
-            if (allClassTypes.isEmpty()) {
-                LOGGER.error("No class types found in any datapacks");
-                return stack;
-            }
-            ResourceLocation species = allClassTypes.get(randomsource.nextInt(allClassTypes.size()));
-            stack.set(ModDataComponents.STORED_CLASS_TYPE.get(), species);
+            Holder<ClassType> classType = classTypeRegistry.getRandom(lootContext.getRandom()).orElseThrow();
+            stack.set(ModDataComponents.STORED_CLASS_TYPE.get(), classType.getKey());
         }
         return stack;
     }

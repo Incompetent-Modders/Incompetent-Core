@@ -1,30 +1,23 @@
 package com.incompetent_modders.incomp_core.api.item;
 
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.common.registry.ModSpells;
 import com.incompetent_modders.incomp_core.core.def.Spell;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SpellCastingItem extends Item {
     
@@ -42,9 +35,10 @@ public class SpellCastingItem extends Item {
         return oldStack.getItem() != newStack.getItem();
     }
     
-    public int getUseDuration(ItemStack stack) {
-        return CastingItemUtil.getServerSpellProperties(stack).drawTime();
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return CastingItemUtil.getSelectedSpellInstance(stack, entity).definition().drawTime();
     }
+
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BOW;
     }
@@ -85,8 +79,8 @@ public class SpellCastingItem extends Item {
         }
         if (noCastProgress) {
             IncompCore.LOGGER.info("Starting cast progress.");
-            SpellCastingItem.setCastProgress(castingStack);
-            player.getCooldowns().addCooldown(this, getUseDuration(castingStack));
+            SpellCastingItem.setCastProgress(castingStack, player);
+            player.getCooldowns().addCooldown(this, getUseDuration(castingStack, player));
         } else  {
             Spell spell = CastingItemUtil.getSelectedSpellInstanceWithKey(castingStack, player).getSecond();
             player.startUsingItem(hand);
@@ -97,7 +91,10 @@ public class SpellCastingItem extends Item {
     }
     
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        ClientUtil.createSelectedSpellTooltip(tooltip, stack);
+        HolderLookup.Provider provider = context.registries();
+        if (provider != null) {
+            ClientUtil.createSelectedSpellTooltip(tooltip, stack, provider);
+        }
         if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()) > 1) {
             ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
         }
@@ -106,8 +103,8 @@ public class SpellCastingItem extends Item {
         if (!stack.has(ModDataComponents.SELECTED_SPELL_SLOT)) {
             stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
         }
-        if (!stack.has(ModDataComponents.REMAINING_DRAW_TIME)) {
-            stack.set(ModDataComponents.REMAINING_DRAW_TIME, CastingItemUtil.getClientSpellProperties(stack).drawTime());
+        if (!stack.has(ModDataComponents.REMAINING_DRAW_TIME) && entity instanceof LivingEntity livingEntity) {
+            stack.set(ModDataComponents.REMAINING_DRAW_TIME, CastingItemUtil.getSelectedSpellInstance(stack, livingEntity).definition().drawTime());
         }
         if (!stack.has(ModDataComponents.MAX_SPELL_SLOTS)) {
             stack.set(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots());
@@ -132,8 +129,8 @@ public class SpellCastingItem extends Item {
         return stack.getOrDefault(ModDataComponents.REMAINING_DRAW_TIME, 0);
     }
     
-    public static void setCastProgress(ItemStack stack) {
-        int ticks = CastingItemUtil.getClientSpellProperties(stack).drawTime();
+    public static void setCastProgress(ItemStack stack, LivingEntity entity) {
+        int ticks = CastingItemUtil.getSelectedSpellInstance(stack, entity).definition().drawTime();
         if (ticks == 0) {
             IncompCore.LOGGER.warn("Spell draw time is 0 for {}", stack);
         }

@@ -6,6 +6,7 @@ import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.De
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.DefaultSpeciesBehaviour;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
 import com.incompetent_modders.incomp_core.common.registry.ModDiets;
+import com.incompetent_modders.incomp_core.core.def.params.SpeciesAttributes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -19,7 +20,7 @@ import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm, Holder<Diet> dietType, boolean keepOnDeath, Ability ability, int abilityCooldown) {
+public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm, Holder<Diet> dietType, boolean keepOnDeath, Ability ability, int abilityCooldown, SpeciesAttributes attributeModifiers) {
     public static final Codec<SpeciesType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     SpeciesBehaviour.DIRECT_CODEC.fieldOf("behaviour").forGetter(SpeciesType::behaviour),
                     Codec.BOOL.optionalFieldOf("invert_heal_and_harm", false).forGetter(SpeciesType::invertHealAndHarm),
@@ -27,7 +28,8 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
                     Codec.BOOL.optionalFieldOf("keep_on_death", true).forGetter(SpeciesType::keepOnDeath),
                     //EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesType::enchantWeaknesses),
                     Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesType::ability),
-                    Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown)
+                    Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown),
+                    SpeciesAttributes.CODEC.optionalFieldOf("attribute_modifiers", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributeModifiers)
             ).apply(instance, SpeciesType::new));
 
     public static final Codec<Holder<SpeciesType>> CODEC = RegistryFixedCodec.create(ModRegistries.Keys.SPECIES_TYPE);
@@ -41,7 +43,8 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
             Codec.BOOL.optionalFieldOf("keep_on_death", true).forGetter(SpeciesType::keepOnDeath),
             //EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesType::enchantWeaknesses),
             Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesType::ability),
-            Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown)
+            Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown),
+            SpeciesAttributes.CODEC.optionalFieldOf("attribute_modifiers", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributeModifiers)
     ).apply(instance, SpeciesType::new));
 
     static {
@@ -64,6 +67,8 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
         private boolean keepOnDeath = true;
         private Ability ability = new DefaultAbility(false);
         private int abilityCooldown = 0;
+        SpeciesAttributes.Builder attributes = SpeciesAttributes.builder();
+
 
         public Builder(BootstrapContext<SpeciesType> context) {
             this.diets = context.lookup(ModRegistries.Keys.DIET);
@@ -95,8 +100,13 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
             return this;
         }
 
+        public Builder addAttributeModifiers(SpeciesAttributes.Builder attributes) {
+            this.attributes = attributes;
+            return this;
+        }
+
         public SpeciesType build() {
-            return new SpeciesType(behaviour, invertPotionHealAndHarm, diets.getOrThrow(dietType), keepOnDeath, ability, abilityCooldown);
+            return new SpeciesType(behaviour, invertPotionHealAndHarm, diets.getOrThrow(dietType), keepOnDeath, ability, abilityCooldown, attributes.build());
         }
     }
 }

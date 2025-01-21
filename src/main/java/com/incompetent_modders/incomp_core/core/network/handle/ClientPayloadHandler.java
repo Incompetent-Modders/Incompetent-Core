@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core.core.network.handle;
 
-import com.incompetent_modders.incomp_core.core.network.UpdateClassTypePayload;
-import com.incompetent_modders.incomp_core.core.network.UpdateManaPayload;
-import com.incompetent_modders.incomp_core.core.network.UpdateSpeciesTypePayload;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateClassTypePayload;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateManaPayload;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateSpeciesTypePayload;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.handling.IPayloadContext;

@@ -1,10 +1,10 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.network.action.MessageClassAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.action.MessageSpeciesAbilitySync;
-import com.incompetent_modders.incomp_core.api.network.action.MessageSpellSlotScrollSync;
+import com.incompetent_modders.incomp_core.core.network.serverbound.ScrollSpellSlotPacket;
+import com.incompetent_modders.incomp_core.core.network.serverbound.SpeciesAbilityPayload;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
+import com.incompetent_modders.incomp_core.core.network.serverbound.ClassAbilityPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.incompetent_modders.incomp_core.client.ClientModEvents.ACTIVATE_CLASS_ABILITY;
 import static com.incompetent_modders.incomp_core.client.ClientModEvents.ACTIVATE_SPECIES_ABILITY;
@@ -27,7 +28,7 @@ public class ClientEventHandler {
             {
                 if(equipped.getItem() instanceof SpellCastingItem)
                 {
-                    MessageSpellSlotScrollSync.sendToServer(event.getScrollDeltaY() < 0);
+                    PacketDistributor.sendToServer(new ScrollSpellSlotPacket(event.getScrollDeltaY() < 0));
                     event.setCanceled(true);
                 }
             }
@@ -39,12 +40,12 @@ public class ClientEventHandler {
         while (ACTIVATE_CLASS_ABILITY.get().consumeClick()) {
             if (player == null)
                 return;
-            MessageClassAbilitySync.sendToServer(true);
+            PacketDistributor.sendToServer(new ClassAbilityPayload(true));
         }
         while (ACTIVATE_SPECIES_ABILITY.get().consumeClick()) {
             if (player == null)
                 return;
-            MessageSpeciesAbilitySync.sendToServer(true);
+            PacketDistributor.sendToServer(new SpeciesAbilityPayload(true));
         }
     }
     

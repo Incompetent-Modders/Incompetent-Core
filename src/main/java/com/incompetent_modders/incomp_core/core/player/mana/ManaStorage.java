@@ -38,7 +38,7 @@ public record ManaStorage(ManaData data, boolean showInTooltip) implements Toolt
 
     public static Codec<ManaStorage> codec() {
         return RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("amount").forGetter(storage -> storage.data.amount()),
+                Codec.DOUBLE.fieldOf("amount").forGetter(storage -> storage.data.amount()),
                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("limit").forGetter(storage -> storage.data.limit())
         ).apply(instance, (amount, limit) -> new ManaStorage(new ManaData(amount, limit), true)));
     }

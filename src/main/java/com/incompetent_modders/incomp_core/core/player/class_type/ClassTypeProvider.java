@@ -2,7 +2,6 @@ package com.incompetent_modders.incomp_core.core.player.class_type;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.core.player.AbilityCooldownData;
-import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeStorage;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 

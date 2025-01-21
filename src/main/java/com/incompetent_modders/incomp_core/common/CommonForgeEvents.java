@@ -1,47 +1,31 @@
 package com.incompetent_modders.incomp_core.common;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.effect.SpeciesAlteringEffect;
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeProperties;
-import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectProperties;
-import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
-import com.incompetent_modders.incomp_core.api.json.species.*;
-import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
-import com.incompetent_modders.incomp_core.api.json.species.diet.DietProperties;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.api.network.player.MessagePlayerDataSync;
-import com.incompetent_modders.incomp_core.api.player.ClassData;
-import com.incompetent_modders.incomp_core.api.player.ManaData;
-import com.incompetent_modders.incomp_core.api.player.PlayerDataCore;
-import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientDietManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
-import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.def.Diet;
+import com.incompetent_modders.incomp_core.core.def.PotionProperty;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BundleItem;
@@ -54,12 +38,9 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
-
-import static com.incompetent_modders.incomp_core.api.player.PlayerDataCore.PLAYER_DATA_ID;
 //import static com.incompetent_modders.incomp_core.common.util.Utils.applyDamage;
 
 @EventBusSubscriber(modid = IncompCore.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -69,12 +50,14 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof Player player) {
-            CompoundTag playerData = PlayerDataCore.getPlayerData(player);
-            if (player.getPersistentData().getCompound(PLAYER_DATA_ID) != playerData) {
-                PlayerDataCore.updatePlayerData(player);
-            }
-            PlayerDataCore.handleClassDataTick(player, event);
-            PlayerDataCore.handleSpeciesDataTick(player, event);
+            PlayerDataHelper.getClassTypeProvider(player).ifPresent((prov) -> {
+                if (player.level().getGameTime() % 20 == 0)
+                    prov.decreaseAbilityCooldown();
+            });
+            PlayerDataHelper.getSpeciesTypeProvider(player).ifPresent((prov) -> {
+                if (player.level().getGameTime() % 20 == 0)
+                    prov.decreaseAbilityCooldown();
+            });
 
             ClassType playerClass = PlayerDataHelper.getClassType(player);
             PlayerDataHelper.setMaxMana(player, playerClass.maxMana());
@@ -85,50 +68,20 @@ public class CommonForgeEvents {
     //    Stream<ServerPlayer> relevantPlayers = event.getRelevantPlayers();
     //    FeaturesSyncer.syncAllToAll(relevantPlayers.toList());
     //}
-    static AttributeModifier PACIFIST = new AttributeModifier(IncompCore.makeId("pacifist"), 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityAdded(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            ResourceLocation classType = ClassData.Get.playerClassType(player);
-            ClassTypeProperties classTypeProperties = ClassTypeListener.getClassTypeProperties(classType);
-            AttributeInstance maxMana = player.getAttribute(ModAttributes.MAX_MANA);
-            if (maxMana != null) {
-                ManaData.Set.maxMana(player, maxMana.getValue());
-            }
-            
-            AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
-            if (classTypeProperties != null && damage != null) {
-                if (classTypeProperties.pacifist() && !damage.hasModifier(PACIFIST.id())) {
-                    damage.addPermanentModifier(PACIFIST);
+            PlayerDataHelper.getSpeciesType(player).attributeModifiers().attributes().forEach((attributeEntry) -> {
+                Holder<Attribute> attribute = attributeEntry.attributeHolder();
+                AttributeModifier modifier = attributeEntry.attributeModifier();
+                AttributeInstance instance = player.getAttribute(attribute);
+                if (instance != null) {
+                    instance.addTransientModifier(modifier);
                 }
-                if (!classTypeProperties.pacifist()) {
-                    damage.removeModifier(PACIFIST);
-                }
-            }
-            ClassData.initialize(player);
-            SpeciesData.initialize(player);
-            MessagePlayerDataSync.sendToClient(player, PlayerDataCore.getPlayerData(player));
+            });
         }
     }
-    @SubscribeEvent
-    public static void serverStarting(ServerStartingEvent event) {
-        SpellListener.getAllSpells().forEach(entry -> {
-            if (SpellListener.getSpellProperties(entry).isBlankSpell() && entry != CastingItemUtil.emptySpell) {
-                IncompCore.LOGGER.warn("Spell {} does not have properties! This may cause issues!", entry);
-            }
-        });
-    }
-    //@SubscribeEvent
-    //public static void onPlayerHurt(LivingHurtEvent event) {
-    //    LivingEntity entity = event.getEntity();
-    //    DamageSource source = event.getSource();
-    //    Entity attacker = source.getEntity();
-    //    ItemStack weapon = attacker instanceof LivingEntity livingEntity ? livingEntity.getMainHandItem() : ItemStack.EMPTY;
-    //    if (entity instanceof Player player) {
-    //        applyDamage(event, player, weapon);
-    //    }
-    //}
     
     @SubscribeEvent
     public static void onItemStartUse(LivingEntityUseItemEvent.Start event) {
@@ -147,10 +100,10 @@ public class CommonForgeEvents {
                 }
             }
             if (PlayerDataHelper.getSpeciesType(player) != null) {
-                Holder<Diet> dietType = PlayerDataHelper.getSpeciesType(player).dietType();
-                if (stack.getFoodProperties(entity) != null && dietType.getKey() != Utils.defaultDiet) {
-                    if (!dietType.value().ableToConsume().isEmpty()) {
-                        NonNullList<Ingredient> ableToConsume = dietType.value().ableToConsume();
+                Diet dietType = PlayerDataHelper.getDiet(player);
+                if (stack.getFoodProperties(entity) != null) {
+                    if (!dietType.ableToConsume().isEmpty()) {
+                        NonNullList<Ingredient> ableToConsume = dietType.ableToConsume();
                         for (Ingredient ingredient : ableToConsume) {
                             if (!ingredient.test(stack)) {
                                 event.setCanceled(true);
@@ -188,18 +141,14 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onPotionEffectFinish(MobEffectEvent.Expired event) {
         LivingEntity entity = event.getEntity();
-        PotionEffectProperties properties = PotionEffectPropertyListener.getEffectProperties(event.getEffectInstance().getEffect().value());
-        if (entity instanceof Player player) {
-            if (event.getEffectInstance().getEffect().value() instanceof SpeciesAlteringEffect speciesAlteringEffect) {
-                if (speciesAlteringEffect.getConvertTo() != null) {
-                    SpeciesData.Set.playerSpecies(player, speciesAlteringEffect.getConvertTo());
+        Registry<PotionProperty> registry = entity.level().registryAccess().registryOrThrow(ModRegistries.Keys.POTION_PROPERTY);
+        registry.holders().forEach((holder) -> {
+            if (holder.value().effect().equals(event.getEffectInstance().getEffect())) {
+                if (entity instanceof Player player) {
+                    holder.value().applyConverts(player);
                 }
             }
-            if (properties != null) {
-                properties.applySpeciesConvert(player);
-                properties.applyClassConvert(player);
-            }
-        }
+        });
     }
     
     @SubscribeEvent
@@ -221,10 +170,11 @@ public class CommonForgeEvents {
     }
     
     public static void sendWelcomeMessage(Player player, boolean isToggledOn) {
-        int spellsCount = ClientSpellManager.getInstance().getSpellList().size();
-        int classTypesCount = ClientClassTypeManager.getInstance().getClassTypeList().size();
-        int speciesCount = ClientSpeciesManager.getInstance().getSpeciesList().size();
-        int dietsCount = ClientDietManager.getInstance().getDietList().size();
+        RegistryAccess registryAccess = player.level().registryAccess();
+        int spellsCount = registryAccess.registryOrThrow(ModRegistries.Keys.SPELL).size();
+        int classTypesCount = registryAccess.registryOrThrow(ModRegistries.Keys.CLASS_TYPE).size();
+        int speciesCount = registryAccess.registryOrThrow(ModRegistries.Keys.SPECIES_TYPE).size();
+        int dietsCount = registryAccess.registryOrThrow(ModRegistries.Keys.DIET).size();
         int allFeaturesCount = spellsCount + classTypesCount + speciesCount + dietsCount;
         Component firstJoinNotification = Component.translatable(welcomeMessage_thanks(allFeaturesCount), allFeaturesCount).withStyle(ClientUtil.styleFromColor(0x418d7e));
         Component spellsNotification = Component.translatable(welcomeMessage_spells(spellsCount), spellsCount).withStyle(ClientUtil.styleFromColor(0x624a95));

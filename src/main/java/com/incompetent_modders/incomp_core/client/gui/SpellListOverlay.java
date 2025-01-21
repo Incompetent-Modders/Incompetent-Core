@@ -1,10 +1,7 @@
 package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
-import com.incompetent_modders.incomp_core.client.player_data.ClientClassData;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
 import com.incompetent_modders.incomp_core.common.registry.ModSpells;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
@@ -22,8 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-
-import java.util.Map;
 
 public class SpellListOverlay implements LayeredDraw.Layer {
     public static final SpellListOverlay INSTANCE = new SpellListOverlay();
@@ -72,22 +67,6 @@ public class SpellListOverlay implements LayeredDraw.Layer {
         if (stack.getItem() instanceof SpellCastingItem)
             return stack;
         return ItemStack.EMPTY;
-    }
-    
-    public float getCastCompletionPercent(LocalPlayer player) {
-        if (!(getCastingItem(player).getItem() instanceof SpellCastingItem castingItem))
-            return 0;
-        if (ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(player)).drawTime() == 0) {
-            return 0;
-        }
-        
-        return 1 - (castingItem.spellRemainingDrawTime(getCastingItem(player)) / (float) castingItem.getUseDuration(getCastingItem(player)));
-    }
-    
-    public float getCastDuration(LocalPlayer player) {
-        if (!(getCastingItem(player).getItem() instanceof SpellCastingItem))
-            return 0;
-        return ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(player)).drawTime();
     }
     
     public ResourceLocation getSpellOverlayTexture(String spriteName, LocalPlayer player) {

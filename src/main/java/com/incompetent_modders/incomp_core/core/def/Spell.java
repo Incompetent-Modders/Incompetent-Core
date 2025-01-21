@@ -2,19 +2,16 @@ package com.incompetent_modders.incomp_core.core.def;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.json.potion.PotionEffectPropertyListener;
-import com.incompetent_modders.incomp_core.api.player.ClassData;
-import com.incompetent_modders.incomp_core.api.player.ManaData;
-import com.incompetent_modders.incomp_core.api.player.SpeciesData;
 import com.incompetent_modders.incomp_core.common.util.Utils;
-import com.incompetent_modders.incomp_core.core.def.conditions.*;
-import com.incompetent_modders.incomp_core.core.def.conditions.SpeciesTypeCondition;
-import com.incompetent_modders.incomp_core.core.def.conditions.ClassTypeCondition;
+import com.incompetent_modders.incomp_core.core.def.params.*;
+import com.incompetent_modders.incomp_core.core.def.params.SpeciesTypeCondition;
+import com.incompetent_modders.incomp_core.core.def.params.ClassTypeCondition;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -23,10 +20,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BundleItem;
@@ -61,6 +58,10 @@ public record Spell(Component description, SpellDefinition definition) {
 
     static {
         STREAM_CODEC = ByteBufCodecs.holderRegistry(ModRegistries.Keys.SPELL);
+    }
+
+    public boolean isBlankSpell() {
+        return definition().manaCost == 0.0 && definition().drawTime == 0 && definition().conditions().catalyst.item().isEmpty() && Objects.equals(definition().conditions().classType, ClassTypeCondition.ANY) && Objects.equals(definition().conditions().speciesType, SpeciesTypeCondition.ANY) && definition().results.spellResult().isEmpty() && definition().results.function().isEmpty();
     }
 
     public record SpellDefinition(SpellCategory category, double manaCost, int drawTime, SpellResults results, SoundEvent castSound, SpellConditions conditions) {
@@ -183,10 +184,6 @@ public record Spell(Component description, SpellDefinition definition) {
         }
     }
 
-    public boolean isBlankSpell() {
-        return definition().manaCost() == 0.0 && definition().drawTime() == 0 && definition().conditions().catalyst().item().isEmpty() && Objects.equals(definition().conditions().classType.classKey(), Utils.defaultClass) && Objects.equals(definition().conditions().speciesType.speciesKey(), Utils.defaultSpecies) && definition().results().spellResult().isEmpty() && definition().results().function().isEmpty();
-    }
-
     public void executeCast(Player player) {
         Level level = player.level();
         ResourceKey<ClassType> playerClass = PlayerDataHelper.getClassTypeWithKey(player).getFirst();
@@ -195,7 +192,7 @@ public record Spell(Component description, SpellDefinition definition) {
             generateClassSpeciesLogger(player);
             return;
         }
-        int playerMana = (int) ManaData.Get.mana(player);
+        double playerMana = PlayerDataHelper.getMana(player);
         if (playerMana < getManaCost(player)) {
             IncompCore.LOGGER.info("{} doesn't have enough mana to cast spell!", player.getName().getString());
             return;
@@ -204,7 +201,7 @@ public record Spell(Component description, SpellDefinition definition) {
             IncompCore.LOGGER.info("{} is not holding the required catalyst to cast spell!", player.getName().getString());
             return;
         }
-        ManaData.Util.removeMana(player, getManaCost(player));
+        PlayerDataHelper.removeMana(player, getManaCost(player));
         handleCatalystConsumption(player);
         executeCast(level, player);
     }
@@ -262,17 +259,22 @@ public record Spell(Component description, SpellDefinition definition) {
     }
 
     public double getManaCost(Player player) {
-        AtomicReference<Float> mod = new AtomicReference<>(1.0F);
+        float mod = 1.0F;
         if (player == null) return definition().manaCost();
         if (!player.getActiveEffects().isEmpty()) {
-            player.getActiveEffects().forEach(effect -> {
-                float manaCostModifier = PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()) == null ? 1.0F : PotionEffectPropertyListener.getEffectProperties(effect.getEffect().value()).manaCostModifier();
-                if (manaCostModifier != 1.0F) {
-                    mod.set(manaCostModifier);
+            for (MobEffectInstance effectInstance : player.getActiveEffects()) {
+                RegistryAccess access = player.level().registryAccess();
+                for (Holder.Reference<PotionProperty> holder : access.registryOrThrow(ModRegistries.Keys.POTION_PROPERTY).holders().toList()) {
+                    if (holder.value().effect() == effectInstance.getEffect()) {
+                        float manaCostModifier = holder.value().manaCostModifier();
+                        if (manaCostModifier != 1.0F) {
+                            mod = manaCostModifier;
+                        }
+                    }
                 }
-            });
+            }
         }
-        return definition().manaCost() * mod.get();
+        return definition().manaCost() * mod;
     }
 
     public boolean checkPlayerClass(ClassTypeCondition requiredClass, ResourceKey<ClassType> playerClass) {
@@ -298,6 +300,6 @@ public record Spell(Component description, SpellDefinition definition) {
     }
 
     public static Component getDisplayName(ResourceKey<Spell> spell) {
-        return Component.translatable("spells." + spell.location().getNamespace() + "." + spell.location().getPath().replace("/", "."));
+        return Component.translatable("spell." + spell.location().getNamespace() + "." + spell.location().getPath().replace("/", "."));
     }
 }

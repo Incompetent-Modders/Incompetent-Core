@@ -4,7 +4,7 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.registry.content.spell_results.AddEffectResult;
 import com.incompetent_modders.incomp_core.core.def.Spell;
-import com.incompetent_modders.incomp_core.core.def.conditions.*;
+import com.incompetent_modders.incomp_core.core.def.params.*;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;

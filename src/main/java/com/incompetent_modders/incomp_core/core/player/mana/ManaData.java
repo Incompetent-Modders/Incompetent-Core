@@ -8,25 +8,25 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 
-public record ManaData(int amount, int limit) {
+public record ManaData(double amount, int limit) {
     public static final ManaData EMPTY = new ManaData(0, 0);
 
     public static final MapCodec<ManaData> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("amount").forGetter(ManaData::amount),
+            Codec.DOUBLE.fieldOf("amount").forGetter(ManaData::amount),
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("limit").forGetter(ManaData::limit)
     ).apply(instance, ManaData::new));
 
     public static final Codec<ManaData> CODEC = MAP_CODEC.codec();
 
     public static final StreamCodec<FriendlyByteBuf, ManaData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT,
+            ByteBufCodecs.DOUBLE,
             ManaData::amount,
             ByteBufCodecs.INT,
             ManaData::limit,
             ManaData::new
     );
 
-    public static ManaData of(int amount, int limit) {
+    public static ManaData of(double amount, int limit) {
         return new ManaData(amount, limit);
     }
 

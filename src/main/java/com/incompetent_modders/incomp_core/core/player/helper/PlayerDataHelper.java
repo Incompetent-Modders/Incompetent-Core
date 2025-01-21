@@ -4,6 +4,7 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.core.def.Diet;
 import com.incompetent_modders.incomp_core.core.def.SpeciesType;
 import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeProvider;
 import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeStorage;
@@ -11,12 +12,22 @@ import com.incompetent_modders.incomp_core.core.player.mana.ManaProvider;
 import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeProvider;
 import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeStorage;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PlayerDataHelper {
 
@@ -39,7 +50,9 @@ public class PlayerDataHelper {
 
     public static void setSpeciesType(LivingEntity entity, ResourceKey<SpeciesType> speciesType) {
         SpeciesTypeStorage storage = Objects.requireNonNull(getSpeciesTypeProvider(entity).orElse(null)).asStorage();
+        resetSpeciesAttributes(entity, getSpeciesType(entity));
         getSpeciesTypeProvider(entity).ifPresent(provider -> provider.setStorage(new SpeciesTypeStorage(speciesType, storage.cooldownData())));
+        addNewSpeciesAttributes(entity, getSpeciesType(entity));
     }
 
     public static ClassType getClassType(LivingEntity entity) {
@@ -68,19 +81,23 @@ public class PlayerDataHelper {
         return Pair.of(key, speciesType);
     }
 
-    public static void setMana(LivingEntity entity, int mana) {
+    public static Diet getDiet(LivingEntity entity) {
+        return getSpeciesType(entity).dietType().value();
+    }
+
+    public static void setMana(LivingEntity entity, double mana) {
         getManaProvider(entity).ifPresent(provider -> provider.setAmount(mana));
     }
 
-    public static int getMana(LivingEntity entity) {
-        return getManaProvider(entity).map(ManaProvider::getAmount).orElse(0);
+    public static double getMana(LivingEntity entity) {
+        return getManaProvider(entity).map(ManaProvider::getAmount).orElse(0.0d);
     }
 
-    public static void addMana(LivingEntity entity, int mana) {
+    public static void addMana(LivingEntity entity, double mana) {
         getManaProvider(entity).ifPresent(provider -> provider.addAmount(mana));
     }
 
-    public static void removeMana(LivingEntity entity, int mana) {
+    public static void removeMana(LivingEntity entity, double mana) {
         getManaProvider(entity).ifPresent(provider -> provider.addAmount(-mana));
     }
 
@@ -90,5 +107,39 @@ public class PlayerDataHelper {
 
     public static int getMaxMana(LivingEntity entity) {
         return getManaProvider(entity).map(ManaProvider::getLimit).orElse(0);
+    }
+
+
+    public static void resetSpeciesAttributes(LivingEntity entity, SpeciesType speciesType) {
+        speciesType.attributeModifiers().attributes().forEach((attributeEntry) -> {
+                    Holder<Attribute> attribute = attributeEntry.attributeHolder();
+                    AttributeModifier modifier = attributeEntry.attributeModifier();
+                    AttributeInstance instance = entity.getAttribute(attribute);
+                    if (instance != null) {
+                        instance.removeModifier(modifier);
+                    }
+                });
+        //RegistryAccess registryAccess = entity.level().registryAccess();
+        //Collection<Holder<Attribute>> attributes = registryAccess.registryOrThrow(Registries.ATTRIBUTE).holders().collect(Collectors.toSet());
+        //for (Holder<Attribute> attribute : attributes) {
+        //    String modifierName = "species_%s_modifier".formatted(attribute.getKey().location().getPath().replace(".", "_"));
+        //    if (entity.getAttribute(attribute) == null) {
+        //        continue;
+        //    }
+        //    if (entity.getAttribute(attribute).hasModifier(ResourceLocation.parse(modifierName))) {
+        //        entity.getAttribute(attribute).removeModifier(ResourceLocation.parse(modifierName));
+        //    }
+        //}
+    }
+
+    public static void addNewSpeciesAttributes(LivingEntity entity, SpeciesType speciesType) {
+        speciesType.attributeModifiers().attributes().forEach((attributeEntry) -> {
+            Holder<Attribute> attribute = attributeEntry.attributeHolder();
+            AttributeModifier modifier = attributeEntry.attributeModifier();
+            AttributeInstance instance = entity.getAttribute(attribute);
+            if (instance != null) {
+                instance.addTransientModifier(modifier);
+            }
+        });
     }
 }

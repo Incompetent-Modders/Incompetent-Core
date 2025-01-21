@@ -1,15 +1,16 @@
 package com.incompetent_modders.incomp_core.common.registry.content.loot_item_functions;
 
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.registry.ModItems;
 import com.incompetent_modders.incomp_core.common.registry.ModLootItemFunctions;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.core.def.SpeciesType;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -35,15 +36,10 @@ public class RandomSpeciesFunction extends LootItemConditionalFunction {
     }
     
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        RandomSource randomsource = lootContext.getRandom();
-        List<ResourceLocation> allSpecies = SpeciesListener.getAllSpecies();
+        Registry<SpeciesType> speciesRegistry = lootContext.getLevel().registryAccess().registryOrThrow(ModRegistries.Keys.SPECIES_TYPE);
         if (stack.is(ModItems.ASSIGN_SPECIES)) {
-            if (allSpecies.isEmpty()) {
-                LOGGER.error("No species found in any datapacks");
-                return stack;
-            }
-            ResourceLocation species = allSpecies.get(randomsource.nextInt(allSpecies.size()));
-            stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), species);
+            Holder<SpeciesType> species = speciesRegistry.getRandom(lootContext.getRandom()).orElseThrow();
+            stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), species.getKey());
         }
         return stack;
     }

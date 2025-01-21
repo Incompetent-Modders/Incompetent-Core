@@ -1,13 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.json.class_type.ClassTypeListener;
-import com.incompetent_modders.incomp_core.api.json.species.SpeciesListener;
-import com.incompetent_modders.incomp_core.api.json.species.diet.DietListener;
-import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientDietManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.def.Diet;
@@ -100,7 +93,7 @@ public class ListFeaturesCommand {
         for (Diet diet : registry) {
             Holder<Diet> dietHolder = registry.wrapAsHolder(diet);
             ResourceLocation dietID = dietHolder.getKey().location();
-            Component dietMessage = DietListener.getDisplayName(dietID).copy().withStyle(ClientUtil.styleFromColor(0x56ad56));
+            Component dietMessage = Diet.getDisplayName(dietID).copy().withStyle(ClientUtil.styleFromColor(0x56ad56));
             Component dietIDMessage = Component.literal("> (" + dietID + ")").withStyle(ClientUtil.styleFromColor(0x478e47));
             if (showID) {
                 source.sendSuccess(() -> dietMessage, false);

@@ -1,21 +1,23 @@
 package com.incompetent_modders.incomp_core.client.util;
 
+import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.core.def.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -123,23 +125,26 @@ public class ClientUtil {
     private static final Component requiredCatalyst = Component.translatable("item." + MODID + ".spellcasting.required_catalyst").withStyle(TITLE_FORMAT);
     private static final Component selectedEntitiesComp = Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT);
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
-    public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack) {
-        ResourceLocation spell = SpellCastingItem.getSelectedSpell(castingStack);
-        SpellProperties spellProperties = ClientSpellManager.getInstance().getSpellProperties(spell);
+    public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack, HolderLookup.Provider holderLookup) {
+        ResourceKey<Spell> spellKey = SpellCastingItem.getSelectedSpell(castingStack);
+        Spell spell = holderLookup.lookup(ModRegistries.Keys.SPELL).isPresent() ? holderLookup.lookup(ModRegistries.Keys.SPELL).get().getOrThrow(spellKey).value() : null;
+        if (spell == null) {
+            return;
+        }
         tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(ClientSpellManager.getDisplayName(spell)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(Spell.getDisplayName(spellKey)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.EMPTY);
         Player player = Minecraft.getInstance().player;
         tooltip.add(SPELL_INFO_TITLE);
         tooltip.add(CommonComponents.space().append(manaCost));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spellProperties.getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(String.valueOf(spell.getManaCost(player))).withStyle(DESCRIPTION_FORMAT));
         tooltip.add(CommonComponents.space().append(castTime));
-        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(Utils.timeFromTicks(spellProperties.drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
-        if (spellProperties.hasSpellCatalyst()) {
+        tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(Utils.timeFromTicks(spell.definition().drawTime(), 1)).withStyle(DESCRIPTION_FORMAT));
+        if (spell.hasSpellCatalyst()) {
             tooltip.add(CommonComponents.space().append(requiredCatalyst));
-            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spellProperties.catalyst().item().getDisplayName().getString().replace("[", "").replace("]", "")).append(spellProperties.catalyst().item().getCount() > 1 ? " x" + spellProperties.catalyst().item().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spellProperties.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
-            if (spellProperties.catalyst().item().has(DataComponents.BUNDLE_CONTENTS)) {
-                BundleContents bundleContents = spellProperties.catalyst().item().get(DataComponents.BUNDLE_CONTENTS);
+            tooltip.add(CommonComponents.space().append(CommonComponents.space()).append(spell.definition().conditions().catalyst().item().getDisplayName().getString().replace("[", "").replace("]", "")).append(spell.definition().conditions().catalyst().item().getCount() > 1 ? " x" + spell.definition().conditions().catalyst().item().getCount() : "").withStyle(DESCRIPTION_FORMAT).append(spell.playerIsHoldingSpellCatalyst(player) ? " ✔" : " ✘").withStyle(DESCRIPTION_FORMAT));
+            if (spell.definition().conditions().catalyst().item().has(DataComponents.BUNDLE_CONTENTS)) {
+                BundleContents bundleContents = spell.definition().conditions().catalyst().item().get(DataComponents.BUNDLE_CONTENTS);
                 if (bundleContents == null)
                     return;
                 for (ItemStack content : bundleContents.itemCopyStream().toList()) {

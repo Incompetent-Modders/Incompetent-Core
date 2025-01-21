@@ -4,7 +4,6 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.DefaultClassPassiveEffect;
 import com.incompetent_modders.incomp_core.common.registry.content.passive_effects.ApplyEffectPassiveEffect;
-import com.incompetent_modders.incomp_core.common.registry.content.passive_effects.FunctionChargesPassiveEffect;
 import com.incompetent_modders.incomp_core.common.registry.content.passive_effects.RunFunctionPassiveEffect;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -19,8 +18,7 @@ public class ModClassPassiveEffects {
     
     public static final DeferredHolder<ClassPassiveEffectType<?>, ClassPassiveEffectType<ApplyEffectPassiveEffect>> APPLY_EFFECT = CLASS_PASSIVE_EFFECT_TYPES.register("apply_effect", () -> new ClassPassiveEffectType<>(ApplyEffectPassiveEffect.CODEC));
     public static final DeferredHolder<ClassPassiveEffectType<?>, ClassPassiveEffectType<RunFunctionPassiveEffect>> RUN_FUNCTION = CLASS_PASSIVE_EFFECT_TYPES.register("run_function", () -> new ClassPassiveEffectType<>(RunFunctionPassiveEffect.CODEC));
-    public static final DeferredHolder<ClassPassiveEffectType<?>, ClassPassiveEffectType<FunctionChargesPassiveEffect>> FUNCTION_CHARGES = CLASS_PASSIVE_EFFECT_TYPES.register("function_charges", () -> new ClassPassiveEffectType<>(FunctionChargesPassiveEffect.CODEC));
-    
+
     public static void register(IEventBus eventBus) {
         CLASS_PASSIVE_EFFECT_TYPES.register(eventBus);
     }

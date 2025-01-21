@@ -1,10 +1,8 @@
 package com.incompetent_modders.incomp_core;
 
-import com.incompetent_modders.incomp_core.api.network.SyncHandler;
 import com.incompetent_modders.incomp_core.client.ClientProxy;
 import com.incompetent_modders.incomp_core.common.CommonProxy;
 import com.incompetent_modders.incomp_core.common.data.IncompDatagen;
-import com.incompetent_modders.incomp_core.common.EventHandler;
 import com.incompetent_modders.incomp_core.core.events.IncompetentEventHandler;
 import com.incompetent_modders.incomp_core.common.registry.*;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
@@ -22,7 +20,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 @SuppressWarnings("removal")
@@ -51,7 +48,6 @@ public class IncompCore
         //SetupEvent.EVENT.addListener(IncompCore::setup);
         ModRegistries.register(modEventBus);
         ModAttributes.register(modEventBus);
-        ModArgumentTypes.register(modEventBus);
         ModEffects.register(modEventBus);
         ModSpeciesBehaviourTypes.register(modEventBus);
         ModManaRegenConditions.register(modEventBus);
@@ -66,8 +62,6 @@ public class IncompCore
         
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         
-        EventHandler commonHandler = new EventHandler();
-        NeoForge.EVENT_BUS.register(commonHandler);
         if(dist.isClient())
             ClientProxy.modConstruction();
         
@@ -84,7 +78,6 @@ public class IncompCore
         
         });
         LOGGER.info("HELLO FROM COMMON SETUP");
-        SyncHandler.init();
     }
     
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

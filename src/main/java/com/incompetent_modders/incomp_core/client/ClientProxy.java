@@ -1,9 +1,5 @@
 package com.incompetent_modders.incomp_core.client;
 
-import com.incompetent_modders.incomp_core.client.managers.ClientClassTypeManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientDietManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpeciesManager;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +18,6 @@ public class ClientProxy extends CommonProxy {
     
     public static void initWithMC()
     {
-        ClientSpellManager.getInstance();
-        ClientSpeciesManager.getInstance();
-        ClientClassTypeManager.getInstance();
-        ClientDietManager.getInstance();
         ClientEventHandler handler = new ClientEventHandler();
         NeoForge.EVENT_BUS.register(handler);
     }

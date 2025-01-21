@@ -1,9 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
-import com.incompetent_modders.incomp_core.common.command.arguments.SpellArgument;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;
@@ -13,7 +10,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;

@@ -3,18 +3,13 @@ package com.incompetent_modders.incomp_core.api.spell.item;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellListener;
-import com.incompetent_modders.incomp_core.api.json.spell.SpellProperties;
-import com.incompetent_modders.incomp_core.client.managers.ClientSpellManager;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.common.registry.ModSpells;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -42,12 +37,6 @@ public class CastingItemUtil {
     
     public static ResourceKey<Spell> getSelectedSpell(ItemStack stack) {
         return deserializeFromSlot(stack, getSelectedSpellSlot(stack));
-    }
-    public static SpellProperties getClientSpellProperties(ItemStack stack) {
-        return ClientSpellManager.getInstance().getSpellProperties(getSelectedSpell(stack));
-    }
-    public static SpellProperties getServerSpellProperties(ItemStack stack) {
-        return SpellListener.getSpellProperties(getSelectedSpell(stack));
     }
 
     public static Spell getSelectedSpellInstance(ItemStack stack, LivingEntity entity) {
