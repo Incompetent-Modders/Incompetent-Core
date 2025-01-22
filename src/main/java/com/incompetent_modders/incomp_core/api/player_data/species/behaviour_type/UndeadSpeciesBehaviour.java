@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,38 +25,41 @@ public class UndeadSpeciesBehaviour extends SpeciesBehaviour {
     }
     
     @Override
-    public void apply(Level level, Player player) {
-        ItemStack itemstack = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (player.isCreative() || player.isSpectator() || !burnInSun) {
+    public void apply(Level level, LivingEntity entity) {
+        ItemStack itemstack = entity.getItemBySlot(EquipmentSlot.HEAD);
+        if (entity.isSpectator() || !burnInSun) {
             return;
         }
-        if (player.isAlive()) {
-            boolean flag = this.isSunBurnTick(player);
+        if (entity instanceof Player player && player.isCreative()) {
+            return;
+        }
+        if (entity.isAlive()) {
+            boolean flag = this.isSunBurnTick(entity);
             if (flag) {
                 if (!itemstack.isEmpty()) {
                     if (itemstack.isDamageableItem()) {
-                        itemstack.setDamageValue(itemstack.getDamageValue() + player.getRandom().nextInt(2));
+                        itemstack.setDamageValue(itemstack.getDamageValue() + entity.getRandom().nextInt(2));
                         if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
-                            player.onEquippedItemBroken(itemstack.getItem(), EquipmentSlot.HEAD);
-                            player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                            entity.onEquippedItemBroken(itemstack.getItem(), EquipmentSlot.HEAD);
+                            entity.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         }
                     }
                     flag = false;
                 }
                 if (flag) {
-                    player.igniteForSeconds(8);
+                    entity.igniteForSeconds(8);
                 }
             }
         }
     }
     
     @SuppressWarnings("deprecation")
-    protected boolean isSunBurnTick(Player player) {
-        if (player.level().isDay() && !player.level().isClientSide) {
-            float f = player.getLightLevelDependentMagicValue();
-            BlockPos blockpos = BlockPos.containing(player.getX(), player.getEyeY(), player.getZ());
-            boolean flag = player.isInWaterRainOrBubble() || player.isInPowderSnow || player.wasInPowderSnow;
-            return f > 0.5F && player.getRandom().nextFloat() * 30.0F < (f - 0.4F) * 2.0F && !flag && player.level().canSeeSky(blockpos);
+    protected boolean isSunBurnTick(LivingEntity entity) {
+        if (entity.level().isDay() && !entity.level().isClientSide) {
+            float f = entity.getLightLevelDependentMagicValue();
+            BlockPos blockpos = BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ());
+            boolean flag = entity.isInWaterRainOrBubble() || entity.isInPowderSnow || entity.wasInPowderSnow;
+            return f > 0.5F && entity.getRandom().nextFloat() * 30.0F < (f - 0.4F) * 2.0F && !flag && entity.level().canSeeSky(blockpos);
         }
         
         return false;

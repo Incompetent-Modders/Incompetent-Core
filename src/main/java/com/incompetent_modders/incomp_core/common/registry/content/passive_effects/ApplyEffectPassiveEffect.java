@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 public class ApplyEffectPassiveEffect extends ClassPassiveEffect {
@@ -44,8 +45,8 @@ public class ApplyEffectPassiveEffect extends ClassPassiveEffect {
     }
     
     @Override
-    public void apply(Level level, ServerPlayer player) {
-        player.addEffect(new MobEffectInstance(getEffect(), getDuration(), getAmplifier()));
+    public void apply(Level level, LivingEntity entity) {
+        entity.addEffect(new MobEffectInstance(getEffect(), getDuration(), getAmplifier()));
     }
     
     @Override

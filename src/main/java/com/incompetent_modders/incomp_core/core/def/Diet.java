@@ -9,17 +9,25 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.function.Predicate;
 
 public record Diet(NonNullList<Ingredient> ableToConsume, boolean ignoreHunger) {
+
+
+
     public static final Codec<Diet> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.listOf().fieldOf("able_to_consume").flatXmap((ingredientList) -> {
                 Ingredient[] aingredient = ingredientList.toArray(Ingredient[]::new);
@@ -55,6 +63,23 @@ public record Diet(NonNullList<Ingredient> ableToConsume, boolean ignoreHunger) 
 
     static {
         STREAM_CODEC = ByteBufCodecs.holderRegistry(ModRegistries.Keys.DIET);
+    }
+
+    @SubscribeEvent
+    public void onItemUse(LivingEntityUseItemEvent.Start event) {
+        Predicate<ItemStack> predicate = (itemStack) -> ableToConsume().stream().anyMatch((ingredient) -> ingredient.test(itemStack));
+        if(predicate.test(event.getItem())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+        Predicate<ItemStack> predicate = (itemStack) -> ableToConsume().stream().anyMatch((ingredient) -> ingredient.test(itemStack));
+        if(predicate.test(event.getItemStack())) {
+            event.setCancellationResult(InteractionResult.FAIL);
+            event.setCanceled(true);
+        }
     }
 
     public static Builder builder() {

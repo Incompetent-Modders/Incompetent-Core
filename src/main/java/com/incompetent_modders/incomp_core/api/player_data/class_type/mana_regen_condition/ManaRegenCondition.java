@@ -3,6 +3,7 @@ package com.incompetent_modders.incomp_core.api.player_data.class_type.mana_rege
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.mojang.serialization.Codec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -10,7 +11,7 @@ public abstract class ManaRegenCondition {
     public static final Codec<ManaRegenCondition> DIRECT_CODEC = Codec.lazyInitialized(ModRegistries.MANA_REGEN_CONDITION_TYPE::byNameCodec)
             .dispatch(ManaRegenCondition::getType, ManaRegenConditionType::codec);
     
-    public abstract boolean apply(Level level, Player player);
+    public abstract boolean apply(Level level, LivingEntity player);
     
     public abstract ManaRegenConditionType<? extends ManaRegenCondition> getType();
 }

@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 public class DefaultClassPassiveEffect extends ClassPassiveEffect {
@@ -21,7 +22,7 @@ public class DefaultClassPassiveEffect extends ClassPassiveEffect {
         this.debug = debug;
     }
     @Override
-    public void apply(Level level, ServerPlayer player) {
+    public void apply(Level level, LivingEntity entity) {
     
     }
     

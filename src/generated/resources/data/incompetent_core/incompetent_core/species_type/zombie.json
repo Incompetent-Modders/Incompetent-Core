@@ -3,7 +3,8 @@
     "type": "incompetent_core:default"
   },
   "ability_cooldown": 0,
-  "attribute_modifiers": {
+  "attributes": {
+    "base_values": [],
     "modifiers": [
       {
         "attribute": "minecraft:generic.armor",
@@ -19,6 +20,12 @@
           "amount": 3.0,
           "id": "incompetent_core:species_generic_attack_damage_modifier",
           "operation": "add_value"
+        },
+        "when": {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": "minecraft:air"
+          }
         }
       },
       {
@@ -26,13 +33,13 @@
         "modifier": {
           "amount": 0.075,
           "id": "incompetent_core:species_generic_movement_speed_modifier",
-          "operation": "add_multiplied_base"
+          "operation": "add_multiplied_total"
         }
       },
       {
         "attribute": "minecraft:generic.scale",
         "modifier": {
-          "amount": 1.05,
+          "amount": 0.2,
           "id": "incompetent_core:species_generic_scale_modifier",
           "operation": "add_multiplied_base"
         }

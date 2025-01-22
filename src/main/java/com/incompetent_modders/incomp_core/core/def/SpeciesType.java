@@ -20,7 +20,7 @@ import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm, Holder<Diet> dietType, boolean keepOnDeath, Ability ability, int abilityCooldown, SpeciesAttributes attributeModifiers) {
+public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm, Holder<Diet> dietType, boolean keepOnDeath, Ability ability, int abilityCooldown, SpeciesAttributes attributes) {
     public static final Codec<SpeciesType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     SpeciesBehaviour.DIRECT_CODEC.fieldOf("behaviour").forGetter(SpeciesType::behaviour),
                     Codec.BOOL.optionalFieldOf("invert_heal_and_harm", false).forGetter(SpeciesType::invertHealAndHarm),
@@ -29,7 +29,7 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
                     //EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesType::enchantWeaknesses),
                     Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesType::ability),
                     Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown),
-                    SpeciesAttributes.CODEC.optionalFieldOf("attribute_modifiers", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributeModifiers)
+                    SpeciesAttributes.CODEC.optionalFieldOf("attributes", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributes)
             ).apply(instance, SpeciesType::new));
 
     public static final Codec<Holder<SpeciesType>> CODEC = RegistryFixedCodec.create(ModRegistries.Keys.SPECIES_TYPE);
@@ -44,7 +44,7 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
             //EnchantmentWeaknessProperties.CODEC.listOf().optionalFieldOf("enchant_weaknesses", NonNullList.create()).forGetter(SpeciesType::enchantWeaknesses),
             Ability.DIRECT_CODEC.fieldOf("ability").forGetter(SpeciesType::ability),
             Codec.INT.fieldOf("ability_cooldown").forGetter(SpeciesType::abilityCooldown),
-            SpeciesAttributes.CODEC.optionalFieldOf("attribute_modifiers", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributeModifiers)
+            SpeciesAttributes.CODEC.optionalFieldOf("attributes", SpeciesAttributes.createEmpty()).forGetter(SpeciesType::attributes)
     ).apply(instance, SpeciesType::new));
 
     static {
@@ -100,7 +100,7 @@ public record SpeciesType(SpeciesBehaviour behaviour, boolean invertHealAndHarm,
             return this;
         }
 
-        public Builder addAttributeModifiers(SpeciesAttributes.Builder attributes) {
+        public Builder addAttributes(SpeciesAttributes.Builder attributes) {
             this.attributes = attributes;
             return this;
         }

@@ -25,11 +25,6 @@ public class ModAttributes {
     
     public static final DeferredHolder<Attribute, Attribute> MANA_REGEN = registerAttribute("mana_regen", (id) -> new RangedAttribute(id, 0.5D, 0.0D, 2000.0D).setSyncable(true), "ed69a04a-eb94-4828-88fc-dd366145ed46");
     
-    public static final DeferredHolder<Attribute, Attribute> MAX_MANA = registerAttribute("max_mana", (id) -> new RangedAttribute(id, 100.0D, 0.0D, 1000000000.0D).setSyncable(true), "6393df79-d450-4374-9826-b81c2db0f053");
-    
-    @Deprecated
-    public static final DeferredHolder<Attribute, Attribute> MAX_MANA_BONUS = MAX_MANA, FLAT_MANA_BONUS = MAX_MANA;
-    
     public static DeferredHolder<Attribute, Attribute> registerAttribute(String name, Function<String, Attribute> attribute, String uuid) {
         return registerAttribute(name, attribute, UUID.fromString(uuid));
     }
@@ -42,7 +37,6 @@ public class ModAttributes {
     @SubscribeEvent
     public static void modifyEntityAttributes(EntityAttributeModificationEvent e) {
         e.getTypes().forEach(entity -> {
-            e.add(entity, MAX_MANA);
             e.add(entity, MANA_REGEN);
         });
     }

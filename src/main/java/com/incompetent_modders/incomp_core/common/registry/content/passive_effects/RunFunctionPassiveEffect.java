@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -28,13 +29,13 @@ public class RunFunctionPassiveEffect extends ClassPassiveEffect {
     }
     
     @Override
-    public void apply(Level level, ServerPlayer player) {
-        MinecraftServer minecraftserver = player.getServer();
+    public void apply(Level level, LivingEntity entity) {
+        MinecraftServer minecraftserver = entity.getServer();
         if (minecraftserver != null) {
             this.function.flatMap((function) -> {
                 return function.get(minecraftserver.getFunctions());
             }).ifPresent((commandFunction) -> {
-                minecraftserver.getFunctions().execute(commandFunction, player.createCommandSourceStack().withEntity(player).withSuppressedOutput().withPermission(2));
+                minecraftserver.getFunctions().execute(commandFunction, entity.createCommandSourceStack().withEntity(entity).withSuppressedOutput().withPermission(2));
             });
         }
     }

@@ -18,7 +18,7 @@ public class ModClassTypes {
 
     private static void registerClasses(BootstrapContext<ClassType> context) {
         register(context, NONE, ClassType.builder());
-        register(context, PLAGUE_DOCTOR, ClassType.builder().maxMana(100).canCastSpells(true).passiveEffect(new ApplyEffectPassiveEffect(MobEffects.NIGHT_VISION, 20, 1), 20));
+        register(context, PLAGUE_DOCTOR, ClassType.builder().maxMana(100).canCastSpells(true).passiveEffect(new ApplyEffectPassiveEffect(MobEffects.NIGHT_VISION, 40, 1), 20));
     }
 
     private static void register(BootstrapContext<ClassType> context, ResourceKey<ClassType> key, ClassType.Builder dietBuilder) {
