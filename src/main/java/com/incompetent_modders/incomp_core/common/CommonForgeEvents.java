@@ -2,11 +2,13 @@ package com.incompetent_modders.incomp_core.common;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviour;
 import com.incompetent_modders.incomp_core.api.player_data.species.behaviour_type.SpeciesBehaviourType;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.def.Diet;
 import com.incompetent_modders.incomp_core.core.def.PotionProperty;
@@ -105,6 +107,11 @@ public class CommonForgeEvents {
                     }
                 }
             }
+
+            if (PlayerDataHelper.getMana(entity) > PlayerDataHelper.getMaxMana(entity)) {
+                PlayerDataHelper.setMana(entity, PlayerDataHelper.getMaxMana(entity));
+            }
+
             PlayerDataHelper.regenerateMana(entity, manaRegenModifier);
 
             SpeciesBehaviour behaviourType = PlayerDataHelper.getSpeciesType(entity).behaviour();
@@ -170,19 +177,21 @@ public class CommonForgeEvents {
         //if (dietPredicate.test(stack)) {
         //    event.setCanceled(true);
         //}
-        if (entity instanceof Player player) {
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem && !(stack.getItem() instanceof SpellCastingItem)) {
-                ResourceKey<Spell> selectedSpell = CastingItemUtil.getSelectedSpell(player.getItemInHand(InteractionHand.MAIN_HAND));
-                if (selectedSpell != null) {
-                    ItemStack catalyst = CastingItemUtil.getSelectedSpellInstance(stack, player).definition().conditions().catalyst().item();
-                    if (catalyst != null && !catalyst.isEmpty()) {
-                        if (player.getItemInHand(InteractionHand.OFF_HAND).equals(catalyst) && catalyst.getItem() instanceof BundleItem) {
-                            event.setCanceled(true);
-                        }
-                    }
-                }
-            }
-        }
+        //if (entity instanceof Player player) {
+        //    if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 0) > 0) {
+        //        if (!stack.getOrDefault(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY).spells().isEmpty()) {
+        //            ResourceKey<Spell> selectedSpell = CastingItemUtil.getSelectedSpell(stack);
+        //            if (selectedSpell != null) {
+        //                ItemStack catalyst = CastingItemUtil.getSelectedSpellInstance(stack, player).definition().conditions().catalyst().item();
+        //                if (catalyst != null && !catalyst.isEmpty()) {
+        //                    if (player.getItemInHand(InteractionHand.OFF_HAND).equals(catalyst) && catalyst.getItem() instanceof BundleItem) {
+        //                        event.setCanceled(true);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     @SubscribeEvent

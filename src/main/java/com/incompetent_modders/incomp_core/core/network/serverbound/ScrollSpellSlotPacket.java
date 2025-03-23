@@ -34,7 +34,7 @@ public record ScrollSpellSlotPacket(boolean forward) implements CustomPacketPayl
 
     public static void changeSelectedSpell(ItemStack stack, boolean up) {
         int selectedSpellSlotTag = CastingItemUtil.getSelectedSpellSlot(stack);
-        if (stack.getItem() instanceof SpellCastingItem) {
+        if (stack.has(ModDataComponents.SPELLS) && stack.has(ModDataComponents.MAX_SPELL_SLOTS)) {
             int spellSlots = stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 6) - 1;
             if (up) {
                 if (selectedSpellSlotTag == spellSlots) {

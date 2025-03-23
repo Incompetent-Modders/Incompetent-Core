@@ -25,6 +25,7 @@ public class ModSpells {
         register(context, TEST, toMsgId(TEST),
                 Spell.SpellDefinition
                         .builder(1.0, 5)
+                        .conditions(Spell.SpellConditions.builder().classType(new ClassTypeCondition(ModClassTypes.PLAGUE_DOCTOR)).build())
                         .results(SpellResults.create(new AddEffectResult(MobEffects.DAMAGE_BOOST, 200, 1)))
         );
     }

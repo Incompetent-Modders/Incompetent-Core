@@ -5,6 +5,7 @@ import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
 import com.incompetent_modders.incomp_core.core.def.ClassType;
 import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -33,6 +34,7 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MAX_SPELL_SLOTS = register("max_spell_slots", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding().cacheEncoding());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SELECTED_SPELL_SLOT = register("selected_spell_slot", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding().cacheEncoding());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemSpellSlots>> SPELLS = register("spells", builder -> builder.persistent(ItemSpellSlots.CODEC).networkSynchronized(ItemSpellSlots.STREAM_CODEC).cacheEncoding());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> CASTING = register("casting", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).cacheEncoding().cacheEncoding());
     
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SUMMONED_MAX_USES  = register("summoned_max_uses", builder -> builder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SUMMONED_USES = register("summoned_uses", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));

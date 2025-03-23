@@ -5,7 +5,8 @@
   "package": "com.incompetent_modders.incomp_core.mixin",
   "refmap": "incompetent_core.refmap.json",
   "mixins": [
-    "HealOrHarmMobEffectMixin"
+    "HealOrHarmMobEffectMixin",
+    "ItemMixin"
   ],
   "client": [
   ],

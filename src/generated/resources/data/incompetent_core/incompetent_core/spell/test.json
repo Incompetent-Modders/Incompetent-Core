@@ -1,5 +1,11 @@
 {
   "definition": {
+    "conditions": {
+      "class": {
+        "accept_all_classes": false,
+        "class": "incompetent_core:plague_doctor"
+      }
+    },
     "draw_time": 5,
     "mana_cost": 1.0,
     "results": {

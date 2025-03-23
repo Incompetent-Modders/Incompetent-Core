@@ -296,7 +296,7 @@ public record Spell(Component description, SpellDefinition definition) {
         ResourceKey<SpeciesType> playerSpecies = PlayerDataHelper.getSpeciesTypeWithKey(player).getFirst();
         String classTypeText = definition.conditions.classType().acceptAllClasses() ? "any class" : definition.conditions.classType().classKey().toString();
         String speciesTypeText = definition.conditions.speciesType().acceptAllSpecies() ? "any species" : definition.conditions.speciesType().speciesKey().toString();
-        IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass, playerSpecies);
+        IncompCore.LOGGER.info("{} does not meet class or species requirements to cast spell! required: {} | {}, has: {} | {}", player.getName().getString(), classTypeText, speciesTypeText, playerClass.location(), playerSpecies.location());
     }
 
     public static Component getDisplayName(ResourceKey<Spell> spell) {

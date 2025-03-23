@@ -125,7 +125,10 @@ public class Utils {
         String[] pathElements = path.split("/");
         return pathElements[pathElements.length - 1];
     }
-    
+
+    public static InteractionHand opposite(InteractionHand hand) {
+        return hand == InteractionHand.OFF_HAND ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+    }
     //public static void applyDamage(LivingHurtEvent event, Player player, ItemStack weapon) {
     //    ResourceLocation speciesType = SpeciesData.Get.playerSpecies(player);
     //    SpeciesProperties speciesProperties = SpeciesListener.getSpeciesTypeProperties(speciesType);

@@ -12,10 +12,10 @@ import net.minecraft.resources.ResourceKey;
 public record ClassTypeCondition(ResourceKey<ClassType> classKey, boolean acceptAllClasses) {
     public static final Codec<ClassTypeCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceKey.codec(ModRegistries.Keys.CLASS_TYPE).optionalFieldOf("class", ModClassTypes.NONE).forGetter(ClassTypeCondition::classKey),
-            Codec.BOOL.optionalFieldOf("accept_all_classes", false).forGetter(ClassTypeCondition::acceptAllClasses)
+            Codec.BOOL.optionalFieldOf("accept_all_classes", true).forGetter(ClassTypeCondition::acceptAllClasses)
     ).apply(instance, ClassTypeCondition::new));
     
-    public static final ClassTypeCondition ANY = new ClassTypeCondition(ModClassTypes.NONE, false);
+    public static final ClassTypeCondition ANY = new ClassTypeCondition(ModClassTypes.NONE, true);
     public ClassTypeCondition(ResourceKey<ClassType> classKey) {
         this(classKey, false);
     }

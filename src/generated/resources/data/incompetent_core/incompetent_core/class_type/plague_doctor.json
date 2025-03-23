@@ -11,8 +11,8 @@
   "passive_effect": {
     "type": "incompetent_core:apply_effect",
     "amplifier": 1,
-    "duration": 40,
+    "duration": 300,
     "effect": "minecraft:night_vision"
   },
-  "passive_effect_tick_frequency": 20
+  "passive_effect_tick_frequency": 100
 }

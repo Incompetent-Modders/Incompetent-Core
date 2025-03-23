@@ -154,7 +154,7 @@ public class ClientUtil {
         }
         tooltip.add(CommonComponents.EMPTY);
     }
-    public static void createAvailableSpellsTooltip(List<Component> tooltip, ItemStack castingStack, SpellCastingItem spellCastingItem) {
+    public static void createAvailableSpellsTooltip(List<Component> tooltip, ItemStack castingStack) {
         tooltip.add(AVAILABLE_SPELLS_TITLE);
         DataComponentMap componentMap = castingStack.getComponents();
         if (componentMap.get(ModDataComponents.MAX_SPELL_SLOTS.get()) != null) {

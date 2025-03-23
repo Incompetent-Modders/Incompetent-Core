@@ -1,4 +1,4 @@
-// 1.21.1	2025-01-22T20:58:20.0863218	Registries
+// 1.21.1	2025-03-23T15:22:05.7375584	Registries
 3a6dd9237d871af95a83e7f1cae7db88f8eb5138 data/incompetent_core/incompetent_core/class_type/none.json
 834fcf34d61b9a1b5ce22e9f23bdbe0147f511e1 data/incompetent_core/incompetent_core/class_type/plague_doctor.json
 eecae3b86c11a071ceddb9b13b3e799779ffb856 data/incompetent_core/incompetent_core/diet/carnivore.json
@@ -10,4 +10,4 @@ b2e21665677b660459d70ad048e34c038c1db53b data/incompetent_core/incompetent_core/
 b00a701d17262180913921eccef57ca158ed7c5d data/incompetent_core/incompetent_core/species_type/human.json
 e8b312479083f759e1a8f5c42f76ea66ef599ae3 data/incompetent_core/incompetent_core/species_type/zombie.json
 edf5f0ce153dcee5cbf2037ab89251a7c9eb7d18 data/incompetent_core/incompetent_core/spell/empty.json
-80dc715141e92b9d8720c8c7c3203a2a2ead9c32 data/incompetent_core/incompetent_core/spell/test.json
+b4f4b61cc5b549ce46bb06ba3ed36a158d87f77f data/incompetent_core/incompetent_core/spell/test.json

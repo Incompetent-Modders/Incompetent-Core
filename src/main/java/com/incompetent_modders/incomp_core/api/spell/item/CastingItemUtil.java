@@ -10,6 +10,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -40,8 +41,10 @@ public class CastingItemUtil {
     }
 
     public static Spell getSelectedSpellInstance(ItemStack stack, LivingEntity entity) {
-        Registry<Spell> spellRegistry = entity.registryAccess().registryOrThrow(ModRegistries.Keys.SPELL);
-        return spellRegistry.getOrThrow(getSelectedSpell(stack));
+        return getSelectedSpellInstanceWithKey(stack, entity).getSecond();
+    }
+    public static ResourceKey<Spell> getSelectedSpellKey(ItemStack stack, LivingEntity entity) {
+        return getSelectedSpellInstanceWithKey(stack, entity).getFirst();
     }
 
     public static Pair<ResourceKey<Spell>, Spell> getSelectedSpellInstanceWithKey(ItemStack stack, LivingEntity entity) {

@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.incompetent_modders.incomp_core.core.network.serverbound.ScrollSpellSlotPacket;
 import com.incompetent_modders.incomp_core.core.network.serverbound.SpeciesAbilityPayload;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
@@ -24,10 +25,8 @@ public class ClientEventHandler {
         if(event.getScrollDeltaY()!=0&& ClientUtil.mc().screen==null&&player!=null)
         {
             ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
-            if(player.isShiftKeyDown())
-            {
-                if(equipped.getItem() instanceof SpellCastingItem)
-                {
+            if(player.isShiftKeyDown()) {
+                if(equipped.has(ModDataComponents.SPELLS) && equipped.has(ModDataComponents.MAX_SPELL_SLOTS)) {
                     PacketDistributor.sendToServer(new ScrollSpellSlotPacket(event.getScrollDeltaY() < 0));
                     event.setCanceled(true);
                 }

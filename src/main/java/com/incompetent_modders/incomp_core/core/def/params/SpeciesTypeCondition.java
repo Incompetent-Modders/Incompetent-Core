@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceKey;
 public record SpeciesTypeCondition(ResourceKey<SpeciesType> speciesKey, boolean acceptAllSpecies) {
     public static final Codec<SpeciesTypeCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceKey.codec(ModRegistries.Keys.SPECIES_TYPE).optionalFieldOf("species", ModSpeciesTypes.HUMAN).forGetter(SpeciesTypeCondition::speciesKey),
-            Codec.BOOL.optionalFieldOf("accept_all_species", false).forGetter(SpeciesTypeCondition::acceptAllSpecies)
+            Codec.BOOL.optionalFieldOf("accept_all_species", true).forGetter(SpeciesTypeCondition::acceptAllSpecies)
     ).apply(instance, SpeciesTypeCondition::new));
     
     public static final SpeciesTypeCondition ANY = new SpeciesTypeCondition(ModSpeciesTypes.HUMAN, true);

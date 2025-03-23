@@ -31,8 +31,8 @@ public class ManaOverlay implements LayeredDraw.Layer {
         ResourceLocation manaFrame = getManaOverlayTexture("frame", player);
         ResourceLocation bubbles = getManaOverlayTexture("bubbles", player);
         
-        if (player == null)
-            return;
+        if (player == null) return;
+        if (PlayerDataHelper.getMaxMana(player) <= 0) return;
         
         double mana = PlayerDataHelper.getMana(player);
         double maxMana = PlayerDataHelper.getMaxMana(player);

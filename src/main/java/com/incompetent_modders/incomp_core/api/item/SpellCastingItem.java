@@ -96,7 +96,7 @@ public class SpellCastingItem extends Item {
             ClientUtil.createSelectedSpellTooltip(tooltip, stack, provider);
         }
         if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()) > 1) {
-            ClientUtil.createAvailableSpellsTooltip(tooltip, stack, this);
+            ClientUtil.createAvailableSpellsTooltip(tooltip, stack);
         }
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
