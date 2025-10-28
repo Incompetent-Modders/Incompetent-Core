@@ -32,11 +32,7 @@ public class RunFunctionPassiveEffect extends ClassPassiveEffect {
     public void apply(Level level, LivingEntity entity) {
         MinecraftServer minecraftserver = entity.getServer();
         if (minecraftserver != null) {
-            this.function.flatMap((function) -> {
-                return function.get(minecraftserver.getFunctions());
-            }).ifPresent((commandFunction) -> {
-                minecraftserver.getFunctions().execute(commandFunction, entity.createCommandSourceStack().withEntity(entity).withSuppressedOutput().withPermission(2));
-            });
+            this.function.flatMap((function) -> function.get(minecraftserver.getFunctions())).ifPresent((commandFunction) -> minecraftserver.getFunctions().execute(commandFunction, entity.createCommandSourceStack().withEntity(entity).withSuppressedOutput().withPermission(2)));
         }
     }
     

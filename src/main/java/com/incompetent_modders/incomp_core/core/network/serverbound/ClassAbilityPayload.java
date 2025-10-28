@@ -6,12 +6,15 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record ClassAbilityPayload(boolean applyCooldown) implements CustomPacketPayload {
+public record ClassAbilityPayload(ResourceLocation ability, boolean applyCooldown) implements CustomPacketPayload {
     public static final Type<ClassAbilityPayload> TYPE = new Type<>(IncompCore.makeId("class_ability"));
 
     public static final StreamCodec<FriendlyByteBuf, ClassAbilityPayload> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC,
+            ClassAbilityPayload::ability,
             ByteBufCodecs.BOOL,
             ClassAbilityPayload::applyCooldown,
             ClassAbilityPayload::new

@@ -1,6 +1,5 @@
 package com.incompetent_modders.incomp_core.api.entity;
 
-import com.incompetent_modders.incomp_core.api.spell.SpellEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;

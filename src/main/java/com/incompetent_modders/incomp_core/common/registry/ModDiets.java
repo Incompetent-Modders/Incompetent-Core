@@ -3,7 +3,7 @@ package com.incompetent_modders.incomp_core.common.registry;
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.data.IncompItemTags;
-import com.incompetent_modders.incomp_core.core.def.Diet;
+import com.incompetent_modders.incomp_core.api.species.diet.Diet;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
@@ -20,11 +20,16 @@ public class ModDiets {
     }
 
     private static void registerDiets(BootstrapContext<Diet> context) {
-        register(context, VEGAN, Diet.builder().addConsumable(IncompItemTags.veganFriendly));
-        register(context, VEGETARIAN, Diet.builder().addConsumable(IncompItemTags.vegetarianFriendly));
-        register(context, PESCETARIAN, Diet.builder().addConsumable(IncompItemTags.pescetarianFriendly));
-        register(context, OMNIVORE, Diet.builder().addConsumable(IncompItemTags.omnivoreFriendly));
-        register(context, CARNIVORE, Diet.builder().addConsumable(IncompItemTags.carnivoreFriendly));
+        Diet.Builder veganBuilder = Diet.builder().addConsumable(IncompItemTags.veganFriendly);
+        Diet.Builder vegetarianBuilder = Diet.builder().inheritFrom(veganBuilder).addConsumable(IncompItemTags.vegetarianFriendly);
+        Diet.Builder pescetarianBuilder = Diet.builder().inheritFrom(vegetarianBuilder).addConsumable(IncompItemTags.pescetarianFriendly);
+        Diet.Builder carnivoreBuilder = Diet.builder().addConsumable(IncompItemTags.carnivoreFriendly);
+        Diet.Builder omnivoreBuilder = Diet.builder().inheritFrom(pescetarianBuilder).inheritFrom(carnivoreBuilder).addConsumable(IncompItemTags.omnivoreFriendly);
+        register(context, VEGAN, veganBuilder);
+        register(context, VEGETARIAN, vegetarianBuilder);
+        register(context, PESCETARIAN, pescetarianBuilder);
+        register(context, CARNIVORE, carnivoreBuilder);
+        register(context, OMNIVORE, omnivoreBuilder);
     }
 
     private static void register(BootstrapContext<Diet> context, ResourceKey<Diet> key, Diet.Builder dietBuilder) {

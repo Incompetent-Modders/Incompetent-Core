@@ -2,9 +2,9 @@ package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.client.util.ClientUtil;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.Diet;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.diet.Diet;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;

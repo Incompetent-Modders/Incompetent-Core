@@ -1,11 +1,12 @@
 {
   "values": [
-    "minecraft:cod",
-    "minecraft:salmon",
-    "minecraft:cooked_cod",
-    "minecraft:cooked_salmon",
-    "minecraft:pufferfish",
-    "minecraft:tropical_fish",
-    "#incompetent_core:vegetarian_friendly"
+    {
+      "id": "#c:foods/cooked_fish",
+      "required": false
+    },
+    {
+      "id": "#c:foods/raw_fish",
+      "required": false
+    }
   ]
 }

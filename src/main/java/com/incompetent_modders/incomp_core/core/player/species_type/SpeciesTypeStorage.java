@@ -1,12 +1,9 @@
 package com.incompetent_modders.incomp_core.core.player.species_type;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.player.AbilityCooldownData;
-import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeStorage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;

@@ -48,8 +48,9 @@ public class IncompCore
         //SetupEvent.EVENT.addListener(IncompCore::setup);
         ModRegistries.register(modEventBus);
         ModAttributes.register(modEventBus);
+        ModSpeciesAttributes.register(modEventBus);
+        ModClassAttributes.register(modEventBus);
         ModEffects.register(modEventBus);
-        ModSpeciesBehaviourTypes.register(modEventBus);
         ModManaRegenConditions.register(modEventBus);
         ModClassPassiveEffects.register(modEventBus);
         ModAbilities.register(modEventBus);

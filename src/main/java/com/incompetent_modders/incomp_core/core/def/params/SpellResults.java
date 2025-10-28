@@ -5,6 +5,8 @@ import com.incompetent_modders.incomp_core.common.registry.content.spell_results
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -47,11 +49,12 @@ public record SpellResults(Optional<SpellResult> spellResult, Optional<Cacheable
         });
         if (player instanceof ServerPlayer serverPlayer) {
             MinecraftServer minecraftserver = serverPlayer.server;
-            this.function.flatMap((function) -> {
-                return function.get(minecraftserver.getFunctions());
-            }).ifPresent((commandFunction) -> {
-                minecraftserver.getFunctions().execute(commandFunction, player.createCommandSourceStack().withSuppressedOutput().withPermission(2));
-            });
+            this.function
+                    .flatMap(function -> function.get(minecraftserver.getFunctions()))
+                    .ifPresent(
+                            commandSource -> minecraftserver.getFunctions()
+                                    .execute(commandSource, player.createCommandSourceStack().withSuppressedOutput().withPermission(2))
+                    );
         }
     }
 }

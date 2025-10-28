@@ -1,15 +1,4 @@
 {
-  "ability": {
-    "type": "incompetent_core:default"
-  },
-  "ability_cooldown": 0,
-  "can_cast_spells": false,
-  "mana_regen_condition": {
-    "type": "incompetent_core:default"
-  },
-  "max_mana": 0,
-  "passive_effect": {
-    "type": "incompetent_core:default"
-  },
-  "passive_effect_tick_frequency": 0
+  "abilities": [],
+  "attributes": {}
 }

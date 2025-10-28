@@ -1,8 +1,9 @@
 package com.incompetent_modders.incomp_core.core.network.handle;
 
-import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityEntry;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.network.serverbound.ClassAbilityPayload;
 import com.incompetent_modders.incomp_core.core.network.serverbound.ScrollSpellSlotPacket;
 import com.incompetent_modders.incomp_core.core.network.serverbound.SpeciesAbilityPayload;
@@ -10,6 +11,7 @@ import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeProvi
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import com.incompetent_modders.incomp_core.core.player.species_type.SpeciesTypeProvider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,10 +33,14 @@ public class ServerPayloadHandler {
         Player player = context.player();
         ClassType classType = PlayerDataHelper.getClassType(player);
         ClassTypeProvider classTypeProvider = PlayerDataHelper.getClassTypeProvider(player).orElseThrow();
-        boolean canUseAbility = classTypeProvider.canUseAbility();
+        ResourceLocation ability = payload.ability();
+        boolean canUseAbility = classTypeProvider.canUseAbility(ability);
         if (canUseAbility) {
-            classType.ability().apply(player.level(), player);
-            classTypeProvider.setAbilityCooldown(payload.applyCooldown() ? classType.abilityCooldown() : 0);
+            AbilityEntry abilityEntry = classType.getAbility(ability);
+            if (abilityEntry != null) {
+                abilityEntry.ability().apply(0, player.level(), player);
+                classTypeProvider.setAbilityCooldown(ability, payload.applyCooldown() ? abilityEntry.getEffectiveCooldown(0) : 0);
+            }
         }
     }
 
@@ -44,15 +50,15 @@ public class ServerPayloadHandler {
         SpeciesTypeProvider speciesTypeProvider = PlayerDataHelper.getSpeciesTypeProvider(player).orElseThrow();
         boolean canUseAbility = speciesTypeProvider.canUseAbility();
         if (canUseAbility) {
-            speciesType.ability().apply(player.level(), player);
-            speciesTypeProvider.setAbilityCooldown(payload.applyCooldown() ? speciesType.abilityCooldown() : 0);
+            //speciesType.ability().apply(, player.level(), player);
+            //speciesTypeProvider.setAbilityCooldown(payload.applyCooldown() ? speciesType.abilityCooldown() : 0);
         }
     }
 
     public void handle(ScrollSpellSlotPacket packet, IPayloadContext context) {
         Player player = context.player();
         ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (equipped.getItem() instanceof SpellCastingItem) {
+        if (equipped.has(ModDataComponents.SPELLS)) {
             ScrollSpellSlotPacket.changeSelectedSpell(equipped, packet.forward());
         }
     }

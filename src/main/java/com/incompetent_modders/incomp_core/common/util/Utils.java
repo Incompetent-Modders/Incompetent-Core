@@ -1,28 +1,34 @@
 package com.incompetent_modders.incomp_core.common.util;
 
 import com.incompetent_modders.incomp_core.IncompCore;
-import com.incompetent_modders.incomp_core.api.entity.EntitySelectEvent;
 import com.incompetent_modders.incomp_core.api.mana.ManaEvent;
+import com.incompetent_modders.incomp_core.api.player.SpellData;
 import com.incompetent_modders.incomp_core.api.spell.*;
+import com.incompetent_modders.incomp_core.common.registry.ModAttachmentTypes;
 import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
 import com.incompetent_modders.incomp_core.common.registry.ModDiets;
 import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.Diet;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.diet.Diet;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
+import com.incompetent_modders.incomp_core.core.def.Spell;
+import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateSpellDataPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class Utils {
     
@@ -49,12 +55,6 @@ public class Utils {
     
     public static void onSpellSlotScrollEvent(Level level, boolean isScrollingUp, Player player) {
         NeoForge.EVENT_BUS.post(new SpellEvent.SpellSlotScrollEvent(level, isScrollingUp, player));
-    }
-    public static void onEntitySelectEvent(Level level, Entity target) {
-        NeoForge.EVENT_BUS.post(new EntitySelectEvent.SelectEvent(target, level));
-    }
-    public static void onEntityDeselectEvent(Level level, Entity target) {
-        NeoForge.EVENT_BUS.post(new EntitySelectEvent.DeselectEvent(target, level));
     }
     public static float onManaHeal(LivingEntity entity, double amount) {
         ManaEvent event = new ManaEvent(entity, amount);
@@ -155,4 +155,28 @@ public class Utils {
     //public static int getEnchantmentLevel(Holder<Enchantment> enchantment, ItemStack stack) {
     //    return stack.getEnchantmentLevel(enchantment);
     //}
+
+    public static void clearSelectedSpell(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new UpdateSpellDataPayload(SpellData.createDefault()));
+        }
+        player.removeData(ModAttachmentTypes.SELECTED_SPELL);
+    }
+
+    public static void setSelectedSpell(Player player, ResourceKey<Spell> spell) {
+        SpellData spellData = player.getData(ModAttachmentTypes.SELECTED_SPELL);
+        spellData = spellData.setSpell(spell);
+        player.setData(ModAttachmentTypes.SELECTED_SPELL, spellData);
+        if (player instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new UpdateSpellDataPayload(spellData));
+        }
+    }
+
+    public static float getAngle(Vec2 a, Vec2 b) {
+        return getAngle(a.x, a.y, b.x, b.y);
+    }
+
+    public static float getAngle(double ax, double ay, double bx, double by) {
+        return (float) (Math.atan2(by - ay, bx - ax)) + 3.141f;// + (a.x > b.x ? Math.PI : 0));
+    }
 }

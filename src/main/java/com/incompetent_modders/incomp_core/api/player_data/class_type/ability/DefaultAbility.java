@@ -1,5 +1,7 @@
 package com.incompetent_modders.incomp_core.api.player_data.class_type.ability;
 
+import com.incompetent_modders.incomp_core.api.class_type.ability.Ability;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -20,7 +22,7 @@ public class DefaultAbility extends Ability {
         this.debug = debug;
     }
     @Override
-    public void apply(Level level, Player player) {
+    public void apply(int classLevel, Level level, Player player) {
         if (debug) {
             System.out.println("Default class ability applied to player " + player.getName().getString());
         }

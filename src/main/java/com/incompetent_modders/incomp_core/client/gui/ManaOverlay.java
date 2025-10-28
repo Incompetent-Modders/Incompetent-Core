@@ -2,7 +2,7 @@ package com.incompetent_modders.incomp_core.client.gui;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.client.screen.DrawingUtils;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.DeltaTracker;

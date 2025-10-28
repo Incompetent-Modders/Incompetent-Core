@@ -15,11 +15,10 @@ import net.minecraft.world.phys.Vec3;
 
 public class ShootFromRotationCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
-        return Commands.literal("shoot_from_rotation").requires(s -> s.hasPermission(2)).then(Commands.argument("power", FloatArgumentType.floatArg()).then(Commands.argument("uncertainty", FloatArgumentType.floatArg()).then(Commands.argument("item", ItemArgument.item(context)).executes(arguments -> {
-            return shootFromRotation(arguments.getSource(), ItemArgument.getItem(arguments, "item").createItemStack(1, true), FloatArgumentType.getFloat(arguments, "power"), FloatArgumentType.getFloat(arguments, "uncertainty"));
-        }).then(Commands.argument("offset", Vec3Argument.vec3()).executes(arguments -> {
-            return shootFromRotation(arguments.getSource(), ItemArgument.getItem(arguments, "item").createItemStack(1, true), FloatArgumentType.getFloat(arguments, "power"), FloatArgumentType.getFloat(arguments, "uncertainty"), Vec3Argument.getVec3(arguments, "offset"));
-        })))));
+        return Commands.literal("shoot_from_rotation").requires(s -> s.hasPermission(2)).then(Commands.argument("power", FloatArgumentType.floatArg()).then(Commands.argument("uncertainty", FloatArgumentType.floatArg()).then(Commands.argument("item", ItemArgument.item(context))
+                .executes(arguments -> shootFromRotation(arguments.getSource(), ItemArgument.getItem(arguments, "item").createItemStack(1, true), FloatArgumentType.getFloat(arguments, "power"), FloatArgumentType.getFloat(arguments, "uncertainty")))
+                .then(Commands.argument("offset", Vec3Argument.vec3())
+                .executes(arguments -> shootFromRotation(arguments.getSource(), ItemArgument.getItem(arguments, "item").createItemStack(1, true), FloatArgumentType.getFloat(arguments, "power"), FloatArgumentType.getFloat(arguments, "uncertainty"), Vec3Argument.getVec3(arguments, "offset")))))));
     }
     
     private static int shootFromRotation(CommandSourceStack source, ItemStack item, float power, float uncertainty) {

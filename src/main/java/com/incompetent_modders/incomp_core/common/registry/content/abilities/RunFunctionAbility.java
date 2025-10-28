@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.common.registry.content.abilities;
 
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.Ability;
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
+import com.incompetent_modders.incomp_core.api.class_type.ability.Ability;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,7 +26,7 @@ public class RunFunctionAbility extends Ability {
         return function;
     }
     @Override
-    public void apply(Level level, Player player) {
+    public void apply(int classLevel, Level level, Player player) {
         MinecraftServer minecraftserver = player.getServer();
         if (minecraftserver != null) {
             this.function.flatMap((function) -> {

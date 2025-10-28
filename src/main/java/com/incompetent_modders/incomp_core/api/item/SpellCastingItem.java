@@ -95,8 +95,8 @@ public class SpellCastingItem extends Item {
         if (provider != null) {
             ClientUtil.createSelectedSpellTooltip(tooltip, stack, provider);
         }
-        if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()) > 1) {
-            ClientUtil.createAvailableSpellsTooltip(tooltip, stack);
+        if (stack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, getMaxSpellSlots()) > 0) {
+            ClientUtil.createSpellSlotsTooltip(tooltip, stack);
         }
     }
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
@@ -115,10 +115,6 @@ public class SpellCastingItem extends Item {
     }
     public static ResourceKey<Spell> getSelectedSpell(ItemStack stack) {
         return CastingItemUtil.deserializeFromSlot(stack, CastingItemUtil.getSelectedSpellSlot(stack));
-    }
-    
-    public static String getSpellNameInSlot(ItemStack stack, int slot) {
-        return Spell.getDisplayName(CastingItemUtil.deserializeFromSlot(stack, slot)).getString();
     }
     
     public void releaseUsing(ItemStack itemstack, Level level, LivingEntity entity, int timeLeft) {

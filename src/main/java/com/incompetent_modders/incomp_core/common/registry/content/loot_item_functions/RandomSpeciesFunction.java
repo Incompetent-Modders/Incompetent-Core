@@ -1,10 +1,10 @@
 package com.incompetent_modders.incomp_core.common.registry.content.loot_item_functions;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.common.registry.ModItems;
+import com.incompetent_modders.incomp_core.common.data.IncompItemTags;
 import com.incompetent_modders.incomp_core.common.registry.ModLootItemFunctions;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -37,7 +37,7 @@ public class RandomSpeciesFunction extends LootItemConditionalFunction {
     
     public ItemStack run(ItemStack stack, LootContext lootContext) {
         Registry<SpeciesType> speciesRegistry = lootContext.getLevel().registryAccess().registryOrThrow(ModRegistries.Keys.SPECIES_TYPE);
-        if (stack.is(ModItems.ASSIGN_SPECIES)) {
+        if (stack.is(IncompItemTags.canAssignSpeciesType)) {
             Holder<SpeciesType> species = speciesRegistry.getRandom(lootContext.getRandom()).orElseThrow();
             stack.set(ModDataComponents.STORED_SPECIES_TYPE.get(), species.getKey());
         }

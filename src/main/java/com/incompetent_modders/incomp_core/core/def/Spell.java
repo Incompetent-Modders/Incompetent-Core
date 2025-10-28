@@ -2,6 +2,8 @@ package com.incompetent_modders.incomp_core.core.def;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.core.def.params.*;
 import com.incompetent_modders.incomp_core.core.def.params.SpeciesTypeCondition;
@@ -32,7 +34,6 @@ import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public record Spell(Component description, SpellDefinition definition) {
 

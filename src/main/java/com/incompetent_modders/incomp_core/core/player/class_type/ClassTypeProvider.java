@@ -2,6 +2,7 @@ package com.incompetent_modders.incomp_core.core.player.class_type;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.core.player.AbilityCooldownData;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 
@@ -13,25 +14,25 @@ public interface ClassTypeProvider {
 
     void setStorage(ClassTypeStorage storage);
 
-    default void setAbilityCooldown(int cooldown) {
+    default void setAbilityCooldown(ResourceLocation ability, int cooldown) {
         ClassTypeStorage storage = this.asStorage();
-
-        this.setStorage(new ClassTypeStorage(storage.classType(), new AbilityCooldownData(cooldown)));
+        AbilityCooldownData data = storage.cooldownData();
+        this.setStorage(new ClassTypeStorage(storage.classType(), data.addCooldown(ability, cooldown)));
     }
 
     default void decreaseAbilityCooldown() {
         ClassTypeStorage storage = this.asStorage();
         AbilityCooldownData data = storage.cooldownData();
-        int cooldown = data.abilityCooldown();
-
-        if (cooldown > 0) {
-            this.setStorage(new ClassTypeStorage(storage.classType(), new AbilityCooldownData(cooldown - 1)));
-        } else {
-            this.setStorage(new ClassTypeStorage(storage.classType(), new AbilityCooldownData(-1)));
-        }
+        this.setStorage(new ClassTypeStorage(storage.classType(), data.decrementAllCooldowns(1)));
     }
 
-    default boolean canUseAbility() {
-        return this.asStorage().cooldownData().abilityCooldown() == -1;
+    default boolean canUseAbility(ResourceLocation ability) {
+        return !this.asStorage().cooldownData().hasAbilityCooldown(ability);
+    }
+
+    default int getAbilityCooldown(ResourceLocation ability) {
+        ClassTypeStorage storage = this.asStorage();
+        AbilityCooldownData data = storage.cooldownData();
+        return data.getAbilityCooldown(ability);
     }
 }

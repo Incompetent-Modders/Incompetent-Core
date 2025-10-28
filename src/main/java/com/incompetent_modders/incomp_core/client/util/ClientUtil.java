@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.client.util;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
@@ -47,8 +47,8 @@ public class ClientUtil {
     private static final Component SELECTED_SPELL_TITLE = Component.translatable(
             Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.selected_spell"))
     ).withStyle(TITLE_FORMAT);
-    private static final Component AVAILABLE_SPELLS_TITLE = Component.translatable(
-            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.available_spells"))
+    private static final Component SPELL_SLOTS_TITLE = Component.translatable(
+            Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.spell_slots"))
     ).withStyle(TITLE_FORMAT);
     private static final Component SPELL_INFO_TITLE = Component.translatable(
             Util.makeDescriptionId("item", ResourceLocation.fromNamespaceAndPath(MODID,"spellcasting.spell_info"))
@@ -126,14 +126,11 @@ public class ClientUtil {
     private static final Component selectedEntitiesComp = Component.translatable("item." + MODID + ".spellcasting.selected_entities").withStyle(TITLE_FORMAT);
     private static final Component selectedPositionsComp = Component.translatable("item." + MODID + ".spellcasting.selected_positions").withStyle(TITLE_FORMAT);
     public static void createSelectedSpellTooltip(List<Component> tooltip, ItemStack castingStack, HolderLookup.Provider holderLookup) {
-        ResourceKey<Spell> spellKey = SpellCastingItem.getSelectedSpell(castingStack);
+        ResourceKey<Spell> spellKey = CastingItemUtil.deserializeFromSlot(castingStack, CastingItemUtil.getSelectedSpellSlot(castingStack));
         Spell spell = holderLookup.lookup(ModRegistries.Keys.SPELL).isPresent() ? holderLookup.lookup(ModRegistries.Keys.SPELL).get().getOrThrow(spellKey).value() : null;
         if (spell == null) {
             return;
         }
-        tooltip.add(SELECTED_SPELL_TITLE);
-        tooltip.add(CommonComponents.space().append(Spell.getDisplayName(spellKey)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
-        tooltip.add(CommonComponents.EMPTY);
         Player player = Minecraft.getInstance().player;
         tooltip.add(SPELL_INFO_TITLE);
         tooltip.add(CommonComponents.space().append(manaCost));
@@ -154,15 +151,13 @@ public class ClientUtil {
         }
         tooltip.add(CommonComponents.EMPTY);
     }
-    public static void createAvailableSpellsTooltip(List<Component> tooltip, ItemStack castingStack) {
-        tooltip.add(AVAILABLE_SPELLS_TITLE);
-        DataComponentMap componentMap = castingStack.getComponents();
-        if (componentMap.get(ModDataComponents.MAX_SPELL_SLOTS.get()) != null) {
-            for (int i = 0; i < castingStack.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 6); i++) {
-                if (i == CastingItemUtil.getSelectedSpellSlot(castingStack)) {
-                    continue;
-                }
-                tooltip.add(CommonComponents.space().append(SpellCastingItem.getSpellNameInSlot(castingStack, i)).withStyle(DESCRIPTION_FORMAT).withStyle(DESCRIPTION_FORMAT));
+    public static void createSpellSlotsTooltip(List<Component> tooltip, ItemStack castingStack) {
+        tooltip.add(SPELL_SLOTS_TITLE);
+        if (castingStack.has(ModDataComponents.SPELLS)) {
+            for (int i = 0; i < castingStack.getOrDefault(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY).maxSlots(); i++) {
+                Style textStyle = i == CastingItemUtil.getSelectedSpellSlot(castingStack) ? Style.EMPTY.withColor(0x699aff) : Style.EMPTY.withColor(0x5555ff);
+                String slotIconText = i == CastingItemUtil.getSelectedSpellSlot(castingStack) ? ">" : "-";
+                tooltip.add(CommonComponents.space().append("[%s]".formatted(slotIconText)).append(Spell.getDisplayName(CastingItemUtil.deserializeFromSlot(castingStack, i)).getString()).withStyle(textStyle));
             }
         }
         

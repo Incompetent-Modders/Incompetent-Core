@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.mixin;
 
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesAttributes;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,10 +19,10 @@ public class HealOrHarmMobEffectMixin {
     @Shadow
     private boolean isHarm;
     
-    @Inject(method = "applyEffectTick", at = @At("HEAD"))
+    @Inject(method = "applyEffectTick", at = @At("HEAD"), cancellable = true)
     private void applyEffectTick(LivingEntity entity, int amplifier, CallbackInfoReturnable<Boolean> cir) {
         SpeciesType speciesType = PlayerDataHelper.getSpeciesType(entity);
-        if (isHarm == speciesType.invertHealAndHarm()) {
+        if (isHarm == speciesType.has(ModSpeciesAttributes.INVERT_HEAL_HARM)) {
             entity.heal((float)Math.max(4 << amplifier, 0));
             cir.cancel();
         } else {
@@ -34,7 +35,7 @@ public class HealOrHarmMobEffectMixin {
     private void applyInstantenousEffect(Entity source, Entity indirectSource, LivingEntity entity, int amplifier, double health, CallbackInfo ci) {
         int j;
         SpeciesType speciesType = PlayerDataHelper.getSpeciesType(entity);
-        if (isHarm == speciesType.invertHealAndHarm()) {
+        if (isHarm == speciesType.has(ModSpeciesAttributes.INVERT_HEAL_HARM)) {
             j = (int)(health * (double)(4 << amplifier) + 0.5);
             entity.heal((float)j);
             ci.cancel();

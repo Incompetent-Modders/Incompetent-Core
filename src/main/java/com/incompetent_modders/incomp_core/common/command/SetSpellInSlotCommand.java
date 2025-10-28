@@ -1,8 +1,8 @@
 package com.incompetent_modders.incomp_core.common.command;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
+import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -25,7 +25,7 @@ public class SetSpellInSlotCommand {
                     Player player = (Player) arguments.getSource().getEntity();
                     if (player == null)
                         player = FakePlayerFactory.getMinecraft(world);
-                    if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
+                    if (player.getItemInHand(InteractionHand.MAIN_HAND).has(ModDataComponents.SPELLS)) {
                         ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                         Holder.Reference<Spell> spell = ResourceArgument.getResource(arguments, "spells", ModRegistries.Keys.SPELL);
                         CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), spell.getKey());

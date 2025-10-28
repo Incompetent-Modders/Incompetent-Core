@@ -86,6 +86,10 @@ repositories {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
+    maven {
+        // Shadows_of_Fire's Maven
+        url "https://maven.shadowsoffire.dev/releases"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -102,6 +106,8 @@ dependencies {
     implementation "com.teamresourceful:yabn:${yabn_version}"
     implementation "com.teamresourceful:bytecodecs:${bytecodecs_version}"
 
+    implementation "dev.shadowsoffire:Placebo:${minecraft_version}-${placeboVersion}"
+    implementation "dev.shadowsoffire:ApothicAttributes:${minecraft_version}-${attributesLibVersion}"
     //compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
     //runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"

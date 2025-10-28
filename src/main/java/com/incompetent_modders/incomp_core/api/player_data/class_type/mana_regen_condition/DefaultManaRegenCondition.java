@@ -13,21 +13,14 @@ import java.util.Random;
 
 public class DefaultManaRegenCondition extends ManaRegenCondition {
     
-    public static final MapCodec<DefaultManaRegenCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.FLOAT.optionalFieldOf("chance", 1.0f).forGetter(result -> {
-                return result.chance;
-            })
-    ).apply(instance, DefaultManaRegenCondition::new));
+    public static final MapCodec<DefaultManaRegenCondition> CODEC = MapCodec.unit(new DefaultManaRegenCondition());
     
-    private final float chance;
-    
-    public DefaultManaRegenCondition(float chance) {
-        this.chance = chance;
+
+    public DefaultManaRegenCondition() {
     }
     @Override
     public boolean apply(Level level, LivingEntity player) {
-        float random = new Random().nextFloat();
-        return random <= chance;
+        return true;
     }
     
     @Override

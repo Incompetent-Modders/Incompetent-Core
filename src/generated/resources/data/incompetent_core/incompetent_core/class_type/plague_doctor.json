@@ -1,18 +1,45 @@
 {
-  "ability": {
-    "type": "incompetent_core:default"
-  },
-  "ability_cooldown": 0,
-  "can_cast_spells": true,
-  "mana_regen_condition": {
-    "type": "incompetent_core:default"
-  },
-  "max_mana": 100,
-  "passive_effect": {
-    "type": "incompetent_core:apply_effect",
-    "amplifier": 1,
-    "duration": 300,
-    "effect": "minecraft:night_vision"
-  },
-  "passive_effect_tick_frequency": 100
+  "abilities": [
+    {
+      "ability": {
+        "type": "incompetent_core:apply_effect",
+        "amplifier": 2,
+        "duration": 300,
+        "effect": "minecraft:resistance"
+      },
+      "cooldown": 400,
+      "cooldown_level_scale": 1.05,
+      "identifier": "incompetent_core:plague_doctor_resistance"
+    },
+    {
+      "ability": {
+        "type": "incompetent_core:apply_effect",
+        "amplifier": 1,
+        "duration": 150,
+        "effect": "minecraft:strength"
+      },
+      "cooldown": 300,
+      "cooldown_level_scale": 1.05,
+      "identifier": "incompetent_core:plague_doctor_strength"
+    }
+  ],
+  "attributes": {
+    "incompetent_core:apply_effect": {
+      "amplifier": 0,
+      "duration": 200,
+      "effect": "minecraft:night_vision"
+    },
+    "incompetent_core:spell_casting": {
+      "mana_regen": {
+        "type": "incompetent_core:default"
+      },
+      "max_mana": 100,
+      "restrictions": {
+        "entries": {
+          "incompetent_core:necromancy": true
+        },
+        "whitelist": true
+      }
+    }
+  }
 }

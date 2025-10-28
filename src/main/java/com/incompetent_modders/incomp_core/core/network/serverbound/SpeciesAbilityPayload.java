@@ -2,7 +2,6 @@ package com.incompetent_modders.incomp_core.core.network.serverbound;
 
 import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.core.network.handle.ServerPayloadHandler;
-import com.teamresourceful.resourcefullib.common.network.Packet;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

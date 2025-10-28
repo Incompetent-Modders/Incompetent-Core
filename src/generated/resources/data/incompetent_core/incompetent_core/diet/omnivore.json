@@ -1,6 +1,18 @@
 {
   "able_to_consume": [
     {
+      "tag": "incompetent_core:vegan_friendly"
+    },
+    {
+      "tag": "incompetent_core:vegetarian_friendly"
+    },
+    {
+      "tag": "incompetent_core:pescetarian_friendly"
+    },
+    {
+      "tag": "incompetent_core:carnivore_friendly"
+    },
+    {
       "tag": "incompetent_core:omnivore_friendly"
     },
     {

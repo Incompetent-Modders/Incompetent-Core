@@ -5,18 +5,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
-import net.neoforged.fml.LogicalSide;
 
 public class SpellEvent extends Event {
+
     public enum Type {
         CAST, ENTITY_CAST, SPELL_SLOT_SCROLL;
     }
+
     public final Type type;
-    public final LogicalSide side;
-    
-    public SpellEvent(Type type, LogicalSide side) {
+
+    public SpellEvent(Type type) {
         this.type = type;
-        this.side = side;
     }
     
     public static class CastEvent extends SpellEvent {
@@ -24,7 +23,7 @@ public class SpellEvent extends Event {
         public final Player player;
         public final InteractionHand hand;
         public CastEvent(Level level, Player player, InteractionHand hand) {
-            super(Type.CAST, LogicalSide.SERVER);
+            super(Type.CAST);
             this.level = level;
             this.player = player;
             this.hand = hand;
@@ -40,7 +39,7 @@ public class SpellEvent extends Event {
         public final Entity entity;
         public final InteractionHand hand;
         public EntityCastEvent(Level level, Entity entity, InteractionHand hand) {
-            super(Type.ENTITY_CAST, LogicalSide.SERVER);
+            super(Type.ENTITY_CAST);
             this.level = level;
             this.entity = entity;
             this.hand = hand;
@@ -55,7 +54,7 @@ public class SpellEvent extends Event {
         public final boolean up;
         public final Player player;
         public SpellSlotScrollEvent(Level level, boolean up, Player player) {
-            super(Type.SPELL_SLOT_SCROLL, LogicalSide.SERVER);
+            super(Type.SPELL_SLOT_SCROLL);
             this.level = level;
             this.up = up;
             this.player = player;

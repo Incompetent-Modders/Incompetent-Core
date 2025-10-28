@@ -7,6 +7,7 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,15 +25,6 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
     
     @SuppressWarnings("unchecked")
     protected void registerModTags() {
-        tag(IncompItemTags.pescetarianFriendly).add(
-                Items.COD,
-                Items.SALMON,
-                Items.COOKED_COD,
-                Items.COOKED_SALMON,
-                Items.PUFFERFISH,
-                Items.TROPICAL_FISH
-        );
-
         tag(IncompItemTags.carnivoreFriendly).add(
                 Items.BEEF,
                 Items.CHICKEN,
@@ -73,27 +65,18 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
                 Items.COOKIE
         );
 
-        tag(IncompItemTags.pescetarianFriendly).addTags(
-                IncompItemTags.vegetarianFriendly
+        tag(IncompItemTags.pescetarianFriendly).addOptionalTags(
+                Tags.Items.FOODS_COOKED_FISH, Tags.Items.FOODS_RAW_FISH
         );
 
-        tag(IncompItemTags.vegetarianFriendly).addTags(
-                IncompItemTags.veganFriendly
-        );
-
-        tag(IncompItemTags.carnivoreFriendly).addTags(
-                IncompItemTags.pescetarianFriendly
+        tag(IncompItemTags.carnivoreFriendly).addOptionalTags(
+                Tags.Items.FOODS_COOKED_MEAT, Tags.Items.FOODS_RAW_MEAT, Tags.Items.FOODS_COOKED_FISH, Tags.Items.FOODS_RAW_FISH
         );
 
         tag(IncompItemTags.vegetarianFriendly).add(
                 Items.HONEY_BOTTLE,
                 Items.MILK_BUCKET,
                 Items.PUMPKIN_PIE
-        );
-
-        tag(IncompItemTags.omnivoreFriendly).addTags(
-                IncompItemTags.carnivoreFriendly,
-                IncompItemTags.vegetarianFriendly
         );
 
         tag(IncompItemTags.givesHunger).add(
@@ -106,6 +89,21 @@ public class IncompItemTagsProvider extends ItemTagsProvider {
                 Items.POTION,
                 Items.ENCHANTED_GOLDEN_APPLE,
                 Items.GOLDEN_APPLE
+        );
+
+        tag(IncompItemTags.canCastSpells).add(
+                ModItems.SPELL_TOME.get()
+        ).addOptionalTags(
+                ItemTags.SWORD_ENCHANTABLE
+        );
+        tag(IncompItemTags.canStoreSpells).add(
+                ModItems.SPELL_TOME.get()
+        );
+        tag(IncompItemTags.canAssignClassType).add(
+                ModItems.ASSIGN_CLASS.get()
+        );
+        tag(IncompItemTags.canAssignSpeciesType).add(
+                ModItems.ASSIGN_SPECIES.get()
         );
     }
 }

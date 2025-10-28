@@ -1,13 +1,16 @@
 package com.incompetent_modders.incomp_core.core.player.helper;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityEntry;
 import com.incompetent_modders.incomp_core.common.registry.ModAttributes;
 import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
+import com.incompetent_modders.incomp_core.common.registry.ModSpeciesAttributes;
 import com.incompetent_modders.incomp_core.common.registry.ModSpeciesTypes;
 import com.incompetent_modders.incomp_core.common.util.Utils;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.Diet;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
+import com.incompetent_modders.incomp_core.core.def.attributes.class_type.ClassSpellCasting;
+import com.incompetent_modders.incomp_core.core.def.attributes.species.EntityAttributeAttribute;
 import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeProvider;
 import com.incompetent_modders.incomp_core.core.player.class_type.ClassTypeStorage;
 import com.incompetent_modders.incomp_core.core.player.mana.ManaProvider;
@@ -17,6 +20,8 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -78,8 +83,26 @@ public class PlayerDataHelper {
         return Pair.of(key, speciesType);
     }
 
-    public static Diet getDiet(LivingEntity entity) {
-        return getSpeciesType(entity).dietType().value();
+    public static int getAbilityCooldown(LivingEntity entity, ResourceLocation ability) {
+        int cooldown = 0;
+        var classTypeProv = getClassTypeProvider(entity).orElse(null);
+        if (classTypeProv != null) {
+            cooldown = classTypeProv.getAbilityCooldown(ability);
+        }
+        return cooldown;
+    }
+
+    public static float getAbilityCooldownPercentage(LivingEntity entity, ResourceLocation ability) {
+        int cooldown = getAbilityCooldown(entity, ability);
+        int fullCooldown = 0;
+        ClassType classType = getClassType(entity);
+        if (classType != null) {
+            AbilityEntry abilityEntry = classType.getAbility(ability);
+            if (abilityEntry != null) {
+                fullCooldown = abilityEntry.getEffectiveCooldown(0);
+            }
+        }
+        return (float) (cooldown / fullCooldown);
     }
 
     public static void setMana(LivingEntity entity, double mana) {
@@ -106,8 +129,8 @@ public class PlayerDataHelper {
         return getManaProvider(entity).map(ManaProvider::getLimit).orElse(0);
     }
 
-    public static void regenerateMana(LivingEntity entity, float modifier) {
-        boolean shouldRegen = getClassType(entity).manaRegenCondition().apply(entity.level(), entity);
+    public static void regenerateMana(LivingEntity entity, float modifier, ClassSpellCasting castingAttribute) {
+        boolean shouldRegen = castingAttribute.manaRegen.apply(entity.level(), entity);
         double maxMana = getMaxMana(entity);
         double currentMana = getMana(entity);
         AttributeInstance manaRegen = entity.getAttribute(ModAttributes.MANA_REGEN);
@@ -127,53 +150,47 @@ public class PlayerDataHelper {
 
 
     public static void resetSpeciesAttributes(LivingEntity entity, SpeciesType speciesType) {
-        speciesType.attributes().attributeModifiers().forEach((attributeModifierEntry) -> {
-                    Holder<Attribute> attribute = attributeModifierEntry.attributeHolder();
-                    AttributeModifier modifier = attributeModifierEntry.attributeModifier();
-                    AttributeInstance instance = entity.getAttribute(attribute);
-                    if (instance != null) {
-                        instance.removeModifier(modifier);
-                    }
-                });
-        //RegistryAccess registryAccess = entity.level().registryAccess();
-        //Collection<Holder<Attribute>> attributes = registryAccess.registryOrThrow(Registries.ATTRIBUTE).holders().collect(Collectors.toSet());
-        //for (Holder<Attribute> attribute : attributes) {
-        //    String modifierName = "species_%s_modifier".formatted(attribute.getKey().location().getPath().replace(".", "_"));
-        //    if (entity.getAttribute(attribute) == null) {
-        //        continue;
-        //    }
-        //    if (entity.getAttribute(attribute).hasModifier(ResourceLocation.parse(modifierName))) {
-        //        entity.getAttribute(attribute).removeModifier(ResourceLocation.parse(modifierName));
-        //    }
-        //}
+        EntityAttributeAttribute entityAttributeAttribute = speciesType.get(ModSpeciesAttributes.ENTITY_ATTRIBUTES.get());
+        if (entityAttributeAttribute != null) {
+            entityAttributeAttribute.attributeModifiers.forEach((attributeModifierEntry) -> {
+                Holder<Attribute> attribute = attributeModifierEntry.attributeHolder();
+                AttributeModifier modifier = attributeModifierEntry.attributeModifier();
+                AttributeInstance instance = entity.getAttribute(attribute);
+                if (instance != null) {
+                    instance.removeModifier(modifier);
+                }
+            });
+        }
     }
 
     public static void addNewSpeciesAttributes(LivingEntity entity, SpeciesType speciesType) {
         double prevMaxHealthBase = entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue();
         double prevMaxHealth = entity.getMaxHealth();
-        speciesType.attributes().attributeModifiers().forEach((attributeModifierEntry) -> {
-            Holder<Attribute> attribute = attributeModifierEntry.attributeHolder();
-            AttributeModifier modifier = attributeModifierEntry.attributeModifier();
-            AttributeInstance instance = entity.getAttribute(attribute);
-            if (attributeModifierEntry.attributeHolder() == Attributes.MAX_HEALTH) {
-                boolean multiplyBase = modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
-                boolean multiplyTotal = modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
-                double newMaxHealth = multiplyBase ? prevMaxHealthBase * modifier.amount() : multiplyTotal ? prevMaxHealth * modifier.amount() : prevMaxHealth + modifier.amount();
-                scaleHealth(entity, prevMaxHealth, newMaxHealth);
-            }
-            if (instance != null) {
-                instance.addTransientModifier(modifier);
-            }
-        });
-
-        PlayerDataHelper.getSpeciesType(entity).attributes().attributes().forEach((attributeEntry) -> {
-            Holder<Attribute> attribute = attributeEntry.attributeHolder();
-            double baseValue = attributeEntry.baseValue();
-            AttributeInstance instance = entity.getAttribute(attribute);
-            if (instance != null) {
-                instance.setBaseValue(baseValue);
-            }
-        });
+        EntityAttributeAttribute entityAttributeAttribute = speciesType.get(ModSpeciesAttributes.ENTITY_ATTRIBUTES.get());
+        if (entityAttributeAttribute != null) {
+            entityAttributeAttribute.attributeModifiers.forEach((attributeModifierEntry) -> {
+                Holder<Attribute> attribute = attributeModifierEntry.attributeHolder();
+                AttributeModifier modifier = attributeModifierEntry.attributeModifier();
+                AttributeInstance instance = entity.getAttribute(attribute);
+                if (attributeModifierEntry.attributeHolder() == Attributes.MAX_HEALTH) {
+                    boolean multiplyBase = modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
+                    boolean multiplyTotal = modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+                    double newMaxHealth = multiplyBase ? prevMaxHealthBase * modifier.amount() : multiplyTotal ? prevMaxHealth * modifier.amount() : prevMaxHealth + modifier.amount();
+                    scaleHealth(entity, prevMaxHealth, newMaxHealth);
+                }
+                if (instance != null) {
+                    instance.addTransientModifier(modifier);
+                }
+            });
+            entityAttributeAttribute.baseAttributes.forEach((attributeEntry) -> {
+                Holder<Attribute> attribute = attributeEntry.attributeHolder();
+                double baseValue = attributeEntry.baseValue();
+                AttributeInstance instance = entity.getAttribute(attribute);
+                if (instance != null) {
+                    instance.setBaseValue(baseValue);
+                }
+            });
+        }
     }
 
     public static void scaleHealth(LivingEntity entity, double prevMaxHealth, double newMaxHealth) {

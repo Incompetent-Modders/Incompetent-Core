@@ -3,7 +3,7 @@ package com.incompetent_modders.incomp_core.api.item;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;

@@ -1,7 +1,7 @@
 package com.incompetent_modders.incomp_core.common.registry;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.AbilityType;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityType;
 import com.incompetent_modders.incomp_core.common.registry.content.abilities.ApplyEffectAbility;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.ability.DefaultAbility;
 import com.incompetent_modders.incomp_core.common.registry.content.abilities.RunFunctionAbility;

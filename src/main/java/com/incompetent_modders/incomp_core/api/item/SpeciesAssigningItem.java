@@ -3,7 +3,7 @@ package com.incompetent_modders.incomp_core.api.item;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.common.util.Utils;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -21,8 +21,6 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-
-import static com.incompetent_modders.incomp_core.core.player.helper.PlayerDataHelper.resetSpeciesAttributes;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

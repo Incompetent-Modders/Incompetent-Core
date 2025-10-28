@@ -1,10 +1,10 @@
 package com.incompetent_modders.incomp_core.common.registry.content.loot_item_functions;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
-import com.incompetent_modders.incomp_core.common.registry.ModItems;
+import com.incompetent_modders.incomp_core.common.data.IncompItemTags;
 import com.incompetent_modders.incomp_core.common.registry.ModLootItemFunctions;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -37,7 +37,7 @@ public class RandomClassTypeFunction extends LootItemConditionalFunction {
     
     public ItemStack run(ItemStack stack, LootContext lootContext) {
         Registry<ClassType> classTypeRegistry = lootContext.getLevel().registryAccess().registryOrThrow(ModRegistries.Keys.CLASS_TYPE);
-        if (stack.is(ModItems.ASSIGN_CLASS)) {
+        if (stack.is(IncompItemTags.canAssignClassType)) {
             Holder<ClassType> classType = classTypeRegistry.getRandom(lootContext.getRandom()).orElseThrow();
             stack.set(ModDataComponents.STORED_CLASS_TYPE.get(), classType.getKey());
         }

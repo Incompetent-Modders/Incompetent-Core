@@ -1,10 +1,1 @@
-{
-  "ability": {
-    "type": "incompetent_core:default"
-  },
-  "ability_cooldown": 0,
-  "behaviour": {
-    "type": "incompetent_core:default"
-  },
-  "diet": "incompetent_core:omnivore"
-}
+{}

@@ -1,71 +1,95 @@
 {
-  "ability": {
-    "type": "incompetent_core:default"
-  },
-  "ability_cooldown": 0,
   "attributes": {
-    "base_values": [],
-    "modifiers": [
-      {
-        "attribute": "minecraft:generic.armor",
-        "modifier": {
-          "amount": 4.0,
-          "id": "incompetent_core:species_generic_armor_modifier",
-          "operation": "add_value"
-        }
-      },
-      {
-        "attribute": "minecraft:generic.attack_damage",
-        "modifier": {
-          "amount": 3.0,
-          "id": "incompetent_core:species_generic_attack_damage_modifier",
-          "operation": "add_value"
+    "incompetent_core:burn_in_sunlight": {},
+    "incompetent_core:diet": {
+      "diet": "incompetent_core:carnivore"
+    },
+    "incompetent_core:entity_attributes": {
+      "base_values": [],
+      "modifiers": [
+        {
+          "attribute": "minecraft:generic.armor",
+          "modifier": {
+            "amount": 4.0,
+            "id": "incompetent_core:species_generic_armor_modifier",
+            "operation": "add_value"
+          }
         },
-        "when": {
-          "condition": "minecraft:match_tool",
-          "predicate": {
-            "items": "minecraft:air"
+        {
+          "attribute": "minecraft:generic.attack_damage",
+          "modifier": {
+            "amount": 3.0,
+            "id": "incompetent_core:species_generic_attack_damage_modifier",
+            "operation": "add_value"
+          },
+          "when": {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "minecraft:air"
+            }
+          }
+        },
+        {
+          "attribute": "minecraft:generic.movement_speed",
+          "modifier": {
+            "amount": 0.075,
+            "id": "incompetent_core:species_generic_movement_speed_modifier",
+            "operation": "add_multiplied_total"
+          }
+        },
+        {
+          "attribute": "minecraft:generic.scale",
+          "modifier": {
+            "amount": 0.2,
+            "id": "incompetent_core:species_generic_scale_modifier",
+            "operation": "add_multiplied_base"
+          }
+        },
+        {
+          "attribute": "minecraft:generic.max_health",
+          "modifier": {
+            "amount": 10.0,
+            "id": "incompetent_core:species_generic_max_health_modifier",
+            "operation": "add_value"
+          }
+        },
+        {
+          "attribute": "minecraft:generic.armor_toughness",
+          "modifier": {
+            "amount": 3.0,
+            "id": "incompetent_core:species_generic_armor_toughness_modifier",
+            "operation": "add_value"
           }
         }
-      },
-      {
-        "attribute": "minecraft:generic.movement_speed",
-        "modifier": {
-          "amount": 0.075,
-          "id": "incompetent_core:species_generic_movement_speed_modifier",
-          "operation": "add_multiplied_total"
+      ]
+    },
+    "incompetent_core:invert_heal_harm": {},
+    "incompetent_core:modify_food_effects": {
+      "additions": [
+        {
+          "effect": {
+            "duration": 60,
+            "id": "minecraft:nausea",
+            "neoforge:cures": [
+              "protected_by_totem",
+              "milk"
+            ],
+            "show_icon": true
+          }
         }
-      },
-      {
-        "attribute": "minecraft:generic.scale",
-        "modifier": {
-          "amount": 0.2,
-          "id": "incompetent_core:species_generic_scale_modifier",
-          "operation": "add_multiplied_base"
+      ],
+      "removals": [
+        {
+          "effect": "minecraft:hunger"
         }
-      },
-      {
-        "attribute": "minecraft:generic.max_health",
-        "modifier": {
-          "amount": 10.0,
-          "id": "incompetent_core:species_generic_max_health_modifier",
-          "operation": "add_value"
-        }
-      },
-      {
-        "attribute": "minecraft:generic.armor_toughness",
-        "modifier": {
-          "amount": 3.0,
-          "id": "incompetent_core:species_generic_armor_toughness_modifier",
-          "operation": "add_value"
+      ]
+    },
+    "incompetent_core:restrict_armor": {
+      "restrictions": {
+        "chest": {
+          "item": "minecraft:elytra"
         }
       }
-    ]
-  },
-  "behaviour": {
-    "type": "incompetent_core:undead",
-    "burn_in_sun": true
-  },
-  "diet": "incompetent_core:carnivore",
-  "invert_heal_and_harm": true
+    }
+  }
 }

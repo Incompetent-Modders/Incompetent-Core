@@ -5,8 +5,13 @@
   "package": "com.incompetent_modders.incomp_core.mixin",
   "refmap": "incompetent_core.refmap.json",
   "mixins": [
+    "ArmorSlotMixin",
+    "EquipableMixin",
     "HealOrHarmMobEffectMixin",
-    "ItemMixin"
+    "IItemExtensionMixin",
+    "ItemMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin"
   ],
   "client": [
   ],

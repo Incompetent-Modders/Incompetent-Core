@@ -33,7 +33,7 @@ public class IncompLangProvider extends LanguageProvider {
         this.tab(ModCreativeTabs.UTIL_CREATIVE_TAB);
         
         this.castingTooltip("selected_spell", "Selected Spell:");
-        this.castingTooltip("available_spells", "Available Spells:");
+        this.castingTooltip("spell_slots", "Spell Slots:");
         this.castingTooltip("spell_info", "Spell Info:");
         this.castingTooltip("mana_cost", "Mana Cost:");
         this.castingTooltip("required_catalyst", "Required Catalyst:");
@@ -87,7 +87,9 @@ public class IncompLangProvider extends LanguageProvider {
         this.welcomeMessage("enabled.toggle", "To disable, use %s");
         
         this.add("ability.incompetent_core.function_charges.no_charges", "You have no charges remaining for this ability.");
-        
+        this.add("incompetent_core.tooltip.inedible", "Inedible");
+        this.add("incompetent_core.tooltip.cannot_use", "You do not know how to use this item");
+        this.add("incompetent_core.tooltip.cannot_wear", "You cannot wear this equipment");
     }
     
     private void tab(Holder<CreativeModeTab> tabHolder) {

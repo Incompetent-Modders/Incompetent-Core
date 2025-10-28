@@ -2,14 +2,13 @@ package com.incompetent_modders.incomp_core.core.player.class_type;
 
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.common.registry.ModClassTypes;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
 import com.incompetent_modders.incomp_core.core.player.AbilityCooldownData;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ExtraCodecs;
 
 public record ClassTypeStorage(ResourceKey<ClassType> classType, AbilityCooldownData cooldownData) {
     public static final ClassTypeStorage DEFAULT = new ClassTypeStorage(ModClassTypes.NONE, AbilityCooldownData.EMPTY_DATA);

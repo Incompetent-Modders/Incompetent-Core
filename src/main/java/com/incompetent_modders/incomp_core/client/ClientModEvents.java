@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.client;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityWheelOverlay;
 import com.incompetent_modders.incomp_core.api.item.EffectExtendingItem;
 import com.incompetent_modders.incomp_core.client.gui.ManaOverlay;
 import com.incompetent_modders.incomp_core.client.gui.SpellListOverlay;
@@ -35,6 +36,7 @@ public class ClientModEvents {
     public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, mana, ManaOverlay.INSTANCE);
         event.registerAbove(VanillaGuiLayers.CHAT, selected_spell, SpellListOverlay.INSTANCE);
+        event.registerAboveAll(IncompCore.makeId("ability_wheel"), AbilityWheelOverlay.instance);
     }
     public static final Lazy<KeyMapping> ACTIVATE_CLASS_ABILITY = Lazy.of(() -> new KeyMapping("key.incompetent_core.activate_class_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.categories.incompetent_core"));
     public static final Lazy<KeyMapping> ACTIVATE_SPECIES_ABILITY = Lazy.of(() -> new KeyMapping("key.incompetent_core.activate_species_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.categories.incompetent_core"));

@@ -4,8 +4,8 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.annotations.HasOwnTab;
 import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
-import com.incompetent_modders.incomp_core.core.def.ClassType;
-import com.incompetent_modders.incomp_core.core.def.SpeciesType;
+import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
+import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -93,10 +93,8 @@ public class ModCreativeTabs {
         spells.listElements().forEach((spell) -> {
             ItemStack stack = new ItemStack(ModItems.SPELL_TOME);
             ItemSpellSlots.Entry entry = new ItemSpellSlots.Entry(spell.getKey(), 0);
-            ItemSpellSlots spellSlots = new ItemSpellSlots(List.of(entry));
+            ItemSpellSlots spellSlots = new ItemSpellSlots(List.of(entry), 1, 0);
             stack.set(ModDataComponents.SPELLS, spellSlots);
-            stack.set(ModDataComponents.MAX_SPELL_SLOTS, 1);
-            stack.set(ModDataComponents.SELECTED_SPELL_SLOT, 0);
             output.accept(stack, tabVisibility);
         });
     }

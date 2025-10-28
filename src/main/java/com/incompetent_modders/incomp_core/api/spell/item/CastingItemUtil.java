@@ -17,8 +17,7 @@ import java.util.Map;
 
 public class CastingItemUtil {
     public static ResourceLocation emptySpell = IncompCore.makeId("empty");
-    public static Map<Integer, ResourceLocation> singleEmptySpell = Map.of(0, emptySpell);
-    
+
     public static ResourceKey<Spell> deserializeFromSlot(ItemStack stack, int slot) {
         ItemSpellSlots spellSlots = stack.getOrDefault(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY);
         return spellSlots.getSpell(slot);
@@ -30,10 +29,10 @@ public class CastingItemUtil {
     }
     
     public static int getSelectedSpellSlot(ItemStack stack) {
-        if (!stack.has(ModDataComponents.SELECTED_SPELL_SLOT)) {
+        if (!stack.has(ModDataComponents.SPELLS)) {
             return 0;
         }
-        return stack.getOrDefault(ModDataComponents.SELECTED_SPELL_SLOT, 0);
+        return stack.getOrDefault(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY).selectedSlot();
     }
     
     public static ResourceKey<Spell> getSelectedSpell(ItemStack stack) {
@@ -43,9 +42,12 @@ public class CastingItemUtil {
     public static Spell getSelectedSpellInstance(ItemStack stack, LivingEntity entity) {
         return getSelectedSpellInstanceWithKey(stack, entity).getSecond();
     }
+
     public static ResourceKey<Spell> getSelectedSpellKey(ItemStack stack, LivingEntity entity) {
         return getSelectedSpellInstanceWithKey(stack, entity).getFirst();
     }
+
+
 
     public static Pair<ResourceKey<Spell>, Spell> getSelectedSpellInstanceWithKey(ItemStack stack, LivingEntity entity) {
         Registry<Spell> spellRegistry = entity.registryAccess().registryOrThrow(ModRegistries.Keys.SPELL);

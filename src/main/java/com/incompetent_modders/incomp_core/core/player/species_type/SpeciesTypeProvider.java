@@ -16,22 +16,22 @@ public interface SpeciesTypeProvider {
     default void setAbilityCooldown(int cooldown) {
         SpeciesTypeStorage storage = this.asStorage();
 
-        this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(cooldown)));
+        //this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(cooldown)));
     }
 
     default void decreaseAbilityCooldown() {
         SpeciesTypeStorage storage = this.asStorage();
         AbilityCooldownData data = storage.cooldownData();
-        int cooldown = data.abilityCooldown();
+        //int cooldown = data.abilityCooldown();
 
-        if (cooldown > 0) {
-            this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(cooldown - 1)));
-        } else {
-            this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(-1)));
-        }
+        //if (cooldown > 0) {
+        //    this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(cooldown - 1)));
+        //} else {
+        //    this.setStorage(new SpeciesTypeStorage(storage.speciesType(), new AbilityCooldownData(-1)));
+        //}
     }
 
     default boolean canUseAbility() {
-        return this.asStorage().cooldownData().abilityCooldown() == -1;
+        return false;//this.asStorage().cooldownData().abilityCooldown() == -1;
     }
 }

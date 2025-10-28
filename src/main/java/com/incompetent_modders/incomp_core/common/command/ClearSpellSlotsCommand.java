@@ -1,6 +1,6 @@
 package com.incompetent_modders.incomp_core.common.command;
 
-import com.incompetent_modders.incomp_core.api.item.SpellCastingItem;
+import com.incompetent_modders.incomp_core.api.item.ItemSpellSlots;
 import com.incompetent_modders.incomp_core.api.spell.item.CastingItemUtil;
 import com.incompetent_modders.incomp_core.common.registry.ModDataComponents;
 import com.incompetent_modders.incomp_core.common.registry.ModSpells;
@@ -12,7 +12,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +25,7 @@ public class ClearSpellSlotsCommand {
             Player player = (Player) arguments.getSource().getEntity();
             if (player == null)
                 player = FakePlayerFactory.getMinecraft(world);
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem) {
+            if (player.getItemInHand(InteractionHand.MAIN_HAND).has(ModDataComponents.SPELLS)) {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
                 ResourceKey<Spell> spell = ModSpells.EMPTY;
                 CastingItemUtil.serializeToSlot(staff, IntegerArgumentType.getInteger(arguments, "spellSlot"), spell);
@@ -39,9 +38,9 @@ public class ClearSpellSlotsCommand {
             Player player = (Player) arguments.getSource().getEntity();
             if (player == null)
                 player = FakePlayerFactory.getMinecraft(world);
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SpellCastingItem spellCastingItem) {
+            if (player.getItemInHand(InteractionHand.MAIN_HAND).has(ModDataComponents.SPELLS)) {
                 ItemStack staff = player.getItemInHand(InteractionHand.MAIN_HAND);
-                int slotsAmount = staff.getOrDefault(ModDataComponents.MAX_SPELL_SLOTS, 6) - 1;
+                int slotsAmount = staff.getOrDefault(ModDataComponents.SPELLS, ItemSpellSlots.EMPTY).maxSlots() - 1;
                 for (int i = 0; i <= slotsAmount; i++) {
                     ResourceKey<Spell> spell = ModSpells.EMPTY;
                     CastingItemUtil.serializeToSlot(staff, i, spell);
