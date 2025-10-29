@@ -1,6 +1,7 @@
 package com.incompetent_modders.incomp_core.core.player.class_type;
 
 import com.incompetent_modders.incomp_core.IncompCore;
+import com.incompetent_modders.incomp_core.api.class_type.level.ClassLevelData;
 import com.incompetent_modders.incomp_core.core.player.AbilityCooldownData;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.EntityCapability;
@@ -17,13 +18,25 @@ public interface ClassTypeProvider {
     default void setAbilityCooldown(ResourceLocation ability, int cooldown) {
         ClassTypeStorage storage = this.asStorage();
         AbilityCooldownData data = storage.cooldownData();
-        this.setStorage(new ClassTypeStorage(storage.classType(), data.addCooldown(ability, cooldown)));
+        this.setStorage(new ClassTypeStorage(storage.classType(), data.addCooldown(ability, cooldown), storage.levelData()));
     }
 
     default void decreaseAbilityCooldown() {
         ClassTypeStorage storage = this.asStorage();
         AbilityCooldownData data = storage.cooldownData();
-        this.setStorage(new ClassTypeStorage(storage.classType(), data.decrementAllCooldowns(1)));
+        this.setStorage(new ClassTypeStorage(storage.classType(), data.decrementAllCooldowns(1), storage.levelData()));
+    }
+
+    default void giveExp(int exp) {
+        ClassTypeStorage storage = this.asStorage();
+        ClassLevelData data = storage.levelData();
+        this.setStorage(new ClassTypeStorage(storage.classType(), storage.cooldownData(), data.giveExperiencePoints(exp)));
+    }
+
+    default int getLevel() {
+        ClassTypeStorage storage = this.asStorage();
+        ClassLevelData data = storage.levelData();
+        return data.level();
     }
 
     default boolean canUseAbility(ResourceLocation ability) {

@@ -140,18 +140,23 @@ public class AbilityWheelOverlay implements LayeredDraw.Layer {
 
         var selectedAbility = abilities.get(wheelSelection);
         var font = Minecraft.getInstance().font;
-        int textHeight = 3 * font.lineHeight + 5;
+        var info = selectedAbility.ability().description(minecraft.player);
+        int textHeight = Math.max(3, info.size()) * font.lineHeight + 5;
         int textCenterMargin = 5;
         int textTitleMargin = 5;
         var title = selectedAbility.getDisplayName(minecraft.player).withStyle(Style.EMPTY.withUnderlined(true));
-        var cooldownTicks = selectedAbility.getEffectiveCooldown(0);
+        var cooldownTicks = selectedAbility.getEffectiveCooldown(player);
         var cooldownTime = Component.translatable("tooltip.incompetent_core.cooldown_length_seconds", Utils.timeFromTicks(cooldownTicks, 2)).withStyle(ChatFormatting.YELLOW);
         int infoHeight = (int) (centerY - (ringOuterEdge + textHeight) + font.lineHeight + textTitleMargin);
-        drawTextBackground(guiHelper, centerX, centerY, ringOuterEdge + textHeight - textTitleMargin - font.lineHeight, textCenterMargin, 2 * font.lineHeight);
-        guiHelper.drawString(font, title, (int) (centerX - font.width(title) / 2), (int) (centerY - (ringOuterEdge + textHeight)), 0xFFFFFF, true);
+        drawTextBackground(guiHelper, centerX, centerY, ringOuterEdge + textHeight - textTitleMargin - font.lineHeight, textCenterMargin, Math.max(2, info.size()) * font.lineHeight);
+        guiHelper.drawString(font, title, centerX - font.width(title) / 2, (int) (centerY - (ringOuterEdge + textHeight)), 0xFFFFFF, true);
         if (cooldownTicks > 0) {
             infoHeight += font.lineHeight;
-            guiHelper.drawString(font, cooldownTime, (int) (centerX - font.width(cooldownTime) - textCenterMargin), infoHeight, 0xFFFFFF, true);
+            guiHelper.drawString(font, cooldownTime, centerX - font.width(cooldownTime) - textCenterMargin, infoHeight, 0xFFFFFF, true);
+        }
+        for (int i = 0; i < info.size(); i++) {
+            var line = info.get(i);
+            guiHelper.drawString(font, line, centerX + textCenterMargin, (int) (centerY - (ringOuterEdgeMax + textHeight) + font.lineHeight * (i + 1) + textTitleMargin), 0x3be33b, true);
         }
 
         //Ability Icons

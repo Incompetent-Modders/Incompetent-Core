@@ -4,15 +4,14 @@ import com.incompetent_modders.incomp_core.IncompCore;
 import com.incompetent_modders.incomp_core.ModRegistries;
 import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityEntry;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.mana_regen_condition.DefaultManaRegenCondition;
-import com.incompetent_modders.incomp_core.common.registry.content.abilities.ApplyEffectAbility;
-import com.incompetent_modders.incomp_core.common.registry.content.passive_effects.ApplyEffectPassiveEffect;
+import com.incompetent_modders.incomp_core.core.def.abilities.ApplyEffectAbility;
 import com.incompetent_modders.incomp_core.api.class_type.core.ClassType;
 import com.incompetent_modders.incomp_core.core.def.attributes.class_type.ClassApplyEffect;
 import com.incompetent_modders.incomp_core.core.def.attributes.class_type.ClassSpellCasting;
-import com.incompetent_modders.incomp_core.core.def.attributes.class_type.ClassTickFrequency;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 
 public class ModClassTypes {
     public static final ResourceKey<ClassType> NONE = create("none");
@@ -31,12 +30,12 @@ public class ModClassTypes {
                                         .allow(IncompCore.makeId("necromancy"))
                                         .whitelist()
                                         .build()),
-                        new ClassApplyEffect(MobEffects.NIGHT_VISION, 200, 0)
+                        new ClassApplyEffect(MobEffects.NIGHT_VISION, 220, 0)
                 ).abilities(
-                        new AbilityEntry(new ApplyEffectAbility(MobEffects.DAMAGE_RESISTANCE, 300, 2), IncompCore.makeId("plague_doctor_resistance"),
-                                400, 1.05f),
-                        new AbilityEntry(new ApplyEffectAbility(MobEffects.DAMAGE_BOOST, 150, 1), IncompCore.makeId("plague_doctor_strength"),
-                                300, 1.05f)
+                        new AbilityEntry(new ApplyEffectAbility(MobEffects.DAMAGE_RESISTANCE, LevelBasedValue.perLevel(300, 5), ModLevelBasedValues.sequential(2, 1.05f)), IncompCore.makeId("plague_doctor_resistance"),
+                                ModLevelBasedValues.sequential(400, 1.05f)),
+                        new AbilityEntry(new ApplyEffectAbility(MobEffects.DAMAGE_BOOST, LevelBasedValue.perLevel(150, 2.5f), ModLevelBasedValues.sequential(1, 1.05f)), IncompCore.makeId("plague_doctor_strength"),
+                                ModLevelBasedValues.sequential(300, 1.05f))
                 )
         );
     }

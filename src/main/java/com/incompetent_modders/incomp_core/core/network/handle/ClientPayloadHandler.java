@@ -24,9 +24,7 @@ public class ClientPayloadHandler {
     }
 
     public void handle(UpdateClassTypePayload payload, IPayloadContext context) {
-        PlayerDataHelper.getClassTypeProvider(context.player()).ifPresent(provider -> {
-            provider.setStorage(payload.storage());
-        });
+        PlayerDataHelper.getClassTypeProvider(context.player()).ifPresent(provider -> provider.setStorage(payload.storage()));
     }
 
     public void handle(UpdateSpeciesTypePayload payload, IPayloadContext context) {

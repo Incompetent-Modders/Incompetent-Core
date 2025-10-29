@@ -47,7 +47,7 @@ public class PlayerDataHelper {
 
     public static void setClassType(LivingEntity entity, ResourceKey<ClassType> classType) {
         ClassTypeStorage storage = Objects.requireNonNull(getClassTypeProvider(entity).orElse(null)).asStorage();
-        getClassTypeProvider(entity).ifPresent(provider -> provider.setStorage(new ClassTypeStorage(classType, storage.cooldownData())));
+        getClassTypeProvider(entity).ifPresent(provider -> provider.setStorage(new ClassTypeStorage(classType, storage.cooldownData(), storage.levelData())));
     }
 
     public static void setSpeciesType(LivingEntity entity, ResourceKey<SpeciesType> speciesType) {
@@ -99,10 +99,19 @@ public class PlayerDataHelper {
         if (classType != null) {
             AbilityEntry abilityEntry = classType.getAbility(ability);
             if (abilityEntry != null) {
-                fullCooldown = abilityEntry.getEffectiveCooldown(0);
+                fullCooldown = abilityEntry.getEffectiveCooldown(entity);
             }
         }
         return (float) (cooldown / fullCooldown);
+    }
+
+    public static int getClassLevel(LivingEntity entity) {
+        int level = 0;
+        var classTypeProv = getClassTypeProvider(entity).orElse(null);
+        if (classTypeProv != null) {
+            level = classTypeProv.getLevel();
+        }
+        return level;
     }
 
     public static void setMana(LivingEntity entity, double mana) {

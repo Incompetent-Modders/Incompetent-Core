@@ -39,7 +39,7 @@ public class ServerPayloadHandler {
             AbilityEntry abilityEntry = classType.getAbility(ability);
             if (abilityEntry != null) {
                 abilityEntry.ability().apply(0, player.level(), player);
-                classTypeProvider.setAbilityCooldown(ability, payload.applyCooldown() ? abilityEntry.getEffectiveCooldown(0) : 0);
+                classTypeProvider.setAbilityCooldown(ability, payload.applyCooldown() ? abilityEntry.getEffectiveCooldown(player) : 0);
             }
         }
     }

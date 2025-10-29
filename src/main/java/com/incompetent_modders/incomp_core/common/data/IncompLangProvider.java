@@ -87,6 +87,9 @@ public class IncompLangProvider extends LanguageProvider {
         this.welcomeMessage("enabled.toggle", "To disable, use %s");
         
         this.add("ability.incompetent_core.function_charges.no_charges", "You have no charges remaining for this ability.");
+        this.add("tooltip.incompetent_core.cooldown_length_seconds", " %d Cooldown");
+        this.add("incompetent_core.abilities.duration_seconds", "Lasts %d");
+        this.add("incompetent_core.abilities.applied_effect", "Applies: %s %s");
         this.add("incompetent_core.tooltip.inedible", "Inedible");
         this.add("incompetent_core.tooltip.cannot_use", "You do not know how to use this item");
         this.add("incompetent_core.tooltip.cannot_wear", "You cannot wear this equipment");

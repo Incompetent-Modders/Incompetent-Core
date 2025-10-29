@@ -3,13 +3,11 @@ package com.incompetent_modders.incomp_core.common.registry.content.passive_effe
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffect;
 import com.incompetent_modders.incomp_core.api.player_data.class_type.passive.ClassPassiveEffectType;
 import com.incompetent_modders.incomp_core.common.registry.ModClassPassiveEffects;
-import com.incompetent_modders.incomp_core.common.registry.content.abilities.ApplyEffectAbility;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;

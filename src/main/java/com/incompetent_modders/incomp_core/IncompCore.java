@@ -54,6 +54,7 @@ public class IncompCore
         ModManaRegenConditions.register(modEventBus);
         ModClassPassiveEffects.register(modEventBus);
         ModAbilities.register(modEventBus);
+        ModLevelBasedValues.register(modEventBus);
         ModDataComponents.DATA_COMPONENTS.register(modEventBus);
         ModSpellResultTypes.register(modEventBus);
         ModItems.register(modEventBus);

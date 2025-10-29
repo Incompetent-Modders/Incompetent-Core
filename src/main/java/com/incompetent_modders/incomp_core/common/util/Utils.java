@@ -14,11 +14,13 @@ import com.incompetent_modders.incomp_core.api.species.core.SpeciesType;
 import com.incompetent_modders.incomp_core.core.def.Spell;
 import com.incompetent_modders.incomp_core.core.network.clientbound.UpdateSpellDataPayload;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -80,6 +82,26 @@ public class Utils {
             affix = "m";
         }
         return stringTruncation(time, decimalPlaces) + affix;
+    }
+    public static Component formatEffect(Holder<MobEffect> effect, int amplifier) {
+        Component effectName = Component.translatable(effect.value().getDescriptionId());
+        Component component = Component.translatable("incompetent_core.abilities.applied_effect", effectName, toRomanNumeral(amplifier));
+        return component;
+    }
+    public static String toRomanNumeral(int number) {
+        return "I".repeat(number)
+                .replace("IIIII", "V")
+                .replace("IIII", "IV")
+                .replace("VV", "X")
+                .replace("VIV", "IX")
+                .replace("XXXXX", "L")
+                .replace("XXXX", "XL")
+                .replace("LL", "C")
+                .replace("LXL", "XC")
+                .replace("CCCCC", "D")
+                .replace("CCCC", "CD")
+                .replace("DD", "M")
+                .replace("DCD", "CM");
     }
     public static String stringTruncation(double f, int decimalPlaces) {
         if (f == Math.floor(f)) {

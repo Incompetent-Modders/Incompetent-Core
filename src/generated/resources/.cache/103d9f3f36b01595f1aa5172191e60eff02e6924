@@ -1,6 +1,6 @@
-// 1.21.1	2025-10-28T22:42:54.4415472	Registries
+// 1.21.1	2025-10-29T23:16:11.7397041	Registries
 5fe44fa0742ca92c04e9ea29c22b87857e76746f data/incompetent_core/incompetent_core/class_type/none.json
-a9218b893b3d7736588a0c7d59dca21078ddd44a data/incompetent_core/incompetent_core/class_type/plague_doctor.json
+87e441cb7c482b3ec1f56cd6d98a6409077eb011 data/incompetent_core/incompetent_core/class_type/plague_doctor.json
 eecae3b86c11a071ceddb9b13b3e799779ffb856 data/incompetent_core/incompetent_core/diet/carnivore.json
 f702311c9a38e45f78fe76a7711686f287674b10 data/incompetent_core/incompetent_core/diet/omnivore.json
 f88fa490b493f9fed896aab63fb5553e8db7d99a data/incompetent_core/incompetent_core/diet/pescetarian.json
@@ -8,6 +8,6 @@ f88fa490b493f9fed896aab63fb5553e8db7d99a data/incompetent_core/incompetent_core/
 98e0dcde81ee04304a7a2f96033e0e6a6e4860c4 data/incompetent_core/incompetent_core/diet/vegetarian.json
 6a8024b73542daa7ace58416edd7580c53d6314d data/incompetent_core/incompetent_core/potion_property/test.json
 bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f data/incompetent_core/incompetent_core/species_type/human.json
-414813e676e01a26da614d78393b5d37b7652794 data/incompetent_core/incompetent_core/species_type/zombie.json
+665fffe6b2bdc6bce3682234f493e37ee7cda344 data/incompetent_core/incompetent_core/species_type/zombie.json
 edf5f0ce153dcee5cbf2037ab89251a7c9eb7d18 data/incompetent_core/incompetent_core/spell/empty.json
 b4f4b61cc5b549ce46bb06ba3ed36a158d87f77f data/incompetent_core/incompetent_core/spell/test.json

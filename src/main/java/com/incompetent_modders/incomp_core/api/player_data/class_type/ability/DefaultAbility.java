@@ -6,8 +6,11 @@ import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class DefaultAbility extends Ability {
     public static final MapCodec<DefaultAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -27,7 +30,12 @@ public class DefaultAbility extends Ability {
             System.out.println("Default class ability applied to player " + player.getName().getString());
         }
     }
-    
+
+    @Override
+    public List<Component> description(Player player) {
+        return List.of();
+    }
+
     @Override
     public AbilityType<? extends Ability> getType() {
         return ModAbilities.DEFAULT.get();

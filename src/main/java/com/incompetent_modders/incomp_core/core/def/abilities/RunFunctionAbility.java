@@ -1,4 +1,4 @@
-package com.incompetent_modders.incomp_core.common.registry.content.abilities;
+package com.incompetent_modders.incomp_core.core.def.abilities;
 
 import com.incompetent_modders.incomp_core.api.class_type.ability.Ability;
 import com.incompetent_modders.incomp_core.api.class_type.ability.AbilityType;
@@ -6,10 +6,12 @@ import com.incompetent_modders.incomp_core.common.registry.ModAbilities;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.CacheableFunction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
 import java.util.Optional;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class RunFunctionAbility extends Ability {
@@ -36,7 +38,12 @@ public class RunFunctionAbility extends Ability {
             });
         }
     }
-    
+
+    @Override
+    public List<Component> description(Player player) {
+        return List.of();
+    }
+
     @Override
     public AbilityType<? extends Ability> getType() {
         return ModAbilities.RUN_FUNCTION.get();

@@ -12,6 +12,8 @@
   "commands.incompetent_core.list_features.spells": "There Are Currently %s Spells Loaded:",
   "commands.incompetent_core.welcome_message.disabled": "Disabled Welcome Message on World Join",
   "commands.incompetent_core.welcome_message.enabled": "Enabled Welcome Message on World Join",
+  "incompetent_core.abilities.applied_effect": "Applies: %s %s",
+  "incompetent_core.abilities.duration_seconds": "Lasts %d",
   "incompetent_core.tooltip.cannot_use": "You do not know how to use this item",
   "incompetent_core.tooltip.cannot_wear": "You cannot wear this equipment",
   "incompetent_core.tooltip.inedible": "Inedible",
@@ -55,5 +57,6 @@
   "tag.item.incompetent_core.neutral_food": "Neutral Food",
   "tag.item.incompetent_core.omnivore_friendly": "Omnivore Friendly",
   "tag.item.incompetent_core.vegan_friendly": "Vegan Friendly",
-  "tag.item.incompetent_core.vegetarian_friendly": "Vegetarian Friendly"
+  "tag.item.incompetent_core.vegetarian_friendly": "Vegetarian Friendly",
+  "tooltip.incompetent_core.cooldown_length_seconds": " %d Cooldown"
 }
